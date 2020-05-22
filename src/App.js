@@ -3,8 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./Components/AppLayouts/NavBar";
 
-const Form = lazy(() => import("./Form"));
+const Stations = lazy(() => import("./Stations"));
 const Queue = lazy(() => import("./Queue"));
+const RegForm = lazy(() => import("./RegForm"));
 
 export default function App() {
   const classes = useStyles();
@@ -16,8 +17,9 @@ export default function App() {
         <div className={classes.content}>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
-              <Route exact path="/" component={Form} />
-              <Route exact path="/form" component={Form} />
+              <Route exact path="/" component={RegForm} />
+              <Route exact path="/stations" component={Stations} />
+              <Route exact path="/registration" component={RegForm} />
               <Route exact path="/queue" component={Queue} />
             </Switch>
           </Suspense>

@@ -5,26 +5,39 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import HealingIcon from "@material-ui/icons/Healing";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import { BrowserRouter as Link } from "react-router-dom";
+import BallotIcon from "@material-ui/icons/Ballot";
+import { Link } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class NavBar extends Component {
   render() {
-    const classes = this.props.className;
+    const { className: classes } = this.props;
     return (
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.root}>
             i2Eye
           </Typography>
-          <Link to="/form">
-            <IconButton className={classes.icon}>
-              <HealingIcon />
-            </IconButton>
+          <Link to="/registration">
+            <Tooltip title="Registration">
+              <IconButton className={classes.icon}>
+                <HealingIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+          <Link to="/stations">
+            <Tooltip title="Stations">
+              <IconButton className={classes.icon}>
+                <BallotIcon />
+              </IconButton>
+            </Tooltip>
           </Link>
           <Link to="/queue">
-            <IconButton className={classes.icon}>
-              <PeopleAltIcon />
-            </IconButton>
+            <Tooltip title="Queue">
+              <IconButton className={classes.icon}>
+                <PeopleAltIcon />
+              </IconButton>
+            </Tooltip>
           </Link>
         </Toolbar>
       </AppBar>
