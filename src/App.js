@@ -1,15 +1,11 @@
 import React, { Suspense, lazy } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import HealingIcon from "@material-ui/icons/Healing";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import NavBar from "./Components/AppLayouts/NavBar";
 
-const Form = lazy(() => import("./Form"));
+const Stations = lazy(() => import("./Stations"));
 const Queue = lazy(() => import("./Queue"));
+const RegForm = lazy(() => import("./RegForm"));
 
 export default function App() {
   const classes = useStyles();
@@ -17,28 +13,13 @@ export default function App() {
   return (
     <div className={classes.root}>
       <Router>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" className={classes.root}>
-              i2Eye
-            </Typography>
-            <Link to="/form">
-              <IconButton className={classes.icon}>
-                <HealingIcon />
-              </IconButton>
-            </Link>
-            <Link to="/queue">
-              <IconButton className={classes.icon}>
-                <PeopleAltIcon />
-              </IconButton>
-            </Link>
-          </Toolbar>
-        </AppBar>
+        <NavBar className={classes} />
         <div className={classes.content}>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
-              <Route exact path="/" component={Form} />
-              <Route exact path="/form" component={Form} />
+              <Route exact path="/" component={RegForm} />
+              <Route exact path="/stations" component={Stations} />
+              <Route exact path="/registration" component={RegForm} />
               <Route exact path="/queue" component={Queue} />
             </Switch>
           </Suspense>
@@ -48,16 +29,16 @@ export default function App() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   icon: {
-    color: "white"
+    color: "white",
   },
   content: {
     marginLeft: 80,
     marginRight: 80,
-    marginTop: 30
-  }
+    marginTop: 30,
+  },
 }));
