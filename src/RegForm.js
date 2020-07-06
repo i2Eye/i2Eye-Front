@@ -64,6 +64,8 @@ class RegForm extends Component {
         );
       case 3:
         return <Success resetForm={this.resetForm} />;
+      default:
+        return 1;
     }
   }
 }
