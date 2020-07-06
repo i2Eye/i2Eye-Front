@@ -43,8 +43,8 @@ class RegForm extends Component {
 
   render() {
     const { step } = this.state;
-    const { name, gender, age, birthdate } = this.state;
-    const values = { name, gender, age, birthdate };
+    const { name, gender, age, birthday } = this.state;
+    const values = { name, gender, age, birthday };
     switch (step) {
       case 1:
         return (

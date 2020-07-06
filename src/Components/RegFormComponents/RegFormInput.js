@@ -37,6 +37,7 @@ class RegFormInput extends Component {
                     label="Name"
                     onChange={handleChange}
                     defaultValue={values.name}
+                    autoComplete="off"
                     fullWidth
                   />
                 </Grid>
@@ -48,7 +49,7 @@ class RegFormInput extends Component {
                       labelId="gender-label"
                       id="gender"
                       onChange={handleChange}
-                      defaultValue={values.gender}
+                      value={values.gender}
                     >
                       <MenuItem value={"F"}>Female</MenuItem>
                       <MenuItem value={"M"}>Male</MenuItem>
@@ -69,9 +70,11 @@ class RegFormInput extends Component {
                 </Grid>
                 <Grid item xs={4}>
                   <TextField
+                    name="birthday"
                     id="date"
                     label="Birthday"
                     type="date"
+                    onChange={handleChange}
                     defaultValue={values.birthday}
                     InputLabelProps={{
                       shrink: true,
