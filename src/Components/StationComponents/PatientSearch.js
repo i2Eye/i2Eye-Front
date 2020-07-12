@@ -6,8 +6,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { CardHeader } from "@material-ui/core/";
-import CardActions from "@material-ui/core/CardActions";
+
 const useStyles = () => ({
   root: {
     maxWidth: 275,
@@ -61,7 +60,9 @@ class PatientSearch extends Component {
     );
     availablePeople.length <= 0
       ? this.setState({ selected: null })
-      : this.setState({ selected: availablePeople[0] });
+      : this.setState({ selected: availablePeople[0] });    
+
+
   };
 
   getCard = (classes, person) => {

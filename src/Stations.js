@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import PatientSearch from "./Components/StationComponents/PatientSearch";
+import StationSelect from "./Components/StationComponents/StationSelect";
+
 
 class Stations extends Component {
   render() {
     return (
       <div>
-        <PatientSearch />
+        <StationSelect />
       </div>
     );
   }
