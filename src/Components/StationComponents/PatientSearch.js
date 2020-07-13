@@ -6,7 +6,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-
+import { Link } from "react-router-dom";
 const useStyles = () => ({
   root: {
     maxWidth: 275,
@@ -26,14 +26,9 @@ const useStyles = () => ({
 
 class PatientSearch extends Component {
   state = {
-    swtich: true,
+    checked: true,
     input: "",
-    station: [
-      { id: 1, available: false },
-      { id: 2, available: true },
-      { id: 3, available: true },
-    ],
-    selected: null,
+    patient: null,
   };
 
   //Replace with function to retrieve list of people when backend team is done
@@ -50,7 +45,7 @@ class PatientSearch extends Component {
   };
 
   handleMasterSearch = (e, v, r) => {
-    this.setState({ selected: v });
+    this.setState({ patient: v });
   };
 
   //Find a way to render an alert if there is no next person in the queue
@@ -59,10 +54,8 @@ class PatientSearch extends Component {
       (person) => person.available
     );
     availablePeople.length <= 0
-      ? this.setState({ selected: null })
-      : this.setState({ selected: availablePeople[0] });    
-
-
+      ? this.setState({ patient: null })
+      : this.setState({ patient: availablePeople[0] });
   };
 
   getCard = (classes, person) => {
@@ -89,7 +82,8 @@ class PatientSearch extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, previousStep, selectedStation } = this.props;
+    const { checked, input, patient } = this.state;
 
     return (
       <div>
@@ -103,10 +97,6 @@ class PatientSearch extends Component {
             option.name +
             (!option.available ? " (busy)" : "")
           }
-          /* The search is actually a master search so that the person can put whatever patient they want next. (It's probably used in the case
-          something happends and we need to overwrite the queue manually :/// ) */
-
-          //getOptionDisabled={(option) => !option.available}
           style={{ width: 300 }}
           renderInput={(params) => (
             <TextField
@@ -116,10 +106,11 @@ class PatientSearch extends Component {
             />
           )}
           onInputChange={this.handleInput}
-          inputValue={this.state.input}
+          inputValue={input}
           onChange={this.handleMasterSearch}
           //Find a better getOptionSelected function
           getOptionSelected={(option, value) => option.id === value.id}
+          disabled={!checked}
         />
 
         <Button
@@ -127,7 +118,7 @@ class PatientSearch extends Component {
           color="primary"
           style={{ marginTop: 20, marginRight: 20, marginBottom: 20 }}
           onClick={this.getNextPerson}
-          disabled={this.state.selected !== null}
+          disabled={!checked}
         >
           Get Next Person
         </Button>
@@ -136,22 +127,30 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginBottom: 20 }}
-          onClick={() => this.setState({ input: "", selected: null })}
-          disabled={this.state.selected === null}
+          onClick={() => this.setState({ input: "", patient: null })}
+          disabled={!checked || patient === null}
         >
           Cancel
         </Button>
-
-        {this.state.selected === null
-          ? null
-          : this.getCard(classes, this.state.selected)}
         <br />
+        {patient === null ? null : this.getCard(classes, patient)}
 
         <Button
           variant="contained"
           color="primary"
-          style={{ marginTop: 20 }}
-          disabled={this.state.selected === null}
+          onClick={previousStep}
+          style={{
+            marginRight: 20,
+            marginTop: patient === null ? 145.563 : 20,
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={patient === null ? { marginTop: 145.563 } : { marginTop: 20 }}
+          disabled={!checked || patient === null}
         >
           Next
         </Button>
