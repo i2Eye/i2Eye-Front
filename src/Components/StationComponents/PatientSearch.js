@@ -7,9 +7,19 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-const useStyles = () => ({
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import Switch from "@material-ui/core/Switch";
+
+const useStyles = (theme) => ({
   root: {
     maxWidth: 275,
+  },
+  rootList: {
+    width: "100%",
+    maxWidth: 360,
   },
   bullet: {
     display: "inline-block",
@@ -29,6 +39,7 @@ class PatientSearch extends Component {
     checked: true,
     input: "",
     patient: null,
+    station: this.props.selectedStation
   };
 
   //Replace with function to retrieve list of people when backend team is done
@@ -81,12 +92,42 @@ class PatientSearch extends Component {
     );
   };
 
+  getSwitch = () => {
+     return (
+      <Switch
+          edge = "end"
+          onChange = {(event) => {
+            this.setState({station: { name: this.state.station.name, checked: event.target.checked}},
+                  ()=> console.log(this.state.station))
+             this.setState({patient : null})
+             this.setState({checked : event.target.checked}, ()=> {console.log(this.state.checked)})
+          }}
+          checked = {this.state.station.checked}
+          inputProps = {{ "aria-labelledby": "switch-list-label-1" }}        
+       />
+
+     );
+  };
+
+
   render() {
     const { classes, previousStep, selectedStation } = this.props;
-    const { checked, input, patient } = this.state;
-
+    const { checked, input, patient, station } = this.state;
     return (
       <div>
+
+        <List className={classes.rootList}>
+          <ListItem
+            button
+          >
+            <ListItemText id={station.name} primary={station.name} />
+            <ListItemSecondaryAction>
+            {patient === null ? this.getSwitch(selectedStation): null}
+            </ListItemSecondaryAction>
+          </ListItem>
+      </List>
+
+
         <Autocomplete
           id="patient-master-search"
           autoHighlight
@@ -142,7 +183,8 @@ class PatientSearch extends Component {
           style={{
             marginRight: 20,
             marginTop: patient === null ? 145.563 : 20,
-          }}
+          }
+        }
         >
           Back
         </Button>
