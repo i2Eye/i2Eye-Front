@@ -7,10 +7,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
 import Switch from "@material-ui/core/Switch";
 
 const useStyles = (theme) => ({
@@ -34,12 +30,14 @@ const useStyles = (theme) => ({
   },
 });
 
+const StyledSwitch = withStyles({
+  root: { verticalAlign: "baseline", marginLeft: 20 },
+})(Switch);
+
 class PatientSearch extends Component {
   state = {
-    checked: true,
     input: "",
-    patient: null,
-    station: this.props.selectedStation
+    patientID: 0,
   };
 
   //Replace with function to retrieve list of people when backend team is done
@@ -56,20 +54,23 @@ class PatientSearch extends Component {
   };
 
   handleMasterSearch = (e, v, r) => {
-    this.setState({ patient: v });
+    this.setState({ patientID: v === null ? 0 : v.id });
   };
 
   //Find a way to render an alert if there is no next person in the queue
   getNextPerson = () => {
-    const availablePeople = this.getPeople().filter(
-      (person) => person.available
-    );
+    const people = this.getPeople();
+    const availablePeople = people.filter((person) => person.available);
     availablePeople.length <= 0
-      ? this.setState({ patient: null })
-      : this.setState({ patient: availablePeople[0] });
+      ? this.setState({ patientID: 0 })
+      : this.setState({ patientID: availablePeople[0].id });
+    this.setState({ input: "" });
   };
 
-  getCard = (classes, person) => {
+  getCard = (classes, patientID) => {
+    const patient = this.getPeople().find(
+      (patient) => patient.id === patientID
+    );
     return (
       <Card className={classes.root}>
         <CardContent>
@@ -78,55 +79,46 @@ class PatientSearch extends Component {
             color="textSecondary"
             gutterBottom
           >
-            {`ID : ${person.id}`}
+            {`ID : ${patient.id}`}
           </Typography>
           <Typography variant="body2" component="p">
-            {`Name : ${person.name}`}
+            {`Name : ${patient.name}`}
             <br />
-            {`Age : ${person.age}`}
+            {`Age : ${patient.age}`}
             <br />
-            {`Gender : ${person.gender}`}
+            {`Gender : ${patient.gender}`}
           </Typography>
         </CardContent>
       </Card>
     );
   };
 
-  getSwitch = () => {
-     return (
-      <Switch
-          edge = "end"
-          onChange = {(event) => {
-            this.setState({station: { name: this.state.station.name, checked: event.target.checked}},
-                  ()=> console.log(this.state.station))
-             this.setState({patient : null})
-             this.setState({checked : event.target.checked}, ()=> {console.log(this.state.checked)})
-          }}
-          checked = {this.state.station.checked}
-          inputProps = {{ "aria-labelledby": "switch-list-label-1" }}        
-       />
-
-     );
+  getWarning = (patientID) => {
+    if (
+      patientID > 0 &&
+      !this.getPeople().find((patient) => patient.id === patientID).available
+    ) {
+      return (
+        <Typography variant="subtitle1" color="error">
+          Warning: This person is currently engaged in another station
+        </Typography>
+      );
+    }
   };
 
-
   render() {
-    const { classes, previousStep, selectedStation } = this.props;
-    const { checked, input, patient, station } = this.state;
+    const { classes, station, previousStep, handleToggle } = this.props;
+    const { input, patientID } = this.state;
     return (
       <div>
-
-        <List className={classes.rootList}>
-          <ListItem
-            button
-          >
-            <ListItemText id={station.name} primary={station.name} />
-            <ListItemSecondaryAction>
-            {patient === null ? this.getSwitch(selectedStation): null}
-            </ListItemSecondaryAction>
-          </ListItem>
-      </List>
-
+        <div>
+          <h1 style={{ display: "inline-block" }}>{station.name}</h1>
+          <StyledSwitch
+            onChange={handleToggle}
+            checked={station.checked}
+            inputProps={{ "aria-labelledby": "switch-list-label-1" }}
+          />
+        </div>
 
         <Autocomplete
           id="patient-master-search"
@@ -151,7 +143,7 @@ class PatientSearch extends Component {
           onChange={this.handleMasterSearch}
           //Find a better getOptionSelected function
           getOptionSelected={(option, value) => option.id === value.id}
-          disabled={!checked}
+          disabled={!station.checked}
         />
 
         <Button
@@ -159,7 +151,7 @@ class PatientSearch extends Component {
           color="primary"
           style={{ marginTop: 20, marginRight: 20, marginBottom: 20 }}
           onClick={this.getNextPerson}
-          disabled={!checked}
+          disabled={!station.checked}
         >
           Get Next Person
         </Button>
@@ -168,13 +160,15 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginBottom: 20 }}
-          onClick={() => this.setState({ input: "", patient: null })}
-          disabled={!checked || patient === null}
+          onClick={() => this.setState({ input: "", patientID: 0 })}
+          disabled={!station.checked || patientID <= 0}
         >
           Cancel
         </Button>
+        {this.getWarning(patientID)}
         <br />
-        {patient === null ? null : this.getCard(classes, patient)}
+
+        {patientID <= 0 ? null : this.getCard(classes, patientID)}
 
         <Button
           variant="contained"
@@ -182,17 +176,20 @@ class PatientSearch extends Component {
           onClick={previousStep}
           style={{
             marginRight: 20,
-            marginTop: patient === null ? 145.563 : 20,
-          }
-        }
+            marginTop: patientID <= 0 ? 145.563 : 20,
+          }}
         >
           Back
         </Button>
         <Button
           variant="contained"
           color="primary"
-          style={patient === null ? { marginTop: 145.563 } : { marginTop: 20 }}
-          disabled={!checked || patient === null}
+          style={patientID <= 0 ? { marginTop: 145.563 } : { marginTop: 20 }}
+          disabled={!station.checked || patientID <= 0}
+          component={Link}
+          to={`/stations/${station.name
+            .toLowerCase()
+            .replace(/\s/g, "")}/${patientID}`}
         >
           Next
         </Button>

@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-import React, { Component, lazy } from "react";
+import React, { Component } from "react";
 import StationList from "./StationList";
 import PatientSearch from "./PatientSearch";
 
@@ -29,7 +29,7 @@ class StationSelect extends Component {
 
   handleClick = (index) => (e) => {
     e.preventDefault();
-    this.setState({ selectedStation: this.state.stations[index] });
+    this.setState({ selectedStation: index });
     this.nextStep();
   };
 
@@ -43,7 +43,7 @@ class StationSelect extends Component {
   };
 
   render() {
-    const { step, selectedStation } = this.state;
+    const { step, stations, selectedStation } = this.state;
     switch (step) {
       case 1:
         return (
@@ -58,7 +58,8 @@ class StationSelect extends Component {
       case 2:
         return (
           <PatientSearch
-            selectedStation={selectedStation}
+            handleToggle={this.handleToggle(selectedStation)}
+            station={stations[selectedStation]}
             previousStep={this.previousStep}
           />
         );
