@@ -9,30 +9,44 @@ import Success from "./Components/RegFormComponents/Success";
 class RegForm extends Component {
   state = {
     step: 1,
+    // personal details
     name: "",
     nric: "",
     gender: "",
     birthday: "",
     age: 0,
+    education: "",
+    occupation: "",
+
+    // lifestyle
+    exercise_freq: "",
+    exercise_duration: "",
+
+    // household info
+    monthly_household_income: "",
+    household_count: 0,
+    
+    // medical conditions
+    symptoms: [],
+
     has_tubercolosis: "",
     live_with_someone_with_tubercolosis: "",
     other_diagnosed_with_tubercolosis_beyond_4_months: "",
-    symptoms: [],
+    
     has_blood_borne_disease: "",
     blood_borne_disease: [],
     has_pre_existing_medical_conditions: "",
-    occupation: "",
-    monthly_household_income: "",
-    household_count: 0,
-    education: "",
-    exercise_freq: "",
-    exercise_duration: "",
+        
     family_has_diabetes: "",
     family_diabetes_count: 0,
+    
     family_has_anemia: "",
     family_anemia_count: 0,
+    
     family_has_oral_cancer: "",
     family_oral_cancer_count: 0,
+    
+    pre_existing_conditions: [],
     family_pre_existing_conditions: [],
   };
 
