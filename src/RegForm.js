@@ -20,10 +20,10 @@ class RegForm extends Component {
 
     // lifestyle
     exercise_freq: "",
-    exercise_duration: "",
+    exercise_duration: 0,
 
     // household info
-    monthly_household_income: "",
+    monthly_household_income: 0,
     household_count: 0,
     
     // medical conditions

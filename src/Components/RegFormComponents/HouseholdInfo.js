@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, InputAdornment, FormLabel } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
 class HouseholdInfo extends Component {
@@ -40,53 +37,33 @@ class HouseholdInfo extends Component {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    name="name"
-                    id="name"
-                    label="Name"
+                    name="monthly_household_income"
+                    id="monthly_household_income"
+                    label="Monthly Household Income (INR) [total]"
                     onChange={handleChange}
-                    defaultValue={values.name}
+                    defaultValue={values.monthly_household_income}
+                    type="number"
                     autoComplete="off"
                     fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          $
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth>
-                    <InputLabel id="gender-label">Gender</InputLabel>
-                    <Select
-                      name="gender"
-                      labelId="gender-label"
-                      id="gender"
-                      onChange={handleChange}
-                      value={values.gender}
-                    >
-                      <MenuItem value={"F"}>Female</MenuItem>
-                      <MenuItem value={"M"}>Male</MenuItem>
-                    </Select>
+                <Grid item xs={12}>
+                  <FormControl>
+                    <FormLabel htmlFor="household_count">How many people are there in the household (including yourself)</FormLabel>
                   </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                  {" "}
                   <TextField
-                    name="age"
-                    id="age"
-                    label="Age"
+                    name="household_count"
+                    id="household_count"
                     type="number"
                     onChange={handleChange}
-                    defaultValue={values.age}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    name="birthday"
-                    id="date"
-                    label="Birthday"
-                    type="date"
-                    onChange={handleChange}
-                    defaultValue={values.birthday}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    defaultValue={values.household_count}
                     fullWidth
                   />
                 </Grid>

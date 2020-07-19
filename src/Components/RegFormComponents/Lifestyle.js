@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, FormLabel } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
@@ -39,56 +38,36 @@ class Lifestyle extends Component {
                   <Typography variant='h4'>Lifestyle</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    id="name"
-                    label="Name"
-                    onChange={handleChange}
-                    defaultValue={values.name}
-                    autoComplete="off"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={4}>
                   <FormControl fullWidth>
-                    <InputLabel id="gender-label">Gender</InputLabel>
+                    <FormLabel id="exercise_freq-label">How often do you exercise or do strenuous activity (lifting heavy objects, farming, construction work) per week?</FormLabel>
                     <Select
-                      name="gender"
-                      labelId="gender-label"
-                      id="gender"
+                      name="exercise_freq"
+                      labelId="exercise_freq-label"
+                      id="exercise_freq"
                       onChange={handleChange}
                       value={values.gender}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     >
-                      <MenuItem value={"F"}>Female</MenuItem>
-                      <MenuItem value={"M"}>Male</MenuItem>
+                      <MenuItem value="1-2_times">1-2 times week</MenuItem>
+                      <MenuItem value="3-4_times">3-4 times a week</MenuItem>
+                      <MenuItem value="5-7_times">5-7 times a week</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
-                  {" "}
+                <Grid item xs={12}>
+                <FormControl fullWidth>
+                    <FormLabel id="exercise_duration-label">How long do you exercise per session (in hours)?</FormLabel>
                   <TextField
-                    name="age"
-                    id="age"
-                    label="Age"
+                    name="exercise_duration"
+                    id="exercise_duration"
                     type="number"
                     onChange={handleChange}
-                    defaultValue={values.age}
+                    defaultValue={values.exercise_duration}
                     fullWidth
                   />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    name="birthday"
-                    id="date"
-                    label="Birthday"
-                    type="date"
-                    onChange={handleChange}
-                    defaultValue={values.birthday}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    fullWidth
-                  />
+                  </FormControl>
                 </Grid>
               </Grid>
             </Paper>
