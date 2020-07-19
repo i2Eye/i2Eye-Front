@@ -61,7 +61,6 @@ class PersonalDetails extends Component {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  {" "}
                   <TextField
                     name="age"
                     id="age"
