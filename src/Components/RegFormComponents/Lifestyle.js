@@ -6,11 +6,16 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Typography from "@material-ui/core/Typography";
 
-class RegFormInput extends Component {
+class Lifestyle extends Component {
   nextStep = (e) => {
     e.preventDefault();
     this.props.nextStep();
+  };
+
+  prevStep = () => {
+    this.props.prevStep();
   };
 
   render() {
@@ -30,6 +35,9 @@ class RegFormInput extends Component {
               }}
             >
               <Grid container spacing={3}>
+              <Grid item xs={12}>
+                  <Typography variant='h4'>Lifestyle</Typography>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     name="name"
@@ -89,6 +97,14 @@ class RegFormInput extends Component {
         <Button
           variant="contained"
           color="primary"
+          style={{ marginTop: 20, marginRight: 20 }}
+          onClick={this.prevStep}
+        >
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
           style={{ marginTop: 20 }}
           onClick={this.nextStep}
         >
@@ -99,4 +115,4 @@ class RegFormInput extends Component {
   }
 }
 
-export default RegFormInput;
+export default Lifestyle;
