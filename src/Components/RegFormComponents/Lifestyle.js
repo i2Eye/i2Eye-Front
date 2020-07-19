@@ -34,21 +34,22 @@ class Lifestyle extends Component {
               }}
             >
               <Grid container spacing={3}>
-              <Grid item xs={12}>
-                  <Typography variant='h4'>Lifestyle</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="h4">Lifestyle</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel id="exercise_freq-label">How often do you exercise or do strenuous activity (lifting heavy objects, farming, construction work) per week?</FormLabel>
+                    <FormLabel id="exercise_freq-label">
+                      How often do you exercise or do strenuous activity
+                      (lifting heavy objects, farming, construction work) per
+                      week?
+                    </FormLabel>
                     <Select
                       name="exercise_freq"
                       labelId="exercise_freq-label"
                       id="exercise_freq"
                       onChange={handleChange}
-                      value={values.gender}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      value={values.exercise_freq}
                     >
                       <MenuItem value="1-2_times">1-2 times week</MenuItem>
                       <MenuItem value="3-4_times">3-4 times a week</MenuItem>
@@ -57,16 +58,18 @@ class Lifestyle extends Component {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                <FormControl fullWidth>
-                    <FormLabel id="exercise_duration-label">How long do you exercise per session (in hours)?</FormLabel>
-                  <TextField
-                    name="exercise_duration"
-                    id="exercise_duration"
-                    type="number"
-                    onChange={handleChange}
-                    defaultValue={values.exercise_duration}
-                    fullWidth
-                  />
+                  <FormControl fullWidth>
+                    <FormLabel id="exercise_duration-label">
+                      How long do you exercise per session (in hours)?
+                    </FormLabel>
+                    <TextField
+                      name="exercise_duration"
+                      id="exercise_duration"
+                      type="number"
+                      onChange={handleChange}
+                      defaultValue={values.exercise_duration}
+                      fullWidth
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
