@@ -11,6 +11,7 @@ import BloodPressure from "./BloodPressure";
 import Doctor from "./DoctorConsult";
 import Phlebotomy from "./Phlebotomy";
 import BMIDuplicate from "./BMIduplicate";
+import OralHealth from "./OralHealth";
 
 class FormAbled extends Component {
   state = {};
@@ -27,7 +28,7 @@ class FormAbled extends Component {
                 paddingBottom: 20,
               }}
             >
-              <FingerstickAnemia />
+              <OralHealth />
             </Paper>
           </Grid>
           <Grid item md="5">
