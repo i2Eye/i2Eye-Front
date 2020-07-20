@@ -111,7 +111,7 @@ class Phlebotomy extends Component {
             <FormGroup>
               {checkBoxOptions.map((option) => (
                 <FormControlLabel
-                  disabled={this.state.age === "40 and above" ? false : true}
+                  disabled={this.state.age === "40 and above" ? true : false}
                   control={
                     <Checkbox
                       onChange={this.handleConditionsChange.bind(this)}

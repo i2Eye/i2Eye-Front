@@ -9,8 +9,12 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "Hb level (g/dL)", label: "Hb level (g/dL)" },
-  { question: "How many meals do you eat a day?", label: "Meals per day" },
+  { question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
+  {
+    question: "How many meals do you eat a day?",
+    label: "Meals per day",
+    id: "meals",
+  },
 ];
 
 const radioQuestions = [
@@ -37,8 +41,8 @@ class Fingerstick extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Hb: 0,
-      meals: 0,
+      Hb: "",
+      meals: "",
       protein: "",
       carbohydrates: "",
       vegetables: "",
@@ -47,7 +51,27 @@ class Fingerstick extends Component {
   }
 
   handleRadioChange(e) {
-    console.log(e.target.key);
+    if (e.target.name === "protein") {
+      this.setState({ protein: e.target.value });
+    }
+    if (e.target.name === "carbohydrates") {
+      this.setState({ carbohydrates: e.target.value });
+    }
+    if (e.target.name === "vegetables") {
+      this.setState({ vegetables: e.target.value });
+    }
+    if (e.target.name === "sweets") {
+      this.setState({ sweets: e.target.value });
+    }
+  }
+
+  handleChange(e) {
+    if (e.target.id === "Hb") {
+      this.setState({ Hb: e.target.value });
+    }
+    if (e.target.id === "meals") {
+      this.setState({ meals: e.target.value });
+    }
   }
   handleSubmit() {
     //get final data of form
@@ -68,12 +92,8 @@ class Fingerstick extends Component {
                   {question.question}
                 </InputLabel>
                 <TextField
-                  key={question.question}
-                  // onChange={(e) => {
-                  //   console.log(label.DataField, e.target.value);
-                  //   props.handleInputChange(label.DataField, e.target.value)}}
-                  //value={props.search}
-                  name="search"
+                  id={question.id}
+                  onChange={this.handleChange.bind(this)}
                   type="number"
                   label={question.label}
                 />
@@ -92,7 +112,7 @@ class Fingerstick extends Component {
                 </FormLabel>
                 <RadioGroup
                   aria-label="frequency"
-                  name="frequency"
+                  name={question.id}
                   onChange={this.handleRadioChange.bind(this)}
                 >
                   <FormControlLabel
