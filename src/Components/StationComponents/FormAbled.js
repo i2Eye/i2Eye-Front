@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import { Grid, Paper } from "@material-ui/core";
-import FormSegment from "./FormSegment";
+//import FormSegment from "./FormSegment";
 import InfoSegment from "./InfoSegment";
+import Tobacco from "./BMI";
+import BMI from "./BMI";
+import EyeScreening from "./EyeScreening";
+import FingerstickAnemia from "./FingerstickAnemia";
+import Fingerstick from "./Fingerstick";
+import BloodPressure from "./BloodPressure";
+import Doctor from "./DoctorConsult";
+import Phlebotomy from "./Phlebotomy";
 
 class FormAbled extends Component {
   state = {};
@@ -9,19 +17,21 @@ class FormAbled extends Component {
     return (
       <div>
         <Grid container spacing="2">
-          <Grid item md="8">
-            <Paper
-              style={{
-                paddingTop: 20,
-                paddingLeft: 30,
-                paddingRight: 30,
-                paddingBottom: 20,
-              }}
-            >
-              <FormSegment />
-            </Paper>
+          <Grid item md="7">
+            <Grid item md="12">
+              <Paper
+                style={{
+                  paddingTop: 20,
+                  paddingLeft: 30,
+                  paddingRight: 30,
+                  paddingBottom: 20,
+                }}
+              >
+                <BloodPressure />
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item md="4">
+          <Grid item md="5">
             <Paper
               style={{
                 paddingTop: 20,
