@@ -1,14 +1,27 @@
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Button from "@material-ui/core/Button";
 
 const questions = [{ question: "SNC ID" }];
 
 class EyeScreening extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      id: "",
+    };
   }
+
+  handleChange(e) {
+    this.setState({ id: e.target.value });
+  }
+
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -24,10 +37,7 @@ class EyeScreening extends Component {
                 </InputLabel>
                 <TextField
                   key={question.question}
-                  // onChange={(e) => {
-                  //   console.log(label.DataField, e.target.value);
-                  //   props.handleInputChange(label.DataField, e.target.value)}}
-                  //value={props.search}
+                  onChange={this.handleChange.bind(this)}
                   name="search"
                   type="text"
                   label={question.question}
@@ -36,6 +46,14 @@ class EyeScreening extends Component {
               </span>
             </div>
           ))}
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={this.handleSubmit.bind(this)}
+          >
+            Submit
+          </Button>
         </form>
       </div>
     );

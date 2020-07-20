@@ -12,15 +12,19 @@ import Button from "@material-ui/core/Button";
 const questions = [
   {
     question: "Systolic BP Reading 1 (mmHg)",
+    key: "Systolic1",
   },
   {
     question: "Diastolic BP Reading 1 (mmHg)",
+    key: "Diastolic1",
   },
   {
     question: "Systolic BP Reading 2 (mmHg)",
+    key: "Systolic2",
   },
   {
     question: "Diastolic BP Reading 2 (mmHg)",
+    key: "Diastolic2",
   },
 ];
 
@@ -34,15 +38,45 @@ class BloodPressure extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      age: 0,
-      Systolic1: 0,
-      Diastolic1: 0,
-      Systolic2: 0,
-      Diastolic2: 0,
+      age: "",
+      Systolic1: "",
+      Diastolic1: "",
+      Systolic2: "",
+      Diastolic2: "",
     };
   }
 
-  handleSubmit(e) {}
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
+  handleChange(e) {
+    if (e.target.id === "Systolic1") {
+      this.setState({
+        Systolic1: e.target.value,
+      });
+    }
+    if (e.target.id === "Diastolic1") {
+      this.setState({
+        Diastolic1: e.target.value,
+      });
+    }
+    if (e.target.id === "Systolic2") {
+      this.setState({
+        Systolic2: e.target.value,
+      });
+    }
+    if (e.target.id === "Diastolic2") {
+      this.setState({
+        Diastolic2: e.target.value,
+      });
+    }
+  }
+
+  handleAgeChange(e) {
+    this.setState({ age: e.target.value });
+  }
 
   render() {
     return (
@@ -63,7 +97,7 @@ class BloodPressure extends Component {
                 <RadioGroup
                   aria-label="age"
                   name="age"
-                  //onChange={handleChange}
+                  onChange={this.handleAgeChange.bind(this)}
                 >
                   <FormControlLabel
                     value="Above 18"
@@ -90,15 +124,13 @@ class BloodPressure extends Component {
                   {question.question}
                 </InputLabel>
                 <TextField
-                  key={question.question}
-                  // onChange={(e) => {
-                  //   console.log(label.DataField, e.target.value);
-                  //   props.handleInputChange(label.DataField, e.target.value)}}
-                  //value={props.search}
-                  name="search"
+                  key={question.key}
+                  id={question.key}
                   type="text"
                   label={question.question}
                   style={{ width: "300px" }}
+                  onChange={this.handleChange.bind(this)}
+                  disabled={this.state.age === "18 and below" ? true : false}
                 />
                 <FormHelperText style={{ color: "red", fontSize: 15 }}>
                   Indicate NIL if did not fulfil criteria for test.

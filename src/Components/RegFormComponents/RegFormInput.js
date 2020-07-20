@@ -12,7 +12,7 @@ class RegFormInput extends Component {
     e.preventDefault();
     this.props.nextStep();
   };
-
+ 
   render() {
     const { values, handleChange } = this.props;
 

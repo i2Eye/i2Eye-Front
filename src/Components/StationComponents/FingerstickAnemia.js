@@ -6,6 +6,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Button from "@material-ui/core/Button";
 
 const questions = [
   { question: "Hb level (g/dL)", label: "Hb level (g/dL)" },
@@ -16,23 +17,43 @@ const radioQuestions = [
   {
     question:
       "How often do you eat protein (eg. daal, mung, rajma, chole, chana)",
+    id: "protein",
   },
   {
     question: "How often do you eat carbohydrates (eg. chapati, rice)",
+    id: "carbohydrates",
   },
   {
     question: "How often do you eat vegetables (eg. gobhi, patta gobhi, saag)",
+    id: "vegetables",
   },
   {
     question: "How often do you eat sweets/desserts (eg. gulab jamun)",
+    id: "sweets",
   },
 ];
 
 class Fingerstick extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      Hb: 0,
+      meals: 0,
+      protein: "",
+      carbohydrates: "",
+      vegetables: "",
+      sweets: "",
+    };
   }
+
+  handleRadioChange(e) {
+    console.log(e.target.key);
+  }
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -72,7 +93,7 @@ class Fingerstick extends Component {
                 <RadioGroup
                   aria-label="frequency"
                   name="frequency"
-                  //onChange={handleChange}
+                  onChange={this.handleRadioChange.bind(this)}
                 >
                   <FormControlLabel
                     value="Never"
@@ -109,6 +130,14 @@ class Fingerstick extends Component {
               <p />
             </div>
           ))}
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={this.handleSubmit.bind(this)}
+          >
+            Submit
+          </Button>
         </form>
       </div>
     );

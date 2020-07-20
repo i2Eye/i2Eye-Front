@@ -9,6 +9,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
+import Button from "@material-ui/core/Button";
 
 const questions = [
   {
@@ -36,7 +37,29 @@ const checkBoxOptions = [
 class Phlebotomy extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      age: "",
+      conditions: [],
+      vimta: "",
+    };
+  }
+
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
+  handleAgeChange(e) {
+    this.setState({ age: e.target.value });
+  }
+
+  handleConditionsChange(e) {
+    const newCondition = e.target.value;
+    this.state.conditions.push(newCondition);
+  }
+
+  handleChange(e) {
+    this.setState({ vimta: e.target.value });
   }
   render() {
     return (
@@ -57,7 +80,7 @@ class Phlebotomy extends Component {
                 <RadioGroup
                   aria-label="age"
                   name="age"
-                  //onChange={handleChange}
+                  onChange={this.handleAgeChange.bind(this)}
                 >
                   <FormControlLabel
                     value="40 and above"
@@ -88,10 +111,12 @@ class Phlebotomy extends Component {
             <FormGroup>
               {checkBoxOptions.map((option) => (
                 <FormControlLabel
+                  disabled={this.state.age === "40 and above" ? false : true}
                   control={
                     <Checkbox
-                      //onChange={handleChange}
+                      onChange={this.handleConditionsChange.bind(this)}
                       name={option.option}
+                      value={option.option}
                     />
                   }
                   label={option.option}
@@ -113,10 +138,7 @@ class Phlebotomy extends Component {
                 </InputLabel>
                 <TextField
                   key={question.question}
-                  // onChange={(e) => {
-                  //   console.log(label.DataField, e.target.value);
-                  //   props.handleInputChange(label.DataField, e.target.value)}}
-                  //value={props.search}
+                  onChange={this.handleChange.bind(this)}
                   name="search"
                   type="number"
                   label={question.question}
@@ -125,6 +147,14 @@ class Phlebotomy extends Component {
               </span>
             </div>
           ))}
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={this.handleSubmit.bind(this)}
+          >
+            Submit
+          </Button>
         </form>
       </div>
     );

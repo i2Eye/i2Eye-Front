@@ -1,22 +1,65 @@
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "Urgent doctor's consult: doctor's notes" },
-  { question: "Standard doctor's consult: doctor's notes" },
+  { question: "Urgent doctor's consult: doctor's notes", id: "Urgent" },
+  { question: "Standard doctor's consult: doctor's notes", id: "Standard" },
 ];
 
 const subQuestions = [
-  { question: "Reason for consultation/ chief complaint", label: "Reason" },
-  { question: "Others (include prescriptions if any)", label: "Others" },
+  {
+    question: "Reason for consultation/ chief complaint",
+    label: "Reason",
+    id: "Reason",
+  },
+  {
+    question: "Others (include prescriptions if any)",
+    label: "Others",
+    id: "Others",
+  },
 ];
 
 class Doctor extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      UrgentReason: "",
+      UrgentOthers: "",
+      StandardReason: "",
+      StandardOthers: "",
+    };
   }
+
+  handleChange(e) {
+    if (e.target.id === "UrgentReason") {
+      this.setState({
+        UrgentReason: e.target.value,
+      });
+    }
+    if (e.target.id === "UrgentOthers") {
+      this.setState({
+        UrgentOthers: e.target.value,
+      });
+    }
+    if (e.target.id === "StandardReason") {
+      this.setState({
+        StandardReason: e.target.value,
+      });
+    }
+    if (e.target.id === "StandardOthers") {
+      this.setState({
+        StandardOthers: e.target.value,
+      });
+    }
+  }
+
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -40,18 +83,27 @@ class Doctor extends Component {
                   </InputLabel>
                   <p />
                   <TextField
-                    id="outlined-multiline-static"
+                    id={question.id + subQuestion.id}
                     label={subQuestion.label}
                     multiline
                     rows={5}
                     variant="outlined"
                     style={{ width: "700px" }}
+                    onChange={this.handleChange.bind(this)}
                   />
                   <p />
                 </span>
               ))}
             </div>
           ))}
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={this.handleSubmit.bind(this)}
+          >
+            Submit
+          </Button>
         </form>
       </div>
     );

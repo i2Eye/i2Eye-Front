@@ -18,18 +18,16 @@ class FormAbled extends Component {
       <div>
         <Grid container spacing="2">
           <Grid item md="7">
-            <Grid item md="12">
-              <Paper
-                style={{
-                  paddingTop: 20,
-                  paddingLeft: 30,
-                  paddingRight: 30,
-                  paddingBottom: 20,
-                }}
-              >
-                <BloodPressure />
-              </Paper>
-            </Grid>
+            <Paper
+              style={{
+                paddingTop: 20,
+                paddingLeft: 30,
+                paddingRight: 30,
+                paddingBottom: 20,
+              }}
+            >
+              <Phlebotomy />
+            </Paper>
           </Grid>
           <Grid item md="5">
             <Paper

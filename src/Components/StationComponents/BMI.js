@@ -1,18 +1,41 @@
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "Height (m)" },
-  { question: "Weight (kg)" },
-  { question: "Waist circumference (cm)" },
+  { question: "Height (m)", id: "height" },
+  { question: "Weight (kg)", id: "weight" },
+  { question: "Waist circumference (cm)", id: "waist" },
 ];
 
 class BMI extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      height: 0,
+      weight: 0,
+      waist: 0,
+    };
   }
+
+  handleChange(e) {
+    if (e.target.id === "height") {
+      this.setState({ height: e.target.value });
+    }
+    if (e.target.id === "weight") {
+      this.setState({ weight: e.target.value });
+    }
+    if (e.target.id === "waist") {
+      this.setState({ waist: e.target.value });
+    }
+  }
+
+  handleSubmit() {
+    //get final data of form
+    console.log(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -32,11 +55,9 @@ class BMI extends Component {
                 </InputLabel>
                 <TextField
                   key={question.question}
-                  // onChange={(e) => {
-                  //   console.log(label.DataField, e.target.value);
-                  //   props.handleInputChange(label.DataField, e.target.value)}}
+                  id={question.id}
+                  onChange={this.handleChange.bind(this)}
                   label={question.question}
-                  name="search"
                   type="number"
                   style={{ width: "250px" }}
                 />
@@ -44,6 +65,14 @@ class BMI extends Component {
               </span>
             </div>
           ))}
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={this.handleSubmit.bind(this)}
+          >
+            Submit
+          </Button>
         </form>
       </div>
     );
