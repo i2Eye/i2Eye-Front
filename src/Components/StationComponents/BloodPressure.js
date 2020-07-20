@@ -11,26 +11,26 @@ import Button from "@material-ui/core/Button";
 
 const questions = [
   {
-    question: "Systolic BP Reading 1 (mmHg)",
+    question: "2. Systolic BP Reading 1 (mmHg)",
     key: "Systolic1",
   },
   {
-    question: "Diastolic BP Reading 1 (mmHg)",
+    question: "3. Diastolic BP Reading 1 (mmHg)",
     key: "Diastolic1",
   },
   {
-    question: "Systolic BP Reading 2 (mmHg)",
+    question: "4. Systolic BP Reading 2 (mmHg)",
     key: "Systolic2",
   },
   {
-    question: "Diastolic BP Reading 2 (mmHg)",
+    question: "5. Diastolic BP Reading 2 (mmHg)",
     key: "Diastolic2",
   },
 ];
 
 const radioQuestions = [
   {
-    question: "Is patient > 18 years old?",
+    question: "1. Is patient > 18 years old?",
     helper: "If Yes, proceed. If No, skip blood pressure station.",
   },
 ];
