@@ -35,7 +35,8 @@ const radioQuestions1 = [
 
 const questions2 = [
   {
-    question: "If Y to having consumed, for how long have you been consuming?",
+    question:
+      "If Y to having consumed, for how long have you been consuming? (e.g. 4y, 5m for 4 years and 5 months)",
     id: "duration",
   },
   {
