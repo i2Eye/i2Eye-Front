@@ -39,10 +39,10 @@ class BloodPressure extends Component {
     super(props);
     this.state = {
       age: "",
-      Systolic1: "",
-      Diastolic1: "",
-      Systolic2: "",
-      Diastolic2: "",
+      Systolic1: "NIL",
+      Diastolic1: "NIL",
+      Systolic2: "NIL",
+      Diastolic2: "NIL",
     };
   }
 
@@ -85,68 +85,85 @@ class BloodPressure extends Component {
           Blood Pressure
         </h1>
         <form>
-          {radioQuestions.map((question) => (
-            <div key={question.question}>
-              <FormControl component="fieldset">
-                <FormLabel
-                  component="legend"
-                  style={{ fontSize: 22, color: "black" }}
+          <ol>
+            {radioQuestions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  {question.question}
-                </FormLabel>
-                <RadioGroup
-                  aria-label="age"
-                  name="age"
-                  onChange={this.handleAgeChange.bind(this)}
+                  <FormControl component="fieldset">
+                    <FormLabel
+                      component="legend"
+                      style={{ fontSize: 22, color: "black" }}
+                    >
+                      {question.question}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="age"
+                      name="age"
+                      onChange={this.handleAgeChange.bind(this)}
+                    >
+                      <FormControlLabel
+                        value="Above 18"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="18 and below"
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText style={{ color: "red", fontSize: 15 }}>
+                      {question.helper}
+                    </FormHelperText>
+                  </FormControl>
+                  <p />
+                </li>
+              </div>
+            ))}
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  <FormControlLabel
-                    value="Above 18"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel
-                    value="18 and below"
-                    control={<Radio />}
-                    label="No"
-                  />
-                </RadioGroup>
-                <FormHelperText style={{ color: "red", fontSize: 15 }}>
-                  {question.helper}
-                </FormHelperText>
-              </FormControl>
-              <p />
-            </div>
-          ))}
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  key={question.key}
-                  id={question.key}
-                  type="text"
-                  label={question.question}
-                  style={{ width: "300px" }}
-                  onChange={this.handleChange.bind(this)}
-                  disabled={this.state.age === "18 and below" ? true : false}
-                />
-                <FormHelperText style={{ color: "red", fontSize: 15 }}>
-                  Indicate NIL if did not fulfil criteria for test.
-                </FormHelperText>
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      key={question.key}
+                      id={question.key}
+                      type="number"
+                      label={question.question}
+                      style={{ width: "300px" }}
+                      onChange={this.handleChange.bind(this)}
+                      disabled={
+                        this.state.age === "18 and below" ? true : false
+                      }
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );

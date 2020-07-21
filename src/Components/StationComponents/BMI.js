@@ -43,36 +43,46 @@ class BMI extends Component {
           BMI & Abdominal Obesity
         </h1>
         <form>
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel
-                  style={{ fontSize: 22, color: "black" }}
-                  margin="normal"
-                  size="large"
+          <ol>
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  key={question.question}
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  label={question.question}
-                  type="number"
-                  style={{ width: "250px" }}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+                  <span>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      margin="normal"
+                      size="large"
+                    >
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      key={question.question}
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      label={question.question}
+                      type="number"
+                      style={{ width: "250px" }}
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );

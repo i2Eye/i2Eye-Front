@@ -72,28 +72,38 @@ class Doctor extends Component {
               <h2 style={{ fontFamily: "sans-serif", fontSize: 25 }}>
                 {question.question}
               </h2>
-              {subQuestions.map((subQuestion) => (
-                <span>
-                  <InputLabel
-                    style={{ fontSize: 22, color: "black" }}
-                    margin="normal"
-                    size="large"
-                  >
-                    {subQuestion.question}
-                  </InputLabel>
-                  <p />
-                  <TextField
-                    id={question.id + subQuestion.id}
-                    label={subQuestion.label}
-                    multiline
-                    rows={5}
-                    variant="outlined"
-                    style={{ width: "700px" }}
-                    onChange={this.handleChange.bind(this)}
-                  />
-                  <p />
-                </span>
-              ))}
+              <ol>
+                {subQuestions.map((subQuestion) => (
+                  <span>
+                    <li
+                      style={{
+                        fontFamily: "sans-serif",
+                        fontSize: 22,
+                        fontWeight: "normal",
+                      }}
+                    >
+                      <InputLabel
+                        style={{ fontSize: 22, color: "black" }}
+                        margin="normal"
+                        size="large"
+                      >
+                        {subQuestion.question}
+                      </InputLabel>
+                      <p />
+                      <TextField
+                        id={question.id + subQuestion.id}
+                        label={subQuestion.label}
+                        multiline
+                        rows={5}
+                        variant="outlined"
+                        style={{ width: "700px" }}
+                        onChange={this.handleChange.bind(this)}
+                      />
+                      <p />
+                    </li>
+                  </span>
+                ))}
+              </ol>
             </div>
           ))}
           <Button

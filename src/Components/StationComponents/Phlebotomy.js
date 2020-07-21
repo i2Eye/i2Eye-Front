@@ -68,93 +68,119 @@ class Phlebotomy extends Component {
           Phlebotomy Test
         </h1>
         <form>
-          {radioQuestions.map((question) => (
-            <div key={question.question}>
-              <FormControl component="fieldset">
+          <ol>
+            {radioQuestions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <FormControl component="fieldset">
+                    <FormLabel
+                      component="legend"
+                      style={{ fontSize: 22, color: "black" }}
+                    >
+                      {question.question}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="age"
+                      name="age"
+                      onChange={this.handleAgeChange.bind(this)}
+                    >
+                      <FormControlLabel
+                        value="40 and above"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="Below 40"
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText style={{ color: "red", fontSize: 15 }}>
+                      {question.helper}
+                    </FormHelperText>
+                  </FormControl>
+                  <p />
+                </li>
+              </div>
+            ))}
+
+            <FormControl component="fieldset">
+              <li
+                style={{
+                  fontFamily: "sans-serif",
+                  fontSize: 22,
+                  fontWeight: "normal",
+                }}
+              >
                 <FormLabel
                   component="legend"
                   style={{ fontSize: 22, color: "black" }}
                 >
-                  {question.question}
+                  Are you suffering from any of the following conditions?
                 </FormLabel>
-                <RadioGroup
-                  aria-label="age"
-                  name="age"
-                  onChange={this.handleAgeChange.bind(this)}
+              </li>
+              <FormGroup>
+                {checkBoxOptions.map((option) => (
+                  <FormControlLabel
+                    disabled={this.state.age === "40 and above" ? true : false}
+                    control={
+                      <Checkbox
+                        onChange={this.handleConditionsChange.bind(this)}
+                        name={option.option}
+                        value={option.option}
+                      />
+                    }
+                    label={option.option}
+                  />
+                ))}
+              </FormGroup>
+              <FormHelperText style={{ fontSize: 15, color: "red" }}>
+                {
+                  "If Yes to > 2 conditions, proceed with test. If Yes to < 2 conditions, skip phlebotomy station."
+                }
+              </FormHelperText>
+            </FormControl>
+            <p />
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  <FormControlLabel
-                    value="40 and above"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel
-                    value="Below 40"
-                    control={<Radio />}
-                    label="No"
-                  />
-                </RadioGroup>
-                <FormHelperText style={{ color: "red", fontSize: 15 }}>
-                  {question.helper}
-                </FormHelperText>
-              </FormControl>
-              <p />
-            </div>
-          ))}
-
-          <FormControl component="fieldset">
-            <FormLabel
-              component="legend"
-              style={{ fontSize: 22, color: "black" }}
-            >
-              Are you suffering from any of the following conditions?
-            </FormLabel>
-            <FormGroup>
-              {checkBoxOptions.map((option) => (
-                <FormControlLabel
-                  disabled={this.state.age === "40 and above" ? true : false}
-                  control={
-                    <Checkbox
-                      onChange={this.handleConditionsChange.bind(this)}
-                      name={option.option}
-                      value={option.option}
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      key={question.question}
+                      onChange={this.handleChange.bind(this)}
+                      type="number"
+                      label={question.question}
+                      style={{ width: 200 }}
                     />
-                  }
-                  label={option.option}
-                />
-              ))}
-            </FormGroup>
-            <FormHelperText style={{ fontSize: 15, color: "red" }}>
-              {
-                "If < 40 years & Yes to > 2 conditions, proceed with test. If Yes to < 2 conditions & < 40 years, skip phlebotomy station. If No to any of the conditions and > 40 years, proceed with test."
-              }
-            </FormHelperText>
-          </FormControl>
-          <p />
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  key={question.question}
-                  onChange={this.handleChange.bind(this)}
-                  name="search"
-                  type="number"
-                  label={question.question}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );

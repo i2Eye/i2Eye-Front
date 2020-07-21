@@ -52,63 +52,83 @@ class EyeScreening extends Component {
           Fingerstick Blood Test (RCBG)
         </h1>
         <form>
-          {radioQuestions.map((question) => (
-            <div key={question.question}>
-              <FormControl component="fieldset">
-                <FormLabel
-                  component="legend"
-                  style={{ fontSize: 22, color: "black" }}
+          <ol>
+            {radioQuestions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  {question.question}
-                </FormLabel>
-                <RadioGroup
-                  aria-label="age"
-                  name="age"
-                  onChange={this.handleAgeChange.bind(this)}
-                >
-                  <FormControlLabel
-                    value="Above 18"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel
-                    value="18 and below"
-                    control={<Radio />}
-                    label="No"
-                  />
-                </RadioGroup>
-                <FormHelperText style={{ color: "red", fontSize: 15 }}>
-                  {question.helper}
-                </FormHelperText>
-              </FormControl>
-              <p />
-            </div>
-          ))}
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  disabled={this.state.age === "18 and below" ? true : false}
-                  key={question.question}
-                  onChange={this.handleChange.bind(this)}
-                  type="number"
-                  label={question.label}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+                  <FormControl component="fieldset">
+                    <FormLabel
+                      component="legend"
+                      style={{ fontSize: 22, color: "black" }}
+                    >
+                      {question.question}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="age"
+                      name="age"
+                      onChange={this.handleAgeChange.bind(this)}
+                    >
+                      <FormControlLabel
+                        value="Above 18"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="18 and below"
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText style={{ color: "red", fontSize: 15 }}>
+                      {question.helper}
+                    </FormHelperText>
+                  </FormControl>
+                  <p />
+                </li>
+              </div>
+            ))}
+            {questions.map((question) => (
+              <div key={question.question}>
+                <span>
+                  <li
+                    style={{
+                      fontFamily: "sans-serif",
+                      fontSize: 22,
+                      fontWeight: "normal",
+                    }}
+                  >
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      disabled={
+                        this.state.age === "18 and below" ? true : false
+                      }
+                      key={question.question}
+                      onChange={this.handleChange.bind(this)}
+                      type="number"
+                      label={question.label}
+                    />
+                    <p />
+                  </li>
+                </span>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );

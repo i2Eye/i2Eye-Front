@@ -29,31 +29,41 @@ class EyeScreening extends Component {
           Eye Screening
         </h1>
         <form>
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  key={question.question}
-                  onChange={this.handleChange.bind(this)}
-                  name="search"
-                  type="text"
-                  label={question.question}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+          <ol>
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      key={question.question}
+                      onChange={this.handleChange.bind(this)}
+                      name="search"
+                      type="text"
+                      label={question.question}
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );

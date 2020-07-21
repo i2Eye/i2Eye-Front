@@ -85,79 +85,97 @@ class Fingerstick extends Component {
           Fingerstick Blood Test (Anemia)
         </h1>
         <form>
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="number"
-                  label={question.label}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          {radioQuestions.map((question) => (
-            <div key={question.question}>
-              <FormControl component="fieldset">
-                <FormLabel
-                  component="legend"
-                  style={{ fontSize: 22, color: "black" }}
+          <ol>
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  {question.question}
-                </FormLabel>
-                <RadioGroup
-                  aria-label="frequency"
-                  name={question.id}
-                  onChange={this.handleRadioChange.bind(this)}
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="number"
+                      label={question.label}
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            {radioQuestions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
                 >
-                  <FormControlLabel
-                    value="Never"
-                    control={<Radio />}
-                    label="Never"
-                  />
-                  <FormControlLabel
-                    value="1-2 times a month"
-                    control={<Radio />}
-                    label="1-2 times a month"
-                  />
-                  <FormControlLabel
-                    value="1-3 times weekly"
-                    control={<Radio />}
-                    label="1-3 times weekly"
-                  />
-                  <FormControlLabel
-                    value="4-5 times weekly"
-                    control={<Radio />}
-                    label="4-5 times weekly"
-                  />
-                  <FormControlLabel
-                    value="Once a day"
-                    control={<Radio />}
-                    label="Once a day"
-                  />
-                  <FormControlLabel
-                    value="More than once daily"
-                    control={<Radio />}
-                    label="More than once daily"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <p />
-            </div>
-          ))}
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+                  <FormControl component="fieldset">
+                    <FormLabel
+                      component="legend"
+                      style={{ fontSize: 22, color: "black" }}
+                    >
+                      {question.question}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="frequency"
+                      name={question.id}
+                      onChange={this.handleRadioChange.bind(this)}
+                    >
+                      <FormControlLabel
+                        value="Never"
+                        control={<Radio />}
+                        label="Never"
+                      />
+                      <FormControlLabel
+                        value="1-2 times a month"
+                        control={<Radio />}
+                        label="1-2 times a month"
+                      />
+                      <FormControlLabel
+                        value="1-3 times weekly"
+                        control={<Radio />}
+                        label="1-3 times weekly"
+                      />
+                      <FormControlLabel
+                        value="4-5 times weekly"
+                        control={<Radio />}
+                        label="4-5 times weekly"
+                      />
+                      <FormControlLabel
+                        value="Once a day"
+                        control={<Radio />}
+                        label="Once a day"
+                      />
+                      <FormControlLabel
+                        value="More than once daily"
+                        control={<Radio />}
+                        label="More than once daily"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  <p />
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );
