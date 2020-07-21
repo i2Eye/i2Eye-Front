@@ -8,19 +8,19 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 
-const questions = [{ question: "1. Dental ID", label: "Dental ID", id: "id" }];
+const questions = [{ question: "Dental ID", label: "Dental ID", id: "id" }];
 
 const radioQuestions = [
   {
     question:
-      "2. Have you ever consumed in the past/present any form of intoxications e.g. tobacco, beedi, cigarettes (include chewing/smoking)? ",
+      "Have you ever consumed in the past/present any form of intoxications e.g. tobacco, beedi, cigarettes (include chewing/smoking)? ",
     name: "intoxication",
   },
 ];
 
 const questions1 = [
   {
-    question: "3. If Y to having consumed, what do you consume?",
+    question: "If Y to having consumed, what do you consume?",
     id: "product",
   },
 ];
@@ -28,49 +28,48 @@ const questions1 = [
 const radioQuestions1 = [
   {
     question:
-      "4. If Y to having consumed, how many pieces/sticks on average do you consume a day?",
+      "If Y to having consumed, how many pieces/sticks on average do you consume a day?",
     name: "amount",
   },
 ];
 
 const questions2 = [
   {
-    question:
-      "5. If Y to having consumed, for how long have you been consuming?",
+    question: "If Y to having consumed, for how long have you been consuming?",
     id: "duration",
   },
   {
-    question: "6. If Y to having consumed, why do you still consume?",
+    question: "If Y to having consumed, why do you still consume?",
     id: "reason",
   },
 ];
 
 const radioQuestions2 = [
-  { question: "7. Are you still consuming?", name: "consuming" },
+  { question: "Are you still consuming?", name: "consuming" },
 ];
 
 const questions3 = [
   {
-    question: "8. If N to consuming now, when did you stop consuming?",
+    question: "If N to consuming now, when did you stop consuming?",
     id: "stopDate",
   },
   {
-    question: "9. If N to consuming now, why did you choose to stop?",
+    question: "If N to consuming now, why did you choose to stop?",
     id: "stopReason",
   },
 ];
 
 const radioQuestions3 = [
   {
-    question: "10. If Y to consuming now, have you tried quitting?",
+    question: "If Y to consuming now, have you tried quitting?",
     name: "quit",
   },
 ];
 
 const questions4 = [
-  { question: "11. If Y, for how long?", id: "quitDuration" },
+  { question: "If Y, for how long?", id: "quitDuration" },
   {
-    question: "12. If Y to having tried quitting, what made you consume again?",
+    question: "If Y to having tried quitting, what made you consume again?",
     id: "consumeAgainReason",
   },
 ];
@@ -145,214 +144,294 @@ class OralHealth extends Component {
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>Oral Health</h1>
         <form>
-          {questions.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="number"
-                  label={question.label}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          {radioQuestions.map((question) => (
-            <FormControl>
-              <FormLabel style={{ fontSize: 22, color: "black" }}>
-                {question.question}
-              </FormLabel>
-              <RadioGroup
-                name={question.name}
-                onChange={this.handleRadioChange.bind(this)}
-              >
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
-              </RadioGroup>
-            </FormControl>
-          ))}
-          <p />
-          {questions1.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="text"
-                  label={question.label}
-                  disabled={this.state.intoxication === "Yes" ? false : true}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <p />
-          {radioQuestions1.map((question) => (
-            <FormControl>
-              <FormLabel style={{ fontSize: 22, color: "black" }}>
-                {question.question}
-              </FormLabel>
-              <RadioGroup
-                name={question.name}
-                //   value={value}
-                onChange={this.handleRadioChange.bind(this)}
-              >
-                <FormControlLabel
-                  value="<1 a day"
-                  control={<Radio />}
-                  label="<1 a day"
-                  disabled={this.state.intoxication === "Yes" ? false : true}
-                />
-                <FormControlLabel
-                  value="1-10 a day"
-                  control={<Radio />}
-                  label="1-10 a day"
-                  disabled={this.state.intoxication === "Yes" ? false : true}
-                />
-                <FormControlLabel
-                  value=">10 a day"
-                  control={<Radio />}
-                  label=">10 a day"
-                  disabled={this.state.intoxication === "Yes" ? false : true}
-                />
-              </RadioGroup>
-            </FormControl>
-          ))}
-          <p />
-          {questions2.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="text"
-                  label={question.label}
-                  disabled={this.state.intoxication === "Yes" ? false : true}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <p />
-          {radioQuestions2.map((question) => (
-            <FormControl>
-              <FormLabel style={{ fontSize: 22, color: "black" }}>
-                {question.question}
-              </FormLabel>
-              <RadioGroup
-                name={question.name}
-                //   value={value}
-                onChange={this.handleRadioChange.bind(this)}
-              >
-                <FormControlLabel
-                  value="Yes"
-                  control={<Radio />}
-                  label="Yes"
-                  disabled={this.state.intoxication === "No" ? true : false}
-                />
-                <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label="No"
-                  disabled={this.state.intoxication === "No" ? true : false}
-                />
-              </RadioGroup>
-            </FormControl>
-          ))}
-          <p />
-          {questions3.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="text"
-                  label={question.label}
-                  disabled={
-                    this.state.consuming === "Yes" ||
-                    this.state.intoxication === "No"
-                      ? true
-                      : false
-                  }
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <p />
-          {radioQuestions3.map((question) => (
-            <FormControl>
-              <FormLabel style={{ fontSize: 22, color: "black" }}>
-                {question.question}
-              </FormLabel>
-              <RadioGroup
-                name={question.name}
-                onChange={this.handleRadioChange.bind(this)}
-              >
-                <FormControlLabel
-                  value="Yes"
-                  control={<Radio />}
-                  label="Yes"
-                  disabled={
-                    this.state.consuming === "No" ||
-                    this.state.intoxication === "No"
-                      ? true
-                      : false
-                  }
-                />
-                <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label="No"
-                  disabled={
-                    this.state.consuming === "No" ||
-                    this.state.intoxication === "No"
-                      ? true
-                      : false
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
-          ))}
-          <p />
-          {questions4.map((question) => (
-            <div key={question.question}>
-              <span>
-                <InputLabel style={{ fontSize: 22, color: "black" }}>
-                  {question.question}
-                </InputLabel>
-                <TextField
-                  id={question.id}
-                  onChange={this.handleChange.bind(this)}
-                  type="text"
-                  label={question.label}
-                  disabled={this.state.quit === "Yes" ? false : true}
-                />
-                <p />
-              </span>
-            </div>
-          ))}
-          <Button
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Submit
-          </Button>
+          <ol>
+            {questions.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="number"
+                      label={question.label}
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            {radioQuestions.map((question) => (
+              <FormControl>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                    {question.question}
+                  </FormLabel>
+                </li>
+                <RadioGroup
+                  name={question.name}
+                  onChange={this.handleRadioChange.bind(this)}
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            ))}
+            <p />
+            {questions1.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="text"
+                      label={question.label}
+                      disabled={
+                        this.state.intoxication === "Yes" ? false : true
+                      }
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <p />
+            {radioQuestions1.map((question) => (
+              <FormControl>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                    {question.question}
+                  </FormLabel>
+                </li>
+                <RadioGroup
+                  name={question.name}
+                  onChange={this.handleRadioChange.bind(this)}
+                >
+                  <FormControlLabel
+                    value="<1 a day"
+                    control={<Radio />}
+                    label="<1 a day"
+                    disabled={this.state.intoxication === "Yes" ? false : true}
+                  />
+                  <FormControlLabel
+                    value="1-10 a day"
+                    control={<Radio />}
+                    label="1-10 a day"
+                    disabled={this.state.intoxication === "Yes" ? false : true}
+                  />
+                  <FormControlLabel
+                    value=">10 a day"
+                    control={<Radio />}
+                    label=">10 a day"
+                    disabled={this.state.intoxication === "Yes" ? false : true}
+                  />
+                </RadioGroup>
+              </FormControl>
+            ))}
+            <p />
+            {questions2.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="text"
+                      label={question.label}
+                      disabled={
+                        this.state.intoxication === "Yes" ? false : true
+                      }
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <p />
+            {radioQuestions2.map((question) => (
+              <FormControl>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                    {question.question}
+                  </FormLabel>
+                </li>
+                <RadioGroup
+                  name={question.name}
+                  onChange={this.handleRadioChange.bind(this)}
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                    disabled={this.state.intoxication === "No" ? true : false}
+                  />
+                  <FormControlLabel
+                    value="No"
+                    control={<Radio />}
+                    label="No"
+                    disabled={this.state.intoxication === "No" ? true : false}
+                  />
+                </RadioGroup>
+              </FormControl>
+            ))}
+            <p />
+            {questions3.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="text"
+                      label={question.label}
+                      disabled={
+                        this.state.consuming === "Yes" ||
+                        this.state.intoxication === "No"
+                          ? true
+                          : false
+                      }
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <p />
+            {radioQuestions3.map((question) => (
+              <FormControl>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                    {question.question}
+                  </FormLabel>
+                </li>
+                <RadioGroup
+                  name={question.name}
+                  onChange={this.handleRadioChange.bind(this)}
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                    disabled={
+                      this.state.consuming === "No" ||
+                      this.state.intoxication === "No"
+                        ? true
+                        : false
+                    }
+                  />
+                  <FormControlLabel
+                    value="No"
+                    control={<Radio />}
+                    label="No"
+                    disabled={
+                      this.state.consuming === "No" ||
+                      this.state.intoxication === "No"
+                        ? true
+                        : false
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            ))}
+            <p />
+            {questions4.map((question) => (
+              <div key={question.question}>
+                <li
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <span>
+                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="text"
+                      label={question.label}
+                      disabled={this.state.quit === "Yes" ? false : true}
+                    />
+                    <p />
+                  </span>
+                </li>
+              </div>
+            ))}
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Submit
+            </Button>
+          </ol>
         </form>
       </div>
     );
