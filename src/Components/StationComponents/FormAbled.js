@@ -10,6 +10,7 @@ import Fingerstick from "./Fingerstick";
 import BloodPressure from "./BloodPressure";
 import Doctor from "./DoctorConsult";
 import Phlebotomy from "./Phlebotomy";
+import OralHealth from "./OralHealth";
 
 class FormAbled extends Component {
   state = {};

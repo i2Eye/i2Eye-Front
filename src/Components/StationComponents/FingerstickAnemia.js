@@ -9,9 +9,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
+  { question: "1. Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
   {
-    question: "How many meals do you eat a day?",
+    question: "2. How many meals do you eat a day?",
     label: "Meals per day",
     id: "meals",
   },
@@ -20,19 +20,20 @@ const questions = [
 const radioQuestions = [
   {
     question:
-      "How often do you eat protein (eg. daal, mung, rajma, chole, chana)",
+      "3. How often do you eat protein (eg. daal, mung, rajma, chole, chana)",
     id: "protein",
   },
   {
-    question: "How often do you eat carbohydrates (eg. chapati, rice)",
+    question: "4. How often do you eat carbohydrates (eg. chapati, rice)",
     id: "carbohydrates",
   },
   {
-    question: "How often do you eat vegetables (eg. gobhi, patta gobhi, saag)",
+    question:
+      "5. How often do you eat vegetables (eg. gobhi, patta gobhi, saag)",
     id: "vegetables",
   },
   {
-    question: "How often do you eat sweets/desserts (eg. gulab jamun)",
+    question: "6. How often do you eat sweets/desserts (eg. gulab jamun)",
     id: "sweets",
   },
 ];

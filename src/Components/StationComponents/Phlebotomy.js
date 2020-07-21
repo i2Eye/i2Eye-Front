@@ -13,14 +13,14 @@ import Button from "@material-ui/core/Button";
 
 const questions = [
   {
-    question: "Vimta Registration No.",
+    question: "3. Vimta Registration No.",
     helper: "Indicate NIL if did not fulfil any of the criteria for test.",
   },
 ];
 
 const radioQuestions = [
   {
-    question: "Are you 40 years old or above?",
+    question: "1. Are you 40 years old or above?",
     helper: "If Yes, proceed with test. If No, check the following conditions.",
   },
 ];

@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 
 const questions = [
   {
-    question: "Randomy capillary blood glucose (mg/dL)",
+    question: "2. Randomy capillary blood glucose (mg/dL)",
     label: "RCBG (mg/dL)",
     id: "RCBG",
   },
@@ -19,7 +19,7 @@ const questions = [
 
 const radioQuestions = [
   {
-    question: "Is patient > 18 years old?",
+    question: "1. Is patient > 18 years old?",
     helper: "If Yes, proceed. If No, skip RCBG station.",
   },
 ];
