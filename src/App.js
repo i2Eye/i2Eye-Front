@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./Components/AppLayouts/NavBar";
 
 const Stations = lazy(() => import("./Stations"));
-const Queue = lazy(() => import("./Queue"));
+const PatientTracker = lazy(() => import("./PatientTracker"));
 const RegForm = lazy(() => import("./RegForm"));
 const Station1 = lazy(() =>
   import("./Components/StationComponents/StationForms/Station1")
@@ -36,7 +36,7 @@ export default function App() {
                 component={Station2}
               />
               <Route exact path="/registration" component={RegForm} />
-              <Route exact path="/queue" component={Queue} />
+              <Route exact path="/queue" component={PatientTracker} />
             </Switch>
           </Suspense>
         </div>
