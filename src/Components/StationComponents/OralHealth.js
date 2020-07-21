@@ -79,18 +79,18 @@ class OralHealth extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: "",
-      intoxication: "",
-      product: "",
-      amount: "",
-      duration: "",
-      reason: "",
-      consuming: "",
-      stopDate: "",
-      stopReason: "",
-      quit: "",
-      quitDuration: "",
-      consumeAgainReason: "",
+      id: "NIL",
+      intoxication: "NIL",
+      product: "NIL",
+      amount: "NIL",
+      duration: "NIL",
+      reason: "NIL",
+      consuming: "NIL",
+      stopDate: "NIL",
+      stopReason: "NIL",
+      quit: "NIL",
+      quitDuration: "NIL",
+      consumeAgainReason: "NIL",
     };
   }
 
@@ -168,7 +168,6 @@ class OralHealth extends Component {
               </FormLabel>
               <RadioGroup
                 name={question.name}
-                //   value={value}
                 onChange={this.handleRadioChange.bind(this)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
@@ -204,22 +203,24 @@ class OralHealth extends Component {
                 name={question.name}
                 //   value={value}
                 onChange={this.handleRadioChange.bind(this)}
-                disabled={this.state.intoxication === "Yes" ? false : true}
               >
                 <FormControlLabel
                   value="<1 a day"
                   control={<Radio />}
                   label="<1 a day"
+                  disabled={this.state.intoxication === "Yes" ? false : true}
                 />
                 <FormControlLabel
                   value="1-10 a day"
                   control={<Radio />}
                   label="1-10 a day"
+                  disabled={this.state.intoxication === "Yes" ? false : true}
                 />
                 <FormControlLabel
                   value=">10 a day"
                   control={<Radio />}
                   label=">10 a day"
+                  disabled={this.state.intoxication === "Yes" ? false : true}
                 />
               </RadioGroup>
             </FormControl>
@@ -253,8 +254,18 @@ class OralHealth extends Component {
                 //   value={value}
                 onChange={this.handleRadioChange.bind(this)}
               >
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value="Yes"
+                  control={<Radio />}
+                  label="Yes"
+                  disabled={this.state.intoxication === "No" ? true : false}
+                />
+                <FormControlLabel
+                  value="No"
+                  control={<Radio />}
+                  label="No"
+                  disabled={this.state.intoxication === "No" ? true : false}
+                />
               </RadioGroup>
             </FormControl>
           ))}
@@ -270,7 +281,12 @@ class OralHealth extends Component {
                   onChange={this.handleChange.bind(this)}
                   type="text"
                   label={question.label}
-                  disabled={this.state.consuming === "No" ? false : true}
+                  disabled={
+                    this.state.consuming === "Yes" ||
+                    this.state.intoxication === "No"
+                      ? true
+                      : false
+                  }
                 />
                 <p />
               </span>
@@ -284,11 +300,30 @@ class OralHealth extends Component {
               </FormLabel>
               <RadioGroup
                 name={question.name}
-                //   value={value}
                 onChange={this.handleRadioChange.bind(this)}
               >
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value="Yes"
+                  control={<Radio />}
+                  label="Yes"
+                  disabled={
+                    this.state.consuming === "No" ||
+                    this.state.intoxication === "No"
+                      ? true
+                      : false
+                  }
+                />
+                <FormControlLabel
+                  value="No"
+                  control={<Radio />}
+                  label="No"
+                  disabled={
+                    this.state.consuming === "No" ||
+                    this.state.intoxication === "No"
+                      ? true
+                      : false
+                  }
+                />
               </RadioGroup>
             </FormControl>
           ))}
