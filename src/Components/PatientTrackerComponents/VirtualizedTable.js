@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
 
+
 const styles = (theme) => ({
   flexContainer: {
     display: "flex",
@@ -110,6 +111,9 @@ class MuiVirtualizedTable extends React.PureComponent {
             className={classes.table}
             {...tableProps}
             rowClassName={this.getRowClassName}
+            options={{
+              filtering: true
+            }}
           >
             {columns.map(({ dataKey, ...other }, index) => {
               return (
