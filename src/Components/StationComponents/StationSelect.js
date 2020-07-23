@@ -7,8 +7,19 @@ class StationSelect extends Component {
   state = {
     step: 1,
     stations: [
-      { name: "Station 1", checked: true },
-      { name: "Station 2", checked: true },
+      { name: "Oral Health", tag: "oral_health", checked: true },
+      {
+        name: "BMI and Abdominal Obesity",
+        tag: "bmi_abdominal_obesity",
+        checked: true,
+      },
+      { name: "Eye Screening", tag: "eye_screening", checked: true },
+      { name: "Phlebotomy Test", tag: "phlebotomy_test", checked: true },
+      {
+        name: "Fingerstick Blood Test",
+        tag: "fingerstick_blood_test",
+        checked: true,
+      },
     ],
     selectedStation: null,
   };
