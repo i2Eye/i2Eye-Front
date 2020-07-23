@@ -96,7 +96,7 @@ class Doctor extends Component {
                         multiline
                         rows={5}
                         variant="outlined"
-                        style={{ width: "700px" }}
+                        fullWidth
                         onChange={this.handleChange.bind(this)}
                       />
                       <p />

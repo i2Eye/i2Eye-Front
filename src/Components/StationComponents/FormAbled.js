@@ -27,7 +27,7 @@ class FormAbled extends Component {
                 paddingBottom: 20,
               }}
             >
-              <Doctor />
+              <OralHealth />
             </Paper>
           </Grid>
           <Grid item md="5">
