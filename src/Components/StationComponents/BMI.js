@@ -4,9 +4,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "1. Height (m)", id: "height" },
-  { question: "2. Weight (kg)", id: "weight" },
-  { question: "3. Waist circumference (cm)", id: "waist" },
+  { question: "Height (m)", id: "height" },
+  { question: "Weight (kg)", id: "weight" },
+  { question: "Waist circumference (cm)", id: "waist" },
 ];
 
 class BMI extends Component {

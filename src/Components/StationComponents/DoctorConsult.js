@@ -4,18 +4,18 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 
 const questions = [
-  { question: "1. Urgent doctor's consult: doctor's notes", id: "Urgent" },
-  { question: "2. Standard doctor's consult: doctor's notes", id: "Standard" },
+  { question: "Urgent doctor's consult: doctor's notes", id: "Urgent" },
+  { question: "Standard doctor's consult: doctor's notes", id: "Standard" },
 ];
 
 const subQuestions = [
   {
-    question: "a) Reason for consultation/ chief complaint",
+    question: "Reason for consultation/ chief complaint",
     label: "Reason",
     id: "Reason",
   },
   {
-    question: "b) Others (include prescriptions if any)",
+    question: "Others (include prescriptions if any)",
     label: "Others",
     id: "Others",
   },
