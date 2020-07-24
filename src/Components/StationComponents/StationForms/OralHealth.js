@@ -8,70 +8,69 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 
-const questions = [{ question: "Dental ID", label: "Dental ID", id: "id" }];
-
-const radioQuestions = [
+const questions = [
+  { question: "Dental ID", label: "Dental ID", id: "id", type: "text" },
   {
     question:
       "Have you ever consumed in the past/present any form of intoxications e.g. tobacco, beedi, cigarettes (include chewing/smoking)? ",
     name: "intoxication",
+    type: "radio",
+    options: [{ option: "Yes" }, { option: "No" }],
   },
-];
-
-const questions1 = [
   {
     question: "If Y to having consumed, what do you consume?",
     id: "product",
+    type: "text",
   },
-];
-
-const radioQuestions1 = [
   {
     question:
       "If Y to having consumed, how many pieces/sticks on average do you consume a day?",
     name: "amount",
+    type: "radio",
+    options: [
+      { option: "<1 a day" },
+      { option: "1-10 a day" },
+      { option: ">10 a day" },
+    ],
   },
-];
-
-const questions2 = [
   {
     question:
       "If Y to having consumed, for how long have you been consuming? (e.g. 4y, 5m for 4 years and 5 months)",
     id: "duration",
+    type: "text",
   },
   {
     question: "If Y to having consumed, why do you still consume?",
     id: "reason",
+    type: "text",
   },
-];
-
-const radioQuestions2 = [
-  { question: "Are you still consuming?", name: "consuming" },
-];
-
-const questions3 = [
+  {
+    question: "Are you still consuming?",
+    name: "consuming",
+    type: "radio",
+    options: [{ option: "Yes" }, { option: "No" }],
+  },
   {
     question: "If N to consuming now, when did you stop consuming?",
     id: "stopDate",
+    type: "text",
   },
   {
     question: "If N to consuming now, why did you choose to stop?",
     id: "stopReason",
+    type: "text",
   },
-];
-
-const radioQuestions3 = [
   {
     question: "If Y to consuming now, have you tried quitting?",
     name: "quit",
+    type: "radio",
+    options: [{ option: "Yes" }, { option: "No" }],
   },
-];
-
-const questions4 = [
-  { question: "If Y, for how long?", id: "quitDuration" },
+  { question: "If Y, for how long?", id: "quitDuration", type: "text" },
   {
     question: "If Y to having tried quitting, what made you consume again?",
     id: "consumeAgainReason",
+    type: "text",
   },
 ];
 
@@ -139,323 +138,126 @@ class OralHealth extends Component {
   handleSubmit() {
     console.log(this.state);
   }
-
   render() {
     return (
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>Oral Health</h1>
         <form>
           <ol>
-            {questions.map((question) => (
-              <div key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <span>
-                    <InputLabel
-                      style={{ fontSize: 22, color: "black" }}
-                      required
-                    >
-                      {question.question}
-                    </InputLabel>
-                    <TextField
-                      id={question.id}
-                      onChange={this.handleChange.bind(this)}
-                      type="number"
-                      label={question.label}
-                    />
-                    <p />
-                  </span>
-                </li>
-              </div>
-            ))}
-            {radioQuestions.map((question) => (
-              <FormControl key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <FormLabel style={{ fontSize: 22, color: "black" }} required>
-                    {question.question}
-                  </FormLabel>
-                </li>
-                <RadioGroup
-                  name={question.name}
-                  onChange={this.handleRadioChange.bind(this)}
-                >
-                  <FormControlLabel
-                    value="Yes"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel value="No" control={<Radio />} label="No" />
-                </RadioGroup>
-              </FormControl>
-            ))}
-            <p />
-            {questions1.map((question) => (
-              <div key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <span>
-                    <InputLabel
-                      style={{ fontSize: 22, color: "black" }}
-                      required={
-                        this.state.intoxication === "Yes" ? true : false
-                      }
-                    >
-                      {question.question}
-                    </InputLabel>
-                    <TextField
-                      id={question.id}
-                      onChange={this.handleChange.bind(this)}
-                      type="text"
-                      label={question.label}
-                      disabled={
-                        this.state.intoxication === "Yes" ? false : true
-                      }
-                    />
-                    <p />
-                  </span>
-                </li>
-              </div>
-            ))}
-            <p />
-            {radioQuestions1.map((question) => (
-              <FormControl key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <FormLabel
-                    style={{ fontSize: 22, color: "black" }}
-                    required={this.state.intoxication === "Yes" ? true : false}
+            {questions.map((question) =>
+              question.type === "text" ? (
+                <div>
+                  <li
+                    style={{
+                      fontFamily: "sans-serif",
+                      fontSize: 22,
+                      fontWeight: "normal",
+                    }}
                   >
-                    {question.question}
-                  </FormLabel>
-                </li>
-                <RadioGroup
-                  name={question.name}
-                  onChange={this.handleRadioChange.bind(this)}
-                >
-                  <FormControlLabel
-                    value="<1 a day"
-                    control={<Radio />}
-                    label="<1 a day"
-                    disabled={this.state.intoxication === "Yes" ? false : true}
-                  />
-                  <FormControlLabel
-                    value="1-10 a day"
-                    control={<Radio />}
-                    label="1-10 a day"
-                    disabled={this.state.intoxication === "Yes" ? false : true}
-                  />
-                  <FormControlLabel
-                    value=">10 a day"
-                    control={<Radio />}
-                    label=">10 a day"
-                    disabled={this.state.intoxication === "Yes" ? false : true}
-                  />
-                </RadioGroup>
-              </FormControl>
-            ))}
-            <p />
-            {questions2.map((question) => (
-              <div key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <span>
-                    <InputLabel
-                      style={{ fontSize: 22, color: "black" }}
-                      required={
-                        this.state.intoxication === "Yes" ? true : false
-                      }
-                    >
-                      {question.question}
-                    </InputLabel>
-                    <TextField
-                      id={question.id}
-                      onChange={this.handleChange.bind(this)}
-                      type="text"
-                      label={question.label}
-                      disabled={
-                        this.state.intoxication === "Yes" ? false : true
-                      }
-                    />
                     <p />
-                  </span>
-                </li>
-              </div>
-            ))}
-            <p />
-            {radioQuestions2.map((question) => (
-              <FormControl key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <FormLabel
-                    style={{ fontSize: 22, color: "black" }}
-                    required={this.state.intoxication === "Yes" ? true : false}
+                    <span>
+                      <InputLabel
+                        style={{ fontSize: 22, color: "black" }}
+                        required={
+                          question.id === "id"
+                            ? true
+                            : this.state.consuming === "Yes" &&
+                              (question.id === "stopDate" ||
+                                question.id === "stopReason")
+                            ? false
+                            : this.state.consuming === "No" &&
+                              (question.id === "quitDuration" ||
+                                question.id === "consumeAgainReason")
+                            ? false
+                            : this.state.quit === "No" &&
+                              (question.id === "quitDuration" ||
+                                question.id === "consumeAgainReason")
+                            ? false
+                            : this.state.intoxication === "No"
+                            ? false
+                            : true
+                        }
+                      >
+                        {question.question}
+                      </InputLabel>
+                      <TextField
+                        id={question.id}
+                        onChange={this.handleChange.bind(this)}
+                        type="text"
+                        label={question.label}
+                        disabled={
+                          question.id === "id"
+                            ? false
+                            : this.state.consuming === "Yes" &&
+                              (question.id === "stopDate" ||
+                                question.id === "stopReason")
+                            ? true
+                            : this.state.consuming === "No" &&
+                              (question.id === "quitDuration" ||
+                                question.id === "consumeAgainReason")
+                            ? true
+                            : this.state.quit === "No"
+                            ? true
+                            : this.state.intoxication === "Yes"
+                            ? false
+                            : true
+                        }
+                      />
+                      <p />
+                    </span>
+                  </li>
+                </div>
+              ) : (
+                <FormControl key={question.question}>
+                  <li
+                    style={{
+                      fontFamily: "sans-serif",
+                      fontSize: 22,
+                      fontWeight: "normal",
+                    }}
                   >
-                    {question.question}
-                  </FormLabel>
-                </li>
-                <RadioGroup
-                  name={question.name}
-                  onChange={this.handleRadioChange.bind(this)}
-                >
-                  <FormControlLabel
-                    value="Yes"
-                    control={<Radio />}
-                    label="Yes"
-                    disabled={this.state.intoxication === "No" ? true : false}
-                  />
-                  <FormControlLabel
-                    value="No"
-                    control={<Radio />}
-                    label="No"
-                    disabled={this.state.intoxication === "No" ? true : false}
-                  />
-                </RadioGroup>
-              </FormControl>
-            ))}
-            <p />
-            {questions3.map((question) => (
-              <div key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <span>
-                    <InputLabel
+                    <FormLabel
                       style={{ fontSize: 22, color: "black" }}
                       required={
-                        this.state.intoxication === "Yes" ? true : false
-                      }
-                    >
-                      {question.question}
-                    </InputLabel>
-                    <TextField
-                      id={question.id}
-                      onChange={this.handleChange.bind(this)}
-                      type="text"
-                      label={question.label}
-                      disabled={
-                        this.state.consuming === "Yes" ||
-                        this.state.intoxication === "No"
+                        this.state.consuming === "No" &&
+                        question.name === "quit"
+                          ? false
+                          : this.state.intoxication === "Yes"
                           ? true
                           : false
                       }
-                    />
-                    <p />
-                  </span>
-                </li>
-              </div>
-            ))}
-            <p />
-            {radioQuestions3.map((question) => (
-              <FormControl key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <FormLabel
-                    style={{ fontSize: 22, color: "black" }}
-                    required={this.state.intoxication === "Yes" ? true : false}
-                  >
-                    {question.question}
-                  </FormLabel>
-                </li>
-                <RadioGroup
-                  name={question.name}
-                  onChange={this.handleRadioChange.bind(this)}
-                >
-                  <FormControlLabel
-                    value="Yes"
-                    control={<Radio />}
-                    label="Yes"
-                    disabled={
-                      this.state.consuming === "No" ||
-                      this.state.intoxication === "No"
-                        ? true
-                        : false
-                    }
-                  />
-                  <FormControlLabel
-                    value="No"
-                    control={<Radio />}
-                    label="No"
-                    disabled={
-                      this.state.consuming === "No" ||
-                      this.state.intoxication === "No"
-                        ? true
-                        : false
-                    }
-                  />
-                </RadioGroup>
-              </FormControl>
-            ))}
-            <p />
-            {questions4.map((question) => (
-              <div key={question.question}>
-                <li
-                  style={{
-                    fontFamily: "sans-serif",
-                    fontSize: 22,
-                    fontWeight: "normal",
-                  }}
-                >
-                  <span>
-                    <InputLabel
-                      style={{ fontSize: 22, color: "black" }}
-                      required={
-                        this.state.intoxication === "Yes" ? true : false
-                      }
                     >
                       {question.question}
-                    </InputLabel>
-                    <TextField
-                      id={question.id}
-                      onChange={this.handleChange.bind(this)}
-                      type="text"
-                      label={question.label}
-                      disabled={this.state.quit === "Yes" ? false : true}
-                    />
-                    <p />
-                  </span>
-                </li>
-              </div>
-            ))}
+                    </FormLabel>
+                  </li>
+
+                  <RadioGroup
+                    name={question.name}
+                    onChange={this.handleRadioChange.bind(this)}
+                  >
+                    {question.options.map((option) => (
+                      <div>
+                        <FormControlLabel
+                          value={option.option}
+                          control={<Radio />}
+                          label={option.option}
+                          disabled={
+                            question.name === "intoxication"
+                              ? false
+                              : this.state.consuming === "No" &&
+                                question.name === "quit"
+                              ? true
+                              : this.state.intoxication === "Yes"
+                              ? false
+                              : true
+                          }
+                        />
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              )
+            )}
             <Button
               size="large"
               variant="contained"
