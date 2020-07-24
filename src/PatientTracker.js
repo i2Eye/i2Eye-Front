@@ -8,14 +8,12 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionActions from "@material-ui/core/AccordionActions";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Chip from "@material-ui/core/Chip";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
 import Accordion from "@material-ui/core/Accordion";
 import clsx from "clsx";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Screening from "./Components/PatientTrackerComponents/Screening";
 
 const useStyles = (theme) => ({
   root: {
@@ -63,6 +61,7 @@ const useStyles = (theme) => ({
 
 class PatientTracker extends Component {
   state = {
+    step: 1,
     input: "",
     checked1: true,
     checked2: true,
@@ -70,6 +69,26 @@ class PatientTracker extends Component {
     checkedNotQueued: true,
     checkedInQueue: true,
     checkedCompleted: true,
+  };
+
+  nextStep = () => {
+    const { step } = this.state;
+    this.setState({
+      step: step + 1,
+    });
+  };
+
+  previousStep = () => {
+    const { step } = this.state;
+    this.setState({
+      step: step - 1,
+    });
+  };
+
+  handleClick = (index) => (e) => {
+    this.nextStep();
+    e.preventDefault();
+
   };
 
   handleInput = (e) => {
@@ -90,6 +109,7 @@ class PatientTracker extends Component {
           i % 7 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
         station3:
           i % 6 === 0 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
+          
       };
     }
     return people;
@@ -162,8 +182,15 @@ class PatientTracker extends Component {
 
   render() {
     const { classes } = this.props;
-
-    return (
+    const { step} = this.state;
+    switch (step) {
+      case 2:
+        return (
+          <Screening
+          />
+        );
+      case 1:
+        return (
       <div>
         <h1>Patient Tracker</h1>
         <TextField
@@ -284,9 +311,15 @@ class PatientTracker extends Component {
 
         <Paper style={{ height: 272, width: "100%" }}>
           <VirtualizedTable
+            handleClick={this.handleClick}
             rowCount={this.filterPeople().length}
             rowGetter={({ index }) => this.filterPeople()[index]}
             columns={[
+              {
+                width: 70,
+                label:"Edit",
+                datakey:"edit"
+              },
               {
                 width: 70,
                 label: "ID",
@@ -329,6 +362,11 @@ class PatientTracker extends Component {
         </Paper>
       </div>
     );
+  
+    default:
+      return 1;
+    
+    };
   }
 }
 

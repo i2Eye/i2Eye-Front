@@ -4,6 +4,12 @@ import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { AutoSizer, Column, Table } from "react-virtualized";
+import MaterialTable from 'material-table';
+import IconButton from "@material-ui/core/IconButton";
+// Icons
+import EditIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+
 
 const styles = (theme) => ({
   flexContainer: {
@@ -62,8 +68,14 @@ class MuiVirtualizedTable extends React.PureComponent {
             ? "right"
             : "left"
         }
-      >
-        {cellData}
+      > 
+      {columnIndex===0 ? 
+
+      <IconButton onClick={this.props.handleClick()}>            
+                  <VisibilityOutlinedIcon />
+                </IconButton>
+                   : cellData}
+      
       </TableCell>
     );
   };
@@ -93,6 +105,7 @@ class MuiVirtualizedTable extends React.PureComponent {
       classes,
       columns,
       rowHeight,
+      handleClick,
       headerHeight,
       ...tableProps
     } = this.props;
@@ -106,6 +119,7 @@ class MuiVirtualizedTable extends React.PureComponent {
             gridStyle={{
               direction: "inherit",
             }}
+            
             headerHeight={headerHeight}
             className={classes.table}
             {...tableProps}
@@ -134,6 +148,7 @@ class MuiVirtualizedTable extends React.PureComponent {
           </Table>
         )}
       </AutoSizer>
+
     );
   }
 }
