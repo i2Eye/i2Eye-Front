@@ -52,8 +52,12 @@ class Phlebotomy extends Component {
   }
 
   handleSubmit() {
-    //get final data of form
-    console.log(this.state);
+    if (!this.state.age || !this.state.vimta) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      //get final data of form
+      console.log(this.state);
+    }
   }
 
   handleAgeChange(e) {
