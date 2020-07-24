@@ -32,8 +32,12 @@ class BMI extends Component {
   }
 
   handleSubmit() {
-    //get final data of form
-    console.log(this.state);
+    if (!this.state.height || !this.state.weight || !this.state.waist) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      //get final data of form
+      console.log(this.state);
+    }
   }
 
   render() {
@@ -57,6 +61,7 @@ class BMI extends Component {
                     <InputLabel
                       style={{ fontSize: 22, color: "black" }}
                       size="large"
+                      required
                     >
                       {question.question}
                     </InputLabel>

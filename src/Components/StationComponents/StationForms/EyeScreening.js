@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 
 const questions = [{ question: "SNC ID" }];
 
@@ -18,8 +19,12 @@ class EyeScreening extends Component {
   }
 
   handleSubmit() {
-    //get final data of form
-    console.log(this.state);
+    if (!this.state.id) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      //get final data of form
+      console.log(this.state);
+    }
   }
 
   render() {
@@ -40,7 +45,10 @@ class EyeScreening extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
