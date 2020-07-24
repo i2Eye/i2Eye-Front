@@ -79,18 +79,18 @@ class OralHealth extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: "NIL",
-      intoxication: "NIL",
-      product: "NIL",
-      amount: "NIL",
-      duration: "NIL",
-      reason: "NIL",
-      consuming: "NIL",
-      stopDate: "NIL",
-      stopReason: "NIL",
-      quit: "NIL",
-      quitDuration: "NIL",
-      consumeAgainReason: "NIL",
+      id: "",
+      intoxication: "",
+      product: "",
+      amount: "",
+      duration: "",
+      reason: "",
+      consuming: "",
+      stopDate: "",
+      stopReason: "",
+      quit: "",
+      quitDuration: "",
+      consumeAgainReason: "",
     };
   }
 
@@ -156,7 +156,10 @@ class OralHealth extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
@@ -179,7 +182,7 @@ class OralHealth extends Component {
                     fontWeight: "normal",
                   }}
                 >
-                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                  <FormLabel style={{ fontSize: 22, color: "black" }} required>
                     {question.question}
                   </FormLabel>
                 </li>
@@ -207,7 +210,12 @@ class OralHealth extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required={
+                        this.state.intoxication === "Yes" ? true : false
+                      }
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
@@ -234,7 +242,10 @@ class OralHealth extends Component {
                     fontWeight: "normal",
                   }}
                 >
-                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                  <FormLabel
+                    style={{ fontSize: 22, color: "black" }}
+                    required={this.state.intoxication === "Yes" ? true : false}
+                  >
                     {question.question}
                   </FormLabel>
                 </li>
@@ -274,7 +285,12 @@ class OralHealth extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required={
+                        this.state.intoxication === "Yes" ? true : false
+                      }
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
@@ -301,7 +317,10 @@ class OralHealth extends Component {
                     fontWeight: "normal",
                   }}
                 >
-                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                  <FormLabel
+                    style={{ fontSize: 22, color: "black" }}
+                    required={this.state.intoxication === "Yes" ? true : false}
+                  >
                     {question.question}
                   </FormLabel>
                 </li>
@@ -335,7 +354,12 @@ class OralHealth extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required={
+                        this.state.intoxication === "Yes" ? true : false
+                      }
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
@@ -365,7 +389,10 @@ class OralHealth extends Component {
                     fontWeight: "normal",
                   }}
                 >
-                  <FormLabel style={{ fontSize: 22, color: "black" }}>
+                  <FormLabel
+                    style={{ fontSize: 22, color: "black" }}
+                    required={this.state.intoxication === "Yes" ? true : false}
+                  >
                     {question.question}
                   </FormLabel>
                 </li>
@@ -409,7 +436,12 @@ class OralHealth extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required={
+                        this.state.intoxication === "Yes" ? true : false
+                      }
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
