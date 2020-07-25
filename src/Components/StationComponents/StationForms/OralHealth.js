@@ -35,7 +35,7 @@ const questions = [
   },
   {
     question:
-      "If Y to having consumed, for how long have you been consuming? (e.g. 4y, 5m for 4 years and 5 months)",
+      "If Y to having consumed, for how long have you been consuming? (e.g. Enter '4y, 5m' if 4 years and 5 months)",
     id: "duration",
     type: "text",
   },
@@ -66,7 +66,12 @@ const questions = [
     type: "radio",
     options: [{ option: "Yes" }, { option: "No" }],
   },
-  { question: "If Y, for how long?", id: "quitDuration", type: "text" },
+  {
+    question:
+      "If Y, for how long? (e.g. Enter '4y, 5m' if 4 years and 5 months)",
+    id: "quitDuration",
+    type: "text",
+  },
   {
     question: "If Y to having tried quitting, what made you consume again?",
     id: "consumeAgainReason",
@@ -136,8 +141,35 @@ class OralHealth extends Component {
   }
 
   handleSubmit() {
-    console.log(this.state);
+    if (!this.state.id) {
+      alert("Required fields cannot be left empty!");
+    } else if (!this.state.intoxication) {
+      alert("Required fields cannot be left empty!");
+    } else if (
+      this.state.intoxication === "Yes" &&
+      (!this.state.product ||
+        !this.state.amount ||
+        !this.state.duration ||
+        !this.state.reason ||
+        !this.state.consuming)
+    ) {
+      alert("Required fields cannot be left empty!");
+    } else if (
+      this.state.consuming === "No" &&
+      (!this.state.stopDate || !this.state.stopReason)
+    ) {
+      alert("Required fields cannot be left empty!");
+    } else if (
+      this.state.consuming === "Yes" &&
+      this.state.quit === "Yes" &&
+      (!this.state.quitDuration || !this.state.consumeAgainReason)
+    ) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      console.log(this.state);
+    }
   }
+
   render() {
     return (
       <div>
@@ -223,6 +255,8 @@ class OralHealth extends Component {
                         question.name === "quit"
                           ? false
                           : this.state.intoxication === "Yes"
+                          ? true
+                          : question.name === "intoxication"
                           ? true
                           : false
                       }
