@@ -198,7 +198,7 @@ class Screening extends Component {
               >
                 <div className={classes.column}>
                   <Typography className={classes.heading}>
-                   Station 1
+                         Station 1
                   </Typography>
                 </div>
               </AccordionSummary>
