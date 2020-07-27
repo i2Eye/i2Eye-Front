@@ -12,6 +12,9 @@ const Station1 = lazy(() =>
 const Station2 = lazy(() =>
   import("./Components/StationComponents/StationForms/Station2")
 );
+const Screening = lazy(() =>
+  import("./Components/PatientTrackerComponents/Screening")
+);
 
 export default function App() {
   const classes = useStyles();
@@ -36,7 +39,17 @@ export default function App() {
                 component={Station2}
               />
               <Route exact path="/registration" component={RegForm} />
-              <Route exact path="/queue" component={PatientTracker} />
+              <Route
+                exact
+                path="/registration/edit/:patientID"
+                component={RegForm}
+              />
+              <Route exact path="/patient_tracker" component={PatientTracker} />
+              <Route
+                exact
+                path="/patient_tracker/screening_review/:patientID"
+                component={Screening}
+              />
             </Switch>
           </Suspense>
         </div>
