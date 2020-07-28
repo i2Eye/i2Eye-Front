@@ -84,9 +84,11 @@ class Screening extends Component {
         <div className="container">
           <h1 style={{ display: "inline-block" }}>
             Screening Review{" "}
+            <Link to={"/Successful/" + params.patientID}>
             <IconButton>
               <PrintIcon fontSize="large" />
             </IconButton>
+            </Link>
           </h1>
           <Typography
             variant="h6"

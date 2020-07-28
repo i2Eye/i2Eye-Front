@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./Components/AppLayouts/NavBar";
+import Success from "./Components/RegFormComponents/Success";
 
 const Stations = lazy(() => import("./Stations"));
 const PatientTracker = lazy(() => import("./PatientTracker"));
@@ -14,6 +15,9 @@ const Station2 = lazy(() =>
 );
 const Screening = lazy(() =>
   import("./Components/PatientTrackerComponents/Screening")
+);
+const PatientSuccess = lazy(() =>
+  import("./Components/PatientTrackerComponents/PatientSuccess")
 );
 
 export default function App() {
@@ -49,6 +53,11 @@ export default function App() {
                 exact
                 path="/patient_tracker/screening_review/:patientID"
                 component={Screening}
+              />
+               <Route
+                exact
+                path="/Successful/:patientID"
+                component={PatientSuccess}
               />
             </Switch>
           </Suspense>

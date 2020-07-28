@@ -9,6 +9,19 @@ import { withRouter } from "react-router-dom";
 import Filter from "./Components/PatientTrackerComponents/Filter";
 import VirtualizedTable from "./Components/PatientTrackerComponents/VirtualizedTable";
 import PrintIcon from "@material-ui/icons/Print";
+import EditIcon from '@material-ui/icons/Edit';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import { Grid} from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+
 
 const useStyles = (theme) => ({
   root: {
@@ -34,6 +47,7 @@ class PatientTracker extends Component {
     isFemale: true,
     hasIncompleteStations: true,
     completedAllStations: true,
+    open:false
   };
 
   reusableButton = (
@@ -45,6 +59,157 @@ class PatientTracker extends Component {
       }
     >
       <VisibilityOutlinedIcon />
+    </IconButton>
+  );
+
+  edit = () => {
+    const { clickedRow, open} = this.state;
+
+      this.setState({open :true});
+    }
+
+  handleChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const name = e.target.name;
+    this.setState({
+      [name]: value,
+    });
+  };
+  
+    dialog = () => {
+    const { clickedRow, open} = this.state;
+    console.log(clickedRow)
+ 
+    var a=this.getPeople().filter(
+      (person) => person.id.toString()=== clickedRow.toString())
+      console.log(a[0].oralHealth)
+ 
+
+    return (
+
+      <Dialog open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Patient ID: {a[0].id}</DialogTitle>
+        <DialogContent>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper
+              style={{
+                paddingTop: 20,
+                paddingLeft: 30,
+                paddingBottom: 20,
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="name"
+                    id="name"
+                    label="Name"
+                    onChange={this.handleChange}
+                    defaultValue={a[0].name}
+                    autoComplete="off"
+                    fullWidth
+                  />
+                </Grid>
+
+                <Grid item xs={4}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender-label">Gender</InputLabel>
+                    <Select
+                      name="gender"
+                      labelId="gender-label"
+                      id="gender"
+                      onChange={this.handleChange}
+                      value={a[0].gender}
+                    >
+                      <MenuItem value={"F"}>Female</MenuItem>
+                      <MenuItem value={"M"}>Male</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="age"
+                    id="age"
+                    label="Age"
+                    type="number"
+                    onChange={this.handleChange}
+                    defaultValue={a[0].age}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                    <InputLabel id="OralHealth">OralHealth</InputLabel>
+                    <Select
+                      name="oralHealth"
+                      id="oralHealth"
+                      labelId="OralHealth"
+                      onChange={this.handleChange}
+                      defaultValue= {a[0].oralHealth}
+                    >
+                      <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                      <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                      <MenuItem value={"Completed"}>Completed</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                    <InputLabel id="BMI">BMI</InputLabel>
+                    <Select
+                     name="bmi"
+                     id="bmi"
+                     labelId="BMI"
+                     onChange={this.handleChange}
+                     defaultValue={a[0].bmi}
+                    >
+                      <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                      <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                      <MenuItem value={"Completed"}>Completed</MenuItem>
+                    </Select>
+                  </FormControl>
+                  </Grid>
+                <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                    <InputLabel id="EyeScreening">EyeScreening</InputLabel>
+                    <Select
+                    name="eyeScreening"
+                    id="eyeScreening"
+                    labelId="EyeScreening"
+                    onChange={this.handleChange}
+                    defaultValue={a[0].eyeScreening}
+                    >
+                      <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                      <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                      <MenuItem value={"Completed"}>Completed</MenuItem>
+                    </Select>
+                  </FormControl> 
+                </Grid>
+                </Grid>
+            </Paper>
+          </Grid>
+        </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      )
+  }
+  
+
+ handleClose = () => {
+    this.setState({open:false})
+  };
+
+  editButton = (
+    <IconButton
+      onClick={this.edit}
+    >
+      <EditIcon />
     </IconButton>
   );
 
@@ -61,7 +226,8 @@ class PatientTracker extends Component {
     const people = [];
     for (let i = 1; i <= 10000; i++) {
       people[i - 1] = {
-        edit: this.reusableButton,
+        edit: this.editButton,
+        screen: this.reusableButton,
         id: i,
         name: "Person " + ((i * 173) % 190),
         age: (i * 151) % 111,
@@ -162,11 +328,15 @@ class PatientTracker extends Component {
       isMale,
       isFemale,
       hasIncompleteStations,
-      completedAllStations,
+      completedAllStations, open,
     } = this.state;
+    console.log(open)
+
     const people = this.filterPeople();
     return (
       <div>
+        {this.state.open? this.dialog(): null}
+
         <h1>
           Patient Tracker{" "}
           <IconButton>
@@ -182,6 +352,7 @@ class PatientTracker extends Component {
           autoComplete="off"
         />
 
+
         <div className={classes.container}>
           <div className={classes.root} style={{ zIndex: 2 }}>
             <Filter
@@ -196,6 +367,7 @@ class PatientTracker extends Component {
             />
           </div>
         </div>
+        
 
         <Typography variant="subtitle2" style={{ marginBottom: 5 }}>
           {people.length} results
@@ -211,6 +383,11 @@ class PatientTracker extends Component {
                 width: 70,
                 label: "Edit",
                 dataKey: "edit",
+              },
+              {
+                width: 70,
+                label: "Screen",
+                dataKey: "screen",
               },
               {
                 width: 70,
