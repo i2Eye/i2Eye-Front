@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Paper } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
+import { Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/EditOutlined";
@@ -65,17 +59,30 @@ class Screening extends Component {
       {
         label: "Registration Details",
         name: "registration",
-        link: "/registration/edit/",
       },
       {
         label: "Oral Health",
         name: "oralHealth",
-        link: "/stations/oralHealth/",
       },
       {
         label: "BMI & Abdominal Obesity",
         name: "bmi",
-        link: "/stations/bmi/",
+      },
+      {
+        label: "Eye Screening",
+        name: "eyeScreening",
+      },
+      {
+        label: "Phlebotomy Test",
+        name: "phlebotomy",
+      },
+      {
+        label: "Fingerstick Blood Test (Anemia)",
+        name: "fingerstickAnemia",
+      },
+      {
+        label: "Fingerstick Blood Test (RCBG)",
+        name: "fingerstickRCBG",
       },
     ];
 
@@ -84,10 +91,11 @@ class Screening extends Component {
         <div className="container">
           <h1 style={{ display: "inline-block" }}>
             Screening Review{" "}
-            <Link to={"/Successful/" + params.patientID}>
-            <IconButton>
-              <PrintIcon fontSize="large" />
-            </IconButton>
+            <Link to={params.patientID}>
+              {console.log("printed")}
+              <IconButton>
+                <PrintIcon fontSize="large" />
+              </IconButton>
             </Link>
           </h1>
           <Typography
@@ -116,7 +124,13 @@ class Screening extends Component {
                       </Typography>
                     </div>
                     <div className={classes.parentContainer}>
-                      <Link to={station.link + params.patientID}>
+                      <Link
+                        to={
+                          station.name === "registration"
+                            ? `/registration/edit/${params.patientID}`
+                            : `/stations/${station.name}/${params.patientID}`
+                        }
+                      >
                         <IconButton className={classes.childIcon}>
                           <EditIcon />
                         </IconButton>
@@ -127,7 +141,7 @@ class Screening extends Component {
                     <Grid container spacing={3}>
                       {data[station.name].map((question) => {
                         return (
-                          <Grid item xs={12} md={6}>
+                          <Grid item xs={12} md={6} key={question.num}>
                             <Typography variant="subtitle2">
                               {question.num}. {question.question}
                             </Typography>
@@ -143,7 +157,7 @@ class Screening extends Component {
               );
             })}
 
-            <Accordion>
+            {/*             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1c-content"
@@ -308,7 +322,7 @@ class Screening extends Component {
                 </div>
               </AccordionSummary>
               <AccordionDetails className={classes.details}></AccordionDetails>
-            </Accordion>
+            </Accordion> */}
           </Grid>
         </Grid>
       </React.Fragment>

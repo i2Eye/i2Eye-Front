@@ -2,22 +2,13 @@ import React, { Suspense, lazy } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./Components/AppLayouts/NavBar";
-import Success from "./Components/RegFormComponents/Success";
 
 const Stations = lazy(() => import("./Stations"));
 const PatientTracker = lazy(() => import("./PatientTracker"));
 const RegForm = lazy(() => import("./RegForm"));
-const Station1 = lazy(() =>
-  import("./Components/StationComponents/StationForms/Station1")
-);
-const Station2 = lazy(() =>
-  import("./Components/StationComponents/StationForms/Station2")
-);
+
 const Screening = lazy(() =>
   import("./Components/PatientTrackerComponents/Screening")
-);
-const PatientSuccess = lazy(() =>
-  import("./Components/PatientTrackerComponents/PatientSuccess")
 );
 
 export default function App() {
@@ -32,16 +23,6 @@ export default function App() {
             <Switch>
               <Route exact path="/" component={RegForm} />
               <Route exact path="/stations" component={Stations} />
-              <Route
-                exact
-                path="/stations/station1/:patientID"
-                component={Station1}
-              />
-              <Route
-                exact
-                path="/stations/station2/:patientID"
-                component={Station2}
-              />
               <Route exact path="/registration" component={RegForm} />
               <Route
                 exact
@@ -53,11 +34,6 @@ export default function App() {
                 exact
                 path="/patient_tracker/screening_review/:patientID"
                 component={Screening}
-              />
-               <Route
-                exact
-                path="/Successful/:patientID"
-                component={PatientSuccess}
               />
             </Switch>
           </Suspense>
