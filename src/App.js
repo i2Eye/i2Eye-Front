@@ -4,8 +4,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./Components/AppLayouts/NavBar";
 
 const Stations = lazy(() => import("./Stations"));
-const Queue = lazy(() => import("./Queue"));
+const PatientTracker = lazy(() => import("./PatientTracker"));
 const RegForm = lazy(() => import("./RegForm"));
+const Screening = lazy(() =>
+  import("./Components/PatientTrackerComponents/Screening")
+);
 const Form = lazy(() => import("./Components/StationComponents/Form"));
 
 export default function App() {
@@ -20,13 +23,23 @@ export default function App() {
             <Switch>
               <Route exact path="/" component={RegForm} />
               <Route exact path="/stations" component={Stations} />
+              <Route exact path="/registration" component={RegForm} />
+              <Route
+                exact
+                path="/registration/edit/:patientID"
+                component={RegForm}
+              />
+              <Route exact path="/patient_tracker" component={PatientTracker} />
+              <Route
+                exact
+                path="/patient_tracker/screening_review/:patientID"
+                component={Screening}
+              />
               <Route
                 exact
                 path="/stations/:stationName/:patientID"
                 component={Form}
               />
-              <Route exact path="/registration" component={RegForm} />
-              <Route exact path="/queue" component={Queue} />
             </Switch>
           </Suspense>
         </div>

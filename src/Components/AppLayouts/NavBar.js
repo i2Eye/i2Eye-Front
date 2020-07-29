@@ -32,8 +32,8 @@ class NavBar extends Component {
               </IconButton>
             </Tooltip>
           </Link>
-          <Link to="/queue">
-            <Tooltip title="Queue">
+          <Link to="/patient_tracker">
+            <Tooltip title="Patient Tracker">
               <IconButton className={classes.icon}>
                 <PeopleAltIcon />
               </IconButton>
