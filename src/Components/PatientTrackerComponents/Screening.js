@@ -92,7 +92,6 @@ class Screening extends Component {
           <h1 style={{ display: "inline-block" }}>
             Screening Review{" "}
             <Link to={params.patientID}>
-              {console.log("printed")}
               <IconButton>
                 <PrintIcon fontSize="large" />
               </IconButton>

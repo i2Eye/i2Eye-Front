@@ -78,12 +78,12 @@ class PatientTracker extends Component {
 
   dialog = () => {
     const { clickedRow, open } = this.state;
-    console.log(clickedRow);
+    //console.log(clickedRow);
 
     var a = this.getPeople().filter(
       (person) => person.id.toString() === clickedRow.toString()
     );
-    console.log(a[0].oralHealth);
+    //console.log(a[0].oralHealth);
 
     return (
       <Dialog
@@ -217,7 +217,7 @@ class PatientTracker extends Component {
 
   //print data to excel
   handlePrint = () => {
-    console.log("printed");
+    //console.log("printed");
   };
 
   handleInput = (e) => {
@@ -335,9 +335,8 @@ class PatientTracker extends Component {
       isFemale,
       hasIncompleteStations,
       completedAllStations,
-      open,
     } = this.state;
-    console.log(open);
+    //console.log(open);
 
     const people = this.filterPeople();
     return (
