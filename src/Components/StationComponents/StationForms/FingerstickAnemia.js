@@ -73,9 +73,21 @@ class Fingerstick extends Component {
       this.setState({ meals: e.target.value });
     }
   }
+
   handleSubmit() {
-    //get final data of form
-    console.log(this.state);
+    if (
+      !this.state.Hb ||
+      !this.state.meals ||
+      !this.state.protein ||
+      !this.state.carbohydrates ||
+      !this.state.vegetables ||
+      !this.state.sweets
+    ) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      //get final data of form
+      console.log(this.state);
+    }
   }
 
   render() {
@@ -96,7 +108,10 @@ class Fingerstick extends Component {
                   }}
                 >
                   <span>
-                    <InputLabel style={{ fontSize: 22, color: "black" }}>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required
+                    >
                       {question.question}
                     </InputLabel>
                     <TextField
@@ -123,6 +138,7 @@ class Fingerstick extends Component {
                     <FormLabel
                       component="legend"
                       style={{ fontSize: 22, color: "black" }}
+                      required
                     >
                       {question.question}
                     </FormLabel>

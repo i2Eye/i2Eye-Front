@@ -26,12 +26,12 @@ const radioQuestions = [
 ];
 
 const checkBoxOptions = [
-  { option: "High blood pressure" },
-  { option: "Diabetes" },
-  { option: "Family member with coronory artery disease" },
-  { option: "Family member with high cholesterol" },
-  { option: "Chronic kidney disease" },
-  { option: "Smoking/ intoxication consumption e.g. tobacco" },
+  { option: "High blood pressure", id: "BP" },
+  { option: "Diabetes", id: "Diabetes" },
+  { option: "Family member with coronory artery disease", id: "Coronory" },
+  { option: "Family member with high cholesterol", id: "Cholesterol" },
+  { option: "Chronic kidney disease", id: "Kidney" },
+  { option: "Smoking/ intoxication consumption e.g. tobacco", id: "Smoking" },
 ];
 
 class Phlebotomy extends Component {
@@ -39,14 +39,25 @@ class Phlebotomy extends Component {
     super(props);
     this.state = {
       age: "",
-      conditions: [],
+      conditions: {
+        BP: false,
+        Diabetes: false,
+        Coronory: false,
+        Cholesterol: false,
+        Kidney: false,
+        Smoking: false,
+      },
       vimta: "",
     };
   }
 
   handleSubmit() {
-    //get final data of form
-    console.log(this.state);
+    if (!this.state.age || !this.state.vimta) {
+      alert("Required fields cannot be left empty!");
+    } else {
+      //get final data of form
+      console.log(this.state);
+    }
   }
 
   handleAgeChange(e) {
@@ -54,8 +65,51 @@ class Phlebotomy extends Component {
   }
 
   handleConditionsChange(e) {
-    const newCondition = e.target.value;
-    this.state.conditions.push(newCondition);
+    if (e.target.name === "BP") {
+      this.setState({
+        conditions: { ...this.state.conditions, BP: !this.state.conditions.BP },
+      });
+    }
+    if (e.target.name === "Diabetes") {
+      this.setState({
+        conditions: {
+          ...this.state.conditions,
+          Diabetes: !this.state.conditions.Diabetes,
+        },
+      });
+    }
+    if (e.target.name === "Coronory") {
+      this.setState({
+        conditions: {
+          ...this.state.conditions,
+          Coronory: !this.state.conditions.Coronory,
+        },
+      });
+    }
+    if (e.target.name === "Cholesterol") {
+      this.setState({
+        conditions: {
+          ...this.state.conditions,
+          Cholesterol: !this.state.conditions.Cholesterol,
+        },
+      });
+    }
+    if (e.target.name === "Kidney") {
+      this.setState({
+        conditions: {
+          ...this.state.conditions,
+          Kidney: !this.state.conditions.Kidney,
+        },
+      });
+    }
+    if (e.target.name === "Smoking") {
+      this.setState({
+        conditions: {
+          ...this.state.conditions,
+          Smoking: !this.state.conditions.Smoking,
+        },
+      });
+    }
   }
 
   handleChange(e) {
@@ -133,8 +187,8 @@ class Phlebotomy extends Component {
                     control={
                       <Checkbox
                         onChange={this.handleConditionsChange.bind(this)}
-                        name={option.option}
-                        value={option.option}
+                        name={option.id}
+                        value="Yes"
                       />
                     }
                     label={option.option}
