@@ -351,7 +351,7 @@ class PatientTracker extends Component {
         </h1>
         <TextField
           id="patient-tracker-search"
-          label="Search Patient ID"
+          label="Search Patient"
           variant="outlined"
           onChange={this.handleInput}
           style={{ width: 300, marginBottom: 20, marginRight: 20 }}

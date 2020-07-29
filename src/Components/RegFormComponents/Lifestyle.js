@@ -51,9 +51,15 @@ class Lifestyle extends Component {
                       onChange={handleChange}
                       value={values.exercise_freq}
                     >
-                      <MenuItem value="1-2_times">1-2 times week</MenuItem>
-                      <MenuItem value="3-4_times">3-4 times a week</MenuItem>
-                      <MenuItem value="5-7_times">5-7 times a week</MenuItem>
+                      <MenuItem value="1-2 times a week">
+                        1-2 times week
+                      </MenuItem>
+                      <MenuItem value="3-4 times a week">
+                        3-4 times a week
+                      </MenuItem>
+                      <MenuItem value="5-7 times a week">
+                        5-7 times a week
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

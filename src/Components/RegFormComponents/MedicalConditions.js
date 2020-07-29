@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Grid, Paper, Typography, FormLabel, Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Typography,
+  FormLabel,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -7,7 +15,6 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
 class MedicalConditions extends Component {
-
   nextStep = (e) => {
     e.preventDefault();
     this.props.nextStep();
@@ -35,35 +42,74 @@ class MedicalConditions extends Component {
             >
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <Typography variant='h4'>Medical Conditions</Typography>
+                  <Typography variant="h4">Medical Conditions</Typography>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl>
-                    <FormLabel htmlFor="symptoms">Are you currently suffering from any of the following symptoms?</FormLabel>
+                    <FormLabel htmlFor="symptoms">
+                      Are you currently suffering from any of the following
+                      symptoms?
+                    </FormLabel>
                     <FormGroup>
                       <FormControlLabel
-                        control={<Checkbox checked={values.cough_2_weeks} onChange={handleChange} name="cough_2_weeks" />}
+                        control={
+                          <Checkbox
+                            checked={values.cough_2_weeks}
+                            onChange={handleChange}
+                            name="cough_2_weeks"
+                          />
+                        }
                         label="Cough lasting for > 2 weeks"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.cough_up_blood} onChange={handleChange} name="cough_up_blood" />}
+                        control={
+                          <Checkbox
+                            checked={values.cough_up_blood}
+                            onChange={handleChange}
+                            name="cough_up_blood"
+                          />
+                        }
                         label="Coughing up blood"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.breathlessness} onChange={handleChange} name="breathlessness" />}
+                        control={
+                          <Checkbox
+                            checked={values.breathlessness}
+                            onChange={handleChange}
+                            name="breathlessness"
+                          />
+                        }
                         label="Breathlessness"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.weight_loss} onChange={handleChange} name="weight_loss" />}
+                        control={
+                          <Checkbox
+                            checked={values.weight_loss}
+                            onChange={handleChange}
+                            name="weight_loss"
+                          />
+                        }
                         label="Weight loss"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.loss_of_apetite} onChange={handleChange} name="loss_of_apetite" />}
+                        control={
+                          <Checkbox
+                            checked={values.loss_of_apetite}
+                            onChange={handleChange}
+                            name="loss_of_apetite"
+                          />
+                        }
                         label="Loss of apetite"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.fever} onChange={handleChange} name="fever" />}
+                        control={
+                          <Checkbox
+                            checked={values.fever}
+                            onChange={handleChange}
+                            name="fever"
+                          />
+                        }
                         label="Fever"
                       />
                       <FormControlLabel
@@ -76,67 +122,81 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="has_tubercolosis">Do you have tubercolosis?</FormLabel>
+                    <FormLabel htmlFor="has_tubercolosis">
+                      Do you have tubercolosis?
+                    </FormLabel>
                     <Select
                       name="has_tubercolosis"
                       id="has_tubercolosis"
                       onChange={handleChange}
                       value={values.has_tubercolosis}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="live_with_someone_with_tubercolosis">Do you live with someone with tubercolosis?</FormLabel>
+                    <FormLabel htmlFor="live_with_someone_with_tubercolosis">
+                      Do you live with someone with tubercolosis?
+                    </FormLabel>
                     <Select
                       name="live_with_someone_with_tubercolosis"
                       id="live_with_someone_with_tubercolosis"
                       onChange={handleChange}
                       value={values.live_with_someone_with_tubercolosis}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="other_diagnosed_with_tubercolosis_beyond_4_months">If "Yes" to living with someone with tubercolosis, was he/she diagnosed more than 4 months ago? </FormLabel>
+                    <FormLabel htmlFor="other_diagnosed_with_tubercolosis_beyond_4_months">
+                      If "Yes" to living with someone with tubercolosis, was
+                      he/she diagnosed more than 4 months ago?{" "}
+                    </FormLabel>
                     <Select
                       name="other_diagnosed_with_tubercolosis_beyond_4_months"
                       id="other_diagnosed_with_tubercolosis_beyond_4_months"
                       onChange={handleChange}
-                      value={values.other_diagnosed_with_tubercolosis_beyond_4_months}
+                      value={
+                        values.other_diagnosed_with_tubercolosis_beyond_4_months
+                      }
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="has_blood_borne_disease">Do you have any blood borne diseases?</FormLabel>
+                    <FormLabel htmlFor="has_blood_borne_disease">
+                      Do you have any blood borne diseases?
+                    </FormLabel>
                     <Select
                       name="has_blood_borne_disease"
                       id="has_blood_borne_disease"
                       onChange={handleChange}
                       value={values.has_blood_borne_disease}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="has_blood_borne_disease">If "Yes" to having a blood borne disease, what Blood Borne Disease do you have?</FormLabel>
+                    <FormLabel htmlFor="has_blood_borne_disease">
+                      If "Yes" to having a blood borne disease, what Blood Borne
+                      Disease do you have?
+                    </FormLabel>
                     <TextField
                       name="blood_borne_disease"
                       id="blood_borne_disease"
@@ -150,7 +210,9 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="pre_existing_conditions">Do you have any pre-existing medical conditions?</FormLabel>
+                    <FormLabel htmlFor="pre_existing_conditions">
+                      Do you have any pre-existing medical conditions?
+                    </FormLabel>
                     <TextField
                       name="pre_existing_conditions"
                       id="pre_existing_conditions"
@@ -163,22 +225,27 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_has_diabetes">Do you know anyone in your family who has diabetes?</FormLabel>
+                    <FormLabel htmlFor="family_has_diabetes">
+                      Do you know anyone in your family who has diabetes?
+                    </FormLabel>
                     <Select
                       name="family_has_diabetes"
                       id="family_has_diabetes"
                       onChange={handleChange}
                       value={values.family_has_diabetes}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_diabetes_count">If "Yes" to knowing anyone in the family who has diabetes, how many family members have diabetes?</FormLabel>
+                    <FormLabel htmlFor="family_diabetes_count">
+                      If "Yes" to knowing anyone in the family who has diabetes,
+                      how many family members have diabetes?
+                    </FormLabel>
                     <TextField
                       name="family_diabetes_count"
                       id="family_diabetes_count"
@@ -192,22 +259,27 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_has_anemia">Do you know anyone in your family who has anemia?</FormLabel>
+                    <FormLabel htmlFor="family_has_anemia">
+                      Do you know anyone in your family who has anemia?
+                    </FormLabel>
                     <Select
                       name="family_has_anemia"
                       id="family_has_anemia"
                       onChange={handleChange}
                       value={values.family_has_anemia}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_anemia_count">If "Yes" to knowing anyone in the family who has anemia, how many family members have anemia?</FormLabel>
+                    <FormLabel htmlFor="family_anemia_count">
+                      If "Yes" to knowing anyone in the family who has anemia,
+                      how many family members have anemia?
+                    </FormLabel>
                     <TextField
                       name="family_anemia_count"
                       id="family_anemia_count"
@@ -221,22 +293,27 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_has_diabetes">Do you know anyone in your family who has oral cancer?</FormLabel>
+                    <FormLabel htmlFor="family_has_diabetes">
+                      Do you know anyone in your family who has oral cancer?
+                    </FormLabel>
                     <Select
                       name="family_has_oral_cancer"
                       id="family_has_oral_cancer"
                       onChange={handleChange}
                       value={values.family_has_oral_cancer}
                     >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value="Y">Yes</MenuItem>
+                      <MenuItem value="N">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_oral_cancer_count">If "Yes" to knowing anyone in the family who has oral cancer, how many family members have oral cancer?</FormLabel>
+                    <FormLabel htmlFor="family_oral_cancer_count">
+                      If "Yes" to knowing anyone in the family who has oral
+                      cancer, how many family members have oral cancer?
+                    </FormLabel>
                     <TextField
                       name="family_oral_cancer_count"
                       id="family_oral_cancer_count"
@@ -250,7 +327,9 @@ class MedicalConditions extends Component {
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_pre_existing_conditions">Other pre-existing conditions of family member(s) (if any)</FormLabel>
+                    <FormLabel htmlFor="family_pre_existing_conditions">
+                      Other pre-existing conditions of family member(s) (if any)
+                    </FormLabel>
                     <TextField
                       name="family_pre_existing_conditions"
                       id="family_pre_existing_conditions"
@@ -260,7 +339,6 @@ class MedicalConditions extends Component {
                     />
                   </FormControl>
                 </Grid>
-
               </Grid>
             </Paper>
           </Grid>

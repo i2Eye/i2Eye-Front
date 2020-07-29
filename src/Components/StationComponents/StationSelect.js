@@ -1,47 +1,38 @@
 /* eslint-disable default-case */
 import React, { Component } from "react";
-import StationList from "./StationList";
-import PatientSearch from "./PatientSearch";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import Switch from "@material-ui/core/Switch";
+import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+
+const useStyles = (theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
 
 class StationSelect extends Component {
   state = {
-    step: 1,
     stations: [
-      { name: "Oral Health", tag: "oral_health", checked: true },
+      { name: "Oral Health", tag: "oralHealth", checked: true },
       {
         name: "BMI and Abdominal Obesity",
-        tag: "bmi_abdominal_obesity",
+        tag: "bmi",
         checked: true,
       },
-      { name: "Eye Screening", tag: "eye_screening", checked: true },
-      { name: "Phlebotomy Test", tag: "phlebotomy_test", checked: true },
+      { name: "Eye Screening", tag: "eyeScreening", checked: true },
+      { name: "Phlebotomy Test", tag: "phlebotomy", checked: true },
       {
         name: "Fingerstick Blood Test",
-        tag: "fingerstick_blood_test",
+        tag: "fingerstickAnemia",
         checked: true,
       },
     ],
-    selectedStation: null,
-  };
-
-  nextStep = () => {
-    const { step } = this.state;
-    this.setState({
-      step: step + 1,
-    });
-  };
-
-  previousStep = () => {
-    const { step } = this.state;
-    this.setState({
-      step: step - 1,
-    });
-  };
-
-  handleClick = (index) => (e) => {
-    e.preventDefault();
-    this.setState({ selectedStation: index });
-    this.nextStep();
   };
 
   /* Takes in an index to find which station to handle. The event prop is automatically passed in through onChange and the state is updated */
@@ -54,30 +45,34 @@ class StationSelect extends Component {
   };
 
   render() {
-    const { step, stations, selectedStation } = this.state;
-    switch (step) {
-      case 1:
-        return (
-          <StationList
-            nextStep={this.nextStep}
-            handleToggle={this.handleToggle}
-            stations={this.state.stations}
-            handleClick={this.handleClick}
-          />
-        );
+    const { stations } = this.state;
+    const { classes } = this.props;
 
-      case 2:
-        return (
-          <PatientSearch
-            handleToggle={this.handleToggle(selectedStation)}
-            station={stations[selectedStation]}
-            previousStep={this.previousStep}
-          />
-        );
-      default:
-        return 1;
-    }
+    return (
+      //using map to render so that we only have to change the stations state property
+      <List className={classes.root}>
+        {stations.map((station, index) => (
+          <ListItem
+            key={index}
+            button
+            disabled={!station.checked} //handles the check if the station is off
+            component={Link}
+            to={`/stations/patient_search/${station.tag}`}
+          >
+            <ListItemText id={station.name} primary={station.name} />
+            <ListItemSecondaryAction>
+              <Switch
+                edge="end"
+                onChange={this.handleToggle(index)}
+                checked={station.checked}
+                inputProps={{ "aria-labelledby": "switch-list-label-1" }}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+    );
   }
 }
 
-export default StationSelect;
+export default withStyles(useStyles)(StationSelect);

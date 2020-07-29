@@ -31,8 +31,8 @@ class PersonalDetails extends Component {
               }}
             >
               <Grid container spacing={3}>
-              <Grid item xs={12}>
-                  <Typography variant='h4'>Personal Details</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="h4">Personal Details</Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
@@ -98,7 +98,9 @@ class PersonalDetails extends Component {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <FormControl fullWidth>
-                    <InputLabel id="education-label">Highest Education Qualification</InputLabel>
+                    <InputLabel id="education-label">
+                      Highest Education Qualification
+                    </InputLabel>
                     <Select
                       name="education"
                       labelId="education-label"
@@ -106,11 +108,19 @@ class PersonalDetails extends Component {
                       onChange={handleChange}
                       value={values.education}
                     >
-                      <MenuItem value="no_formal_qualification">No formal qualification</MenuItem>
-                      <MenuItem value="primary">Primary(complete 6th standard)</MenuItem>
-                      <MenuItem value="secondary">Secondary</MenuItem>
-                      <MenuItem value="higher_secondary">Higher Secondary</MenuItem>
-                      <MenuItem value="above_higher_secondary">Above higher secondary</MenuItem>
+                      <MenuItem value="No formal qualification">
+                        No formal qualification
+                      </MenuItem>
+                      <MenuItem value="Primary">
+                        Primary(complete 6th standard)
+                      </MenuItem>
+                      <MenuItem value="Secondary">Secondary</MenuItem>
+                      <MenuItem value="Higher secondary">
+                        Higher Secondary
+                      </MenuItem>
+                      <MenuItem value="Above higher secondary">
+                        Above higher secondary
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -124,15 +134,27 @@ class PersonalDetails extends Component {
                       onChange={handleChange}
                       value={values.occupation}
                     >
-                      <MenuItem value="student">Student</MenuItem>
-                      <MenuItem value="homemaker">Homemaker/Housewife</MenuItem>
-                      <MenuItem value="religious_work">Religious Work</MenuItem>
-                      <MenuItem value="professional">Professional (teacher, engineer, architect, doctor, nurse, lawyer, management, finance, etc)</MenuItem>
-                      <MenuItem value="service_industry">Service industry (e.g. restaurant server, call centre, receptionist, hotel staff)</MenuItem>
-                      <MenuItem value="manual_labourer">Manual labourer (e.g. farming, mining, construction, cleaning)</MenuItem>
-                      <MenuItem value="skilled_labourer">Skilled labourer (e.g. plumbing, electrician, cook, tailor)</MenuItem>
-                      <MenuItem value="manufacturing">Manufacturing</MenuItem>
-                      <MenuItem value="unemployed">Unemployed</MenuItem>
+                      <MenuItem value="Student">Student</MenuItem>
+                      <MenuItem value="Homemaker">Homemaker/Housewife</MenuItem>
+                      <MenuItem value="Religious work">Religious Work</MenuItem>
+                      <MenuItem value="Professional">
+                        Professional (teacher, engineer, architect, doctor,
+                        nurse, lawyer, management, finance, etc)
+                      </MenuItem>
+                      <MenuItem value="Service industry">
+                        Service industry (e.g. restaurant server, call centre,
+                        receptionist, hotel staff)
+                      </MenuItem>
+                      <MenuItem value="Manual labourer">
+                        Manual labourer (e.g. farming, mining, construction,
+                        cleaning)
+                      </MenuItem>
+                      <MenuItem value="Skilled labourer">
+                        Skilled labourer (e.g. plumbing, electrician, cook,
+                        tailor)
+                      </MenuItem>
+                      <MenuItem value="Manufacturing">Manufacturing</MenuItem>
+                      <MenuItem value="Unemployed">Unemployed</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

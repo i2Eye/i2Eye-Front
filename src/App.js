@@ -10,6 +10,9 @@ const Screening = lazy(() =>
   import("./Components/PatientTrackerComponents/Screening")
 );
 const Form = lazy(() => import("./Components/StationComponents/Form"));
+const PatientSearch = lazy(() =>
+  import("./Components/StationComponents/PatientSearch")
+);
 
 export default function App() {
   const classes = useStyles();
@@ -23,6 +26,11 @@ export default function App() {
             <Switch>
               <Route exact path="/" component={RegForm} />
               <Route exact path="/stations" component={Stations} />
+              <Route
+                exact
+                path="/stations/patient_search/:stationName"
+                component={PatientSearch}
+              />
               <Route exact path="/registration" component={RegForm} />
               <Route
                 exact
