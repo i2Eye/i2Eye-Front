@@ -178,67 +178,66 @@ class OralHealth extends Component {
           <ol>
             {questions.map((question) =>
               question.type === "text" ? (
-                <div>
-                  <li
-                    style={{
-                      fontFamily: "sans-serif",
-                      fontSize: 22,
-                      fontWeight: "normal",
-                    }}
-                  >
+                <li
+                  key={question.id}
+                  style={{
+                    fontFamily: "sans-serif",
+                    fontSize: 22,
+                    fontWeight: "normal",
+                  }}
+                >
+                  <p />
+                  <span>
+                    <InputLabel
+                      style={{ fontSize: 22, color: "black" }}
+                      required={
+                        question.id === "id"
+                          ? true
+                          : this.state.consuming === "Yes" &&
+                            (question.id === "stopDate" ||
+                              question.id === "stopReason")
+                          ? false
+                          : this.state.consuming === "No" &&
+                            (question.id === "quitDuration" ||
+                              question.id === "consumeAgainReason")
+                          ? false
+                          : this.state.quit === "No" &&
+                            (question.id === "quitDuration" ||
+                              question.id === "consumeAgainReason")
+                          ? false
+                          : this.state.intoxication === "No"
+                          ? false
+                          : true
+                      }
+                    >
+                      {question.question}
+                    </InputLabel>
+                    <TextField
+                      id={question.id}
+                      onChange={this.handleChange.bind(this)}
+                      type="text"
+                      label={question.label}
+                      disabled={
+                        question.id === "id"
+                          ? false
+                          : this.state.consuming === "Yes" &&
+                            (question.id === "stopDate" ||
+                              question.id === "stopReason")
+                          ? true
+                          : this.state.consuming === "No" &&
+                            (question.id === "quitDuration" ||
+                              question.id === "consumeAgainReason")
+                          ? true
+                          : this.state.quit === "No"
+                          ? true
+                          : this.state.intoxication === "Yes"
+                          ? false
+                          : true
+                      }
+                    />
                     <p />
-                    <span>
-                      <InputLabel
-                        style={{ fontSize: 22, color: "black" }}
-                        required={
-                          question.id === "id"
-                            ? true
-                            : this.state.consuming === "Yes" &&
-                              (question.id === "stopDate" ||
-                                question.id === "stopReason")
-                            ? false
-                            : this.state.consuming === "No" &&
-                              (question.id === "quitDuration" ||
-                                question.id === "consumeAgainReason")
-                            ? false
-                            : this.state.quit === "No" &&
-                              (question.id === "quitDuration" ||
-                                question.id === "consumeAgainReason")
-                            ? false
-                            : this.state.intoxication === "No"
-                            ? false
-                            : true
-                        }
-                      >
-                        {question.question}
-                      </InputLabel>
-                      <TextField
-                        id={question.id}
-                        onChange={this.handleChange.bind(this)}
-                        type="text"
-                        label={question.label}
-                        disabled={
-                          question.id === "id"
-                            ? false
-                            : this.state.consuming === "Yes" &&
-                              (question.id === "stopDate" ||
-                                question.id === "stopReason")
-                            ? true
-                            : this.state.consuming === "No" &&
-                              (question.id === "quitDuration" ||
-                                question.id === "consumeAgainReason")
-                            ? true
-                            : this.state.quit === "No"
-                            ? true
-                            : this.state.intoxication === "Yes"
-                            ? false
-                            : true
-                        }
-                      />
-                      <p />
-                    </span>
-                  </li>
-                </div>
+                  </span>
+                </li>
               ) : (
                 <FormControl key={question.question}>
                   <li
@@ -270,23 +269,22 @@ class OralHealth extends Component {
                     onChange={this.handleRadioChange.bind(this)}
                   >
                     {question.options.map((option) => (
-                      <div>
-                        <FormControlLabel
-                          value={option.option}
-                          control={<Radio />}
-                          label={option.option}
-                          disabled={
-                            question.name === "intoxication"
-                              ? false
-                              : this.state.consuming === "No" &&
-                                question.name === "quit"
-                              ? true
-                              : this.state.intoxication === "Yes"
-                              ? false
-                              : true
-                          }
-                        />
-                      </div>
+                      <FormControlLabel
+                        key={option.option}
+                        value={option.option}
+                        control={<Radio />}
+                        label={option.option}
+                        disabled={
+                          question.name === "intoxication"
+                            ? false
+                            : this.state.consuming === "No" &&
+                              question.name === "quit"
+                            ? true
+                            : this.state.intoxication === "Yes"
+                            ? false
+                            : true
+                        }
+                      />
                     ))}
                   </RadioGroup>
                 </FormControl>
