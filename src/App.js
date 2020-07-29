@@ -6,10 +6,10 @@ import NavBar from "./Components/AppLayouts/NavBar";
 const Stations = lazy(() => import("./Stations"));
 const PatientTracker = lazy(() => import("./PatientTracker"));
 const RegForm = lazy(() => import("./RegForm"));
-
 const Screening = lazy(() =>
   import("./Components/PatientTrackerComponents/Screening")
 );
+const Form = lazy(() => import("./Components/StationComponents/Form"));
 
 export default function App() {
   const classes = useStyles();
@@ -34,6 +34,11 @@ export default function App() {
                 exact
                 path="/patient_tracker/screening_review/:patientID"
                 component={Screening}
+              />
+              <Route
+                exact
+                path="/stations/:stationName/:patientID"
+                component={Form}
               />
             </Switch>
           </Suspense>

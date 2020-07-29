@@ -187,9 +187,7 @@ class PatientSearch extends Component {
           style={patientID <= 0 ? { marginTop: 145.563 } : { marginTop: 20 }}
           disabled={!station.checked || patientID <= 0}
           component={Link}
-          to={`/stations/${station.name
-            .toLowerCase()
-            .replace(/\s/g, "")}/${patientID}`}
+          to={`/stations/${station.tag}/${patientID}`}
         >
           Next
         </Button>
