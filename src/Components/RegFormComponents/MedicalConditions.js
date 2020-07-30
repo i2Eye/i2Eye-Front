@@ -25,7 +25,7 @@ class MedicalConditions extends Component {
   };
 
   render() {
-    const { values, handleChange } = this.props;
+    const { values, handleChange, handleCheckbox } = this.props;
 
     return (
       <React.Fragment>
@@ -55,9 +55,13 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.cough_2_weeks}
-                            onChange={handleChange}
-                            name="cough_2_weeks"
+                            checked={
+                              values.symptoms.indexOf(
+                                "Cough lasting for > 2 weeks"
+                              ) >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="Cough lasting for > 2 weeks"
                           />
                         }
                         label="Cough lasting for > 2 weeks"
@@ -65,9 +69,11 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.cough_up_blood}
-                            onChange={handleChange}
-                            name="cough_up_blood"
+                            checked={
+                              values.symptoms.indexOf("Coughing up blood") >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="Coughing up blood"
                           />
                         }
                         label="Coughing up blood"
@@ -75,9 +81,11 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.breathlessness}
-                            onChange={handleChange}
-                            name="breathlessness"
+                            checked={
+                              values.symptoms.indexOf("Breathlessness") >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="Breathlessness"
                           />
                         }
                         label="Breathlessness"
@@ -85,9 +93,11 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.weight_loss}
-                            onChange={handleChange}
-                            name="weight_loss"
+                            checked={
+                              values.symptoms.indexOf("Weight loss") >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="Weight loss"
                           />
                         }
                         label="Weight loss"
@@ -95,9 +105,11 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.loss_of_apetite}
-                            onChange={handleChange}
-                            name="loss_of_apetite"
+                            checked={
+                              values.symptoms.indexOf("Loss of apetite") >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="Loss of apetite"
                           />
                         }
                         label="Loss of apetite"
@@ -105,15 +117,23 @@ class MedicalConditions extends Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.fever}
-                            onChange={handleChange}
-                            name="fever"
+                            checked={values.symptoms.indexOf("Fever") >= 0}
+                            onChange={handleCheckbox("symptoms")}
+                            name="Fever"
                           />
                         }
                         label="Fever"
                       />
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={
+                          <Checkbox
+                            checked={
+                              values.symptoms.indexOf("None of the above") >= 0
+                            }
+                            onChange={handleCheckbox("symptoms")}
+                            name="None of the above"
+                          />
+                        }
                         label="None of the above"
                       />
                     </FormGroup>

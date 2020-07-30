@@ -9,6 +9,7 @@ import getTestData from "./TestData";
 
 const blankState = {
   step: 1,
+  isEdit: false,
   // personal details
   name: "",
   nric: "",
@@ -28,12 +29,6 @@ const blankState = {
 
   // medical conditions
   symptoms: [],
-  cough_2_weeks: false,
-  cough_up_blood: false,
-  breathlessness: false,
-  weight_loss: false,
-  loss_of_apetite: false,
-  fever: false,
 
   has_tubercolosis: "",
   live_with_someone_with_tubercolosis: "",
@@ -56,11 +51,11 @@ const blankState = {
   family_pre_existing_conditions: "",
 };
 
-//TBC
 const handleEdit = (id) => {
   const data = getTestData(id).registration;
   const newState = {
     step: 1,
+    isEdit: true,
     // personal details
     name: data[0].answer,
     nric: data[1].answer,
@@ -79,43 +74,38 @@ const handleEdit = (id) => {
     household_count: data[14].answer,
 
     // medical conditions
-    symptoms: [],
-    cough_2_weeks: false,
-    cough_up_blood: false,
-    breathlessness: false,
-    weight_loss: false,
-    loss_of_apetite: false,
-    fever: false,
+    symptoms: data[8].answer,
 
-    has_tubercolosis: "",
-    live_with_someone_with_tubercolosis: "",
-    other_diagnosed_with_tubercolosis_beyond_4_months: "",
+    has_tubercolosis: data[5].answer,
+    live_with_someone_with_tubercolosis: data[6].answer,
+    other_diagnosed_with_tubercolosis_beyond_4_months: data[7].answer,
 
-    has_blood_borne_disease: "",
-    blood_borne_disease: "",
-    has_pre_existing_medical_conditions: "",
+    has_blood_borne_disease: data[9].answer,
+    blood_borne_disease: data[10].answer,
 
-    family_has_diabetes: "",
-    family_diabetes_count: 0,
+    family_has_diabetes: data[18].answer,
+    family_diabetes_count: data[19].answer,
 
-    family_has_anemia: "",
-    family_anemia_count: 0,
+    family_has_anemia: data[20].answer,
+    family_anemia_count: data[21].answer,
 
-    family_has_oral_cancer: "",
-    family_oral_cancer_count: 0,
+    family_has_oral_cancer: data[22].answer,
+    family_oral_cancer_count: data[23].answer,
 
-    pre_existing_conditions: "",
-    family_pre_existing_conditions: "",
+    pre_existing_conditions: data[11].answer,
+    family_pre_existing_conditions: data[24].answer,
   };
 
   return newState;
 };
 
+const getState = (patientID) => {
+  const id = Number(patientID);
+  return isNaN(id) || id === 0 ? blankState : handleEdit(id);
+};
+
 class RegForm extends Component {
-  state =
-    this.props.match.params.patientID === undefined
-      ? blankState
-      : handleEdit(this.props.match.params.patientID);
+  state = getState(this.props.match.params.patientID);
 
   nextStep = () => {
     const { step } = this.state;
@@ -132,13 +122,23 @@ class RegForm extends Component {
   };
 
   handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    const value = e.target.value;
     //console.log(value);
     const name = e.target.name;
     this.setState({
       [name]: value,
     });
+  };
+
+  handleCheckbox = (question) => (e) => {
+    let options = this.state[question];
+    options = options.filter((x) => x !== e.target.name);
+    if (e.target.checked) {
+      options.push(e.target.name);
+    }
+    this.setState({ [question]: options }, () =>
+      console.log(this.state[question])
+    );
   };
 
   resetForm = () =>
@@ -155,7 +155,7 @@ class RegForm extends Component {
       match: { params },
     } = this.props;
 
-    const { step } = this.state;
+    const { step, isEdit } = this.state;
 
     const {
       name,
@@ -261,6 +261,7 @@ class RegForm extends Component {
             prevStep={this.prevStep}
             handleChange={this.handleChange}
             handleChangeMultiple={this.handleChangeMultiple}
+            handleCheckbox={this.handleCheckbox}
             values={values}
           />
         );
@@ -270,6 +271,9 @@ class RegForm extends Component {
             nextStep={this.nextStep}
             prevStep={this.prevStep}
             values={values}
+            isEdit={isEdit}
+            confirm={this.confirm}
+            saveEdit={this.saveEdit}
           />
         );
       case 6:

@@ -6,11 +6,46 @@ import ListItemText from "@material-ui/core/ListItemText";
 class Confirm extends Component {
   confirm = (e) => {
     e.preventDefault();
+    console.log("Save Edit");
     // *** submit to database *** //
     this.props.nextStep();
   };
+
+  saveEdit = (e) => {
+    e.preventDefault();
+    console.log("Save Edit");
+    this.props.nextStep();
+  };
+
+  getSubmitButton = (isEdit) => {
+    if (isEdit) {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginTop: 20 }}
+          onClick={this.saveEdit}
+        >
+          Save
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginTop: 20 }}
+          onClick={this.confirm}
+        >
+          Submit
+        </Button>
+      );
+    }
+  };
+
   render() {
     const {
+      isEdit,
       values: { name, gender, age, birthday },
       prevStep,
     } = this.props;
@@ -32,14 +67,7 @@ class Confirm extends Component {
         >
           Back
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.confirm}
-        >
-          Submit
-        </Button>
+        {this.getSubmitButton(isEdit)}
       </div>
     );
   }
