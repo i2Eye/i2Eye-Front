@@ -21,6 +21,8 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Tooltip from "@material-ui/core/Tooltip";
+import getTestData from "./TestData";
+import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
 
 const useStyles = (theme) => ({
   root: {
@@ -217,7 +219,24 @@ class PatientTracker extends Component {
 
   //print data to excel
   handlePrint = () => {
-    //console.log("printed");
+    const csvData = [];
+    for (let i = 1; i <= 10000; i++) {
+      csvData[i - 1] = getTestData(i);
+    }
+    var today = new Date();
+    const fileName =
+      "Overall_Information_List_" +
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate() +
+      "_" +
+      today.getHours() +
+      today.getMinutes() +
+      today.getSeconds();
+
+    exportCSV(csvData, fileName);
   };
 
   handleInput = (e) => {
@@ -268,7 +287,7 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    return this.getPeople()
+    return people
       .filter(
         (person) =>
           person.name.indexOf(input) !== -1 ||
@@ -348,14 +367,15 @@ class PatientTracker extends Component {
     } = this.state;
     //console.log(open);
 
-    const people = this.filterPeople();
+    const people = this.getPeople();
+    const filteredPeople = this.filterPeople(people);
     return (
       <div>
         {this.state.open ? this.dialog() : null}
 
         <h1>
           Patient Tracker{" "}
-          <IconButton>
+          <IconButton onClick={this.handlePrint}>
             <PrintIcon fontSize="large" />
           </IconButton>
         </h1>
@@ -384,14 +404,14 @@ class PatientTracker extends Component {
         </div>
 
         <Typography variant="subtitle2" style={{ marginBottom: 5 }}>
-          {people.length} results
+          {filteredPeople.length} results
         </Typography>
 
         <Paper style={{ maxWidth: "100%", overflowX: "scroll" }}>
           <Paper style={{ height: 250, width: 1830 }}>
             <VirtualizedTable
-              rowCount={people.length}
-              rowGetter={({ index }) => people[index]}
+              rowCount={filteredPeople.length}
+              rowGetter={({ index }) => filteredPeople[index]}
               updateRow={this.updateRow}
               columns={[
                 {
