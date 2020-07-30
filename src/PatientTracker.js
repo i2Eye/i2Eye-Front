@@ -243,7 +243,17 @@ class PatientTracker extends Component {
         bmi:
           i % 7 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
         eyeScreening:
-          i % 6 === 0 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
+          i % 6 === 0 ? "Completed" : i % 5 === 0 ? "In Queue" : "Not Queued",
+        phlebotomy:
+          i % 4 === 0 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
+        fingerstickAnemia:
+          i % 5 === 2 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
+        fingerstickRCBG:
+          i % 6 === 3 ? "Completed" : i % 5 === 2 ? "In Queue" : "Not Queued",
+        bloodPressure:
+          i % 7 === 2 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
+        doctorConsult:
+          i % 6 === 5 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
       };
     }
     return people;
@@ -377,55 +387,82 @@ class PatientTracker extends Component {
           {people.length} results
         </Typography>
 
-        <Paper style={{ height: 272, width: "100%" }}>
-          <VirtualizedTable
-            rowCount={people.length}
-            rowGetter={({ index }) => people[index]}
-            updateRow={this.updateRow}
-            columns={[
-              {
-                width: 120,
-                label: "Actions",
-                dataKey: "actions",
-              },
-              {
-                width: 70,
-                label: "ID",
-                dataKey: "id",
-              },
-              {
-                width: 200,
-                label: "Name",
-                dataKey: "name",
-              },
-              {
-                width: 120,
-                label: "Age",
-                dataKey: "age",
-                numeric: true,
-              },
-              {
-                width: 120,
-                label: "Gender",
-                dataKey: "gender",
-              },
-              {
-                width: 150,
-                label: "Oral Health",
-                dataKey: "oralHealth",
-              },
-              {
-                width: 150,
-                label: "BMI",
-                dataKey: "bmi",
-              },
-              {
-                width: 150,
-                label: "Eye Screening",
-                dataKey: "eyeScreening",
-              },
-            ]}
-          />
+        <Paper style={{ maxWidth: "100%", overflowX: "scroll" }}>
+          <Paper style={{ height: 250, width: 1830 }}>
+            <VirtualizedTable
+              rowCount={people.length}
+              rowGetter={({ index }) => people[index]}
+              updateRow={this.updateRow}
+              columns={[
+                {
+                  width: 120,
+                  label: "Actions",
+                  dataKey: "actions",
+                },
+                {
+                  width: 70,
+                  label: "ID",
+                  dataKey: "id",
+                },
+                {
+                  width: 200,
+                  label: "Name",
+                  dataKey: "name",
+                },
+                {
+                  width: 120,
+                  label: "Age",
+                  dataKey: "age",
+                  numeric: true,
+                },
+                {
+                  width: 120,
+                  label: "Gender",
+                  dataKey: "gender",
+                },
+                {
+                  width: 150,
+                  label: "Oral Health",
+                  dataKey: "oralHealth",
+                },
+                {
+                  width: 150,
+                  label: "BMI",
+                  dataKey: "bmi",
+                },
+                {
+                  width: 150,
+                  label: "Eye Screening",
+                  dataKey: "eyeScreening",
+                },
+                {
+                  width: 150,
+                  label: "Phlebotomy Test",
+                  dataKey: "phlebotomy",
+                },
+                {
+                  width: 150,
+                  label: "Fingerstick Anemia",
+                  dataKey: "fingerstickAnemia",
+                },
+                {
+                  width: 150,
+                  label: "Fingerstick RCBG",
+                  dataKey: "fingerstickRCBG",
+                },
+                {
+                  width: 150,
+                  label: "Blood Pressure",
+                  dataKey: "bloodPressure",
+                },
+                {
+                  width: 150,
+                  label: "Doctor's Consult",
+                  dataKey: "doctorConsult",
+                },
+              ]}
+            />
+          </Paper>
         </Paper>
       </div>
     );
