@@ -20,6 +20,9 @@ class FormAbled extends Component {
     eyeScreening: EyeScreening,
     phlebotomy: Phlebotomy,
     fingerstickAnemia: FingerstickAnemia,
+    doctorConsult: Doctor,
+    fingerstickRCBG: Fingerstick,
+    bloodPressure: BloodPressure,
   };
 
   render() {

@@ -32,6 +32,13 @@ class StationSelect extends Component {
         tag: "fingerstickAnemia",
         checked: true,
       },
+      { name: "Doctor Consult", tag: "doctorConsult", checked: true },
+      {
+        name: "Fingerstick Test (RCBG)",
+        tag: "fingerstickRCBG",
+        checked: true,
+      },
+      { name: "Blood Pressure Test", tag: "bloodPressure", checked: true },
     ],
   };
 
