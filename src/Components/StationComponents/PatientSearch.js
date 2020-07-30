@@ -34,7 +34,7 @@ const StyledSwitch = withStyles({
   root: { verticalAlign: "baseline", marginLeft: 20 },
 })(Switch);
 
-const getPatientID = (id) => (Number(id) === NaN ? 0 : Number(id));
+const getPatientID = (id) => (isNaN(Number(id)) ? 0 : Number(id));
 
 class PatientSearch extends Component {
   state = {
