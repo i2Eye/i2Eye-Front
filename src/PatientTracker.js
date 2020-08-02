@@ -10,6 +10,7 @@ import Filter from "./Components/PatientTrackerComponents/Filter";
 import VirtualizedTable from "./Components/PatientTrackerComponents/VirtualizedTable";
 import PrintIcon from "@material-ui/icons/Print";
 import EditIcon from "@material-ui/icons/Edit";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -22,6 +23,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Tooltip from "@material-ui/core/Tooltip";
 import getTestData from "./TestData";
+import Worker from "./Components/PatientTrackerComponents/excel.worker";
+import * as FileSaver from "file-saver";
 import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
 
 const useStyles = (theme) => ({
@@ -39,6 +42,8 @@ const useStyles = (theme) => ({
   },
 });
 
+var excelWorker;
+
 class PatientTracker extends Component {
   state = {
     clickedRow: 0,
@@ -48,7 +53,10 @@ class PatientTracker extends Component {
     isFemale: true,
     hasIncompleteStations: true,
     completedAllStations: true,
-    open: false,
+    editOpen: false,
+    printOpen: 0,
+    fileName: "",
+    saveError: false,
   };
 
   seeMoreButton = (
@@ -66,7 +74,7 @@ class PatientTracker extends Component {
   );
 
   edit = () => {
-    this.setState({ open: true });
+    this.setState({ editOpen: true });
   };
 
   handleChange = (e) => {
@@ -78,22 +86,199 @@ class PatientTracker extends Component {
     });
   };
 
-  dialog = () => {
-    const { clickedRow, open } = this.state;
+  handleOpenSave = (x) => {
+    var today = new Date();
+    const name =
+      "Overall_Information_List_" +
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() < 9 ? 0 : "") +
+      (today.getMonth() + 1) +
+      "-" +
+      (today.getDate() < 10 ? 0 : "") +
+      today.getDate() +
+      "_" +
+      (today.getHours() < 10 ? 0 : "") +
+      today.getHours() +
+      (today.getMinutes() < 10 ? 0 : "") +
+      today.getMinutes() +
+      (today.getSeconds() < 10 ? 0 : "") +
+      today.getSeconds();
+
+    this.setState({ fileName: name, printOpen: x });
+  };
+
+  handlePrintClose = () => {
+    this.setState({ printOpen: 0 });
+  };
+
+  handlePDF = () => {
+    console.log("PDF");
+  };
+
+  getSaveDialog = (fileType) => {
+    const { printOpen, fileName } = this.state;
+    return (
+      <Dialog
+        open={printOpen > 0}
+        onClose={this.handlePrintClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle id="print-dialog-title">Save as</DialogTitle>
+        <DialogContent>
+          <TextField
+            id="excel-save-file-name"
+            name="fileName"
+            label="Enter File Name"
+            variant="outlined"
+            required
+            onChange={this.handleChange}
+            style={{ width: 300 }}
+            autoComplete="off"
+            defaultValue={fileName}
+            error={fileName === "" || fileName.indexOf(":") >= 0}
+            helperText={
+              fileName === ""
+                ? "File name cannot be blank"
+                : fileName.indexOf(":") >= 0
+                ? "File name cannot contain ':'"
+                : ""
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={fileName === ""}
+            onClick={() => {
+              fileType === "excel" ? this.handleExcel() : this.handlePDF();
+            }}
+            color="primary"
+          >
+            Save
+          </Button>
+          <Button onClick={this.handlePrintClose} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  getLoadingDialog = (fileType) => {
+    const { printOpen } = this.state;
+    return (
+      <Dialog open={printOpen > 0} aria-labelledby="print-dialog-title">
+        <DialogTitle id="print-dialog-title">Loading</DialogTitle>
+        <DialogContent>
+          <div
+            style={{
+              width: 300,
+              height: 56,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={(fileType = "excel" ? this.cancelExcel : this.cancelPDF)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  cancelExcel = () => {
+    if (excelWorker !== null) {
+      excelWorker.terminate();
+      excelWorker = null;
+      //console.log("save cancelled");
+    }
+    this.setState({ printOpen: 2 });
+  };
+
+  cancelPDF = () => {
+    this.setState({ printOpen: 3 });
+  };
+
+  printDialog = () => {
+    const { printOpen } = this.state;
+
+    switch (printOpen) {
+      case 0:
+        return null;
+
+      case 1:
+        return (
+          <Dialog
+            open={printOpen > 0}
+            onClose={this.handlePrintClose}
+            aria-labelledby="print-dialog-title"
+          >
+            <DialogTitle id="print-dialog-title">Save as</DialogTitle>
+            <DialogContent style={{ overflowY: "visible" }}>
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <Button
+                    onClick={() => this.handleOpenSave(3)}
+                    color="primary"
+                  >
+                    PDF
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    onClick={() => this.handleOpenSave(2)}
+                    color="primary"
+                  >
+                    Excel
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handlePrintClose} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        );
+
+      case 2:
+        return this.getSaveDialog("excel");
+      case 3:
+        return this.getSaveDialog("pdf");
+      case 4:
+        return this.getLoadingDialog();
+      default:
+        return 0;
+    }
+  };
+
+  editDialog = () => {
+    const { clickedRow, editOpen } = this.state;
     //console.log(clickedRow);
 
-    var a = this.getPeople().filter(
+    const patientData = this.getPeople().find(
       (person) => person.id.toString() === clickedRow.toString()
     );
-    //console.log(a[0].oralHealth);
+    //console.log(patientData.oralHealth);
 
     return (
       <Dialog
-        open={open}
+        open={editOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Patient ID: {a[0].id}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          Patient ID: {patientData.id}
+        </DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -111,7 +296,7 @@ class PatientTracker extends Component {
                       id="name"
                       label="Name"
                       onChange={this.handleChange}
-                      defaultValue={a[0].name}
+                      defaultValue={patientData.name}
                       autoComplete="off"
                       fullWidth
                     />
@@ -125,7 +310,7 @@ class PatientTracker extends Component {
                         labelId="gender-label"
                         id="gender"
                         onChange={this.handleChange}
-                        value={a[0].gender}
+                        value={patientData.gender}
                       >
                         <MenuItem value={"F"}>Female</MenuItem>
                         <MenuItem value={"M"}>Male</MenuItem>
@@ -139,7 +324,7 @@ class PatientTracker extends Component {
                       label="Age"
                       type="number"
                       onChange={this.handleChange}
-                      defaultValue={a[0].age}
+                      defaultValue={patientData.age}
                       fullWidth
                     />
                   </Grid>
@@ -151,7 +336,7 @@ class PatientTracker extends Component {
                         id="oralHealth"
                         labelId="OralHealth"
                         onChange={this.handleChange}
-                        defaultValue={a[0].oralHealth}
+                        defaultValue={patientData.oralHealth}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -167,7 +352,7 @@ class PatientTracker extends Component {
                         id="bmi"
                         labelId="BMI"
                         onChange={this.handleChange}
-                        defaultValue={a[0].bmi}
+                        defaultValue={patientData.bmi}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -183,7 +368,7 @@ class PatientTracker extends Component {
                         id="eyeScreening"
                         labelId="EyeScreening"
                         onChange={this.handleChange}
-                        defaultValue={a[0].eyeScreening}
+                        defaultValue={patientData.eyeScreening}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -206,7 +391,7 @@ class PatientTracker extends Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ editOpen: false });
   };
 
   editButton = (
@@ -218,25 +403,23 @@ class PatientTracker extends Component {
   );
 
   //print data to excel
-  handlePrint = () => {
-    const csvData = [];
-    for (let i = 1; i <= 10000; i++) {
-      csvData[i - 1] = getTestData(i);
+  handleExcel = () => {
+    const { fileName } = this.state;
+    if (window.Worker) {
+      excelWorker = new Worker();
+      excelWorker.postMessage("start save:" + this.state.fileName);
+      this.setState({ printOpen: 4 });
+      excelWorker.addEventListener("message", (event) => {
+        FileSaver.saveAs(event.data, fileName);
+        this.handlePrintClose();
+      });
+    } else {
+      const csvData = [];
+      for (let i = 1; i <= 10000; i++) {
+        csvData[i - 1] = getTestData(i);
+      }
+      FileSaver.saveAs(exportCSV(csvData), fileName);
     }
-    var today = new Date();
-    const fileName =
-      "Overall_Information_List_" +
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate() +
-      "_" +
-      today.getHours() +
-      today.getMinutes() +
-      today.getSeconds();
-
-    exportCSV(csvData, fileName);
   };
 
   handleInput = (e) => {
@@ -365,17 +548,18 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    //console.log(open);
+    //console.log(editOpen);
 
     const people = this.getPeople();
     const filteredPeople = this.filterPeople(people);
     return (
       <div>
-        {this.state.open ? this.dialog() : null}
+        {this.state.editOpen ? this.editDialog() : null}
+        {this.printDialog()}
 
         <h1>
           Patient Tracker{" "}
-          <IconButton onClick={this.handlePrint}>
+          <IconButton onClick={() => this.setState({ printOpen: 1 })}>
             <PrintIcon fontSize="large" />
           </IconButton>
         </h1>
@@ -413,6 +597,7 @@ class PatientTracker extends Component {
               rowCount={filteredPeople.length}
               rowGetter={({ index }) => filteredPeople[index]}
               updateRow={this.updateRow}
+              overscanRowCount={10}
               columns={[
                 {
                   width: 120,

@@ -13,7 +13,7 @@ const getTestData = (id) => {
       { num: 6, question: "Do you have tubercolosis", answer: "N" },
       {
         num: 7,
-        question: "Do ou live with someone with tubercolosis",
+        question: "Do you live with someone with tubercolosis",
         answer: "Y",
       },
       {
