@@ -23,9 +23,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Tooltip from "@material-ui/core/Tooltip";
 import getTestData from "./TestData";
-import Worker from "./Components/PatientTrackerComponents/excel.worker";
+import SaveWorker from "./Components/PatientTrackerComponents/save.worker";
 import * as FileSaver from "file-saver";
 import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
+import jsPDF from "jspdf";
+
+var saveWorker;
 
 const useStyles = (theme) => ({
   root: {
@@ -41,8 +44,6 @@ const useStyles = (theme) => ({
     minWidth: 320,
   },
 });
-
-var excelWorker;
 
 class PatientTracker extends Component {
   state = {
@@ -113,7 +114,23 @@ class PatientTracker extends Component {
   };
 
   handlePDF = () => {
-    console.log("PDF");
+    const { fileName } = this.state;
+    if (window.Worker) {
+      saveWorker = new SaveWorker();
+      const data = "save pdf";
+      saveWorker.postMessage(data);
+      this.setState({ printOpen: 5 });
+      saveWorker.addEventListener("message", (event) => {
+        FileSaver.saveAs(event.data, fileName + ".pdf");
+        this.handlePrintClose();
+        saveWorker = null;
+      });
+    } else {
+      var doc = new jsPDF({ orientation: "l", unit: "cm", format: "a4" });
+      doc.text("test", 1, 1);
+
+      doc.save(fileName);
+    }
   };
 
   getSaveDialog = (fileType) => {
@@ -124,7 +141,9 @@ class PatientTracker extends Component {
         onClose={this.handlePrintClose}
         aria-labelledby="print-dialog-title"
       >
-        <DialogTitle id="print-dialog-title">Save as</DialogTitle>
+        <DialogTitle id="print-dialog-title">
+          Save {fileType === "excel" ? "Excel" : "PDF"}
+        </DialogTitle>
         <DialogContent>
           <TextField
             id="excel-save-file-name"
@@ -148,7 +167,16 @@ class PatientTracker extends Component {
         </DialogContent>
         <DialogActions>
           <Button
-            disabled={fileName === ""}
+            style={{ marginRight: "auto" }}
+            onClick={() => {
+              this.setState({ printOpen: 1 });
+            }}
+            color="primary"
+          >
+            Back
+          </Button>
+          <Button
+            disabled={fileName === "" || fileName.indexOf(":") >= 0}
             onClick={() => {
               fileType === "excel" ? this.handleExcel() : this.handlePDF();
             }}
@@ -184,7 +212,7 @@ class PatientTracker extends Component {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={(fileType = "excel" ? this.cancelExcel : this.cancelPDF)}
+            onClick={fileType === "excel" ? this.cancelExcel : this.cancelPDF}
             color="primary"
           >
             Cancel
@@ -195,9 +223,9 @@ class PatientTracker extends Component {
   };
 
   cancelExcel = () => {
-    if (excelWorker !== null) {
-      excelWorker.terminate();
-      excelWorker = null;
+    if (saveWorker !== null) {
+      saveWorker.terminate();
+      saveWorker = null;
       //console.log("save cancelled");
     }
     this.setState({ printOpen: 2 });
@@ -255,7 +283,9 @@ class PatientTracker extends Component {
       case 3:
         return this.getSaveDialog("pdf");
       case 4:
-        return this.getLoadingDialog();
+        return this.getLoadingDialog("excel");
+      case 5:
+        return this.getLoadingDialog("pdf");
       default:
         return 0;
     }
@@ -406,12 +436,13 @@ class PatientTracker extends Component {
   handleExcel = () => {
     const { fileName } = this.state;
     if (window.Worker) {
-      excelWorker = new Worker();
-      excelWorker.postMessage("start save:" + this.state.fileName);
+      saveWorker = new SaveWorker();
+      saveWorker.postMessage("save excel");
       this.setState({ printOpen: 4 });
-      excelWorker.addEventListener("message", (event) => {
+      saveWorker.addEventListener("message", (event) => {
         FileSaver.saveAs(event.data, fileName);
         this.handlePrintClose();
+        saveWorker = null;
       });
     } else {
       const csvData = [];
@@ -473,7 +504,7 @@ class PatientTracker extends Component {
     return people
       .filter(
         (person) =>
-          person.name.indexOf(input) !== -1 ||
+          person.name.toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
           person.id.toString().indexOf(input) !== -1
       )
       .filter((person) => {

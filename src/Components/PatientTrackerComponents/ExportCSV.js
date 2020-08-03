@@ -11,7 +11,7 @@ const exportCSV = (csvData) => {
   const formatJSON = (fieldName) => {
     const dataList = csvData.map((person) => {
       const personData = {};
-      person[fieldName].map((question) => {
+      person[fieldName].forEach((question) => {
         personData[question.num] = Array.isArray(question.answer)
           ? question.answer.toString()
           : question.answer;
@@ -19,7 +19,7 @@ const exportCSV = (csvData) => {
       return personData;
     });
     const header = {};
-    questionRef[fieldName].map((question) => {
+    questionRef[fieldName].forEach((question) => {
       header[question.num] = question.num + ". " + question.question;
     });
     return [header, ...dataList];
