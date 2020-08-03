@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData";
 
 const questions = [
   {
@@ -34,17 +35,26 @@ const radioQuestions = [
     helper: "If Yes, proceed. If No, skip blood pressure station.",
   },
 ];
+
+const handleEdit = (id) => {
+  const data = getTestData(id).bloodPressure;
+  const newState = {
+    age:
+      data[0].answer === "Y"
+        ? "Above 18"
+        : data[0].answer === "N"
+        ? "18 and below"
+        : "",
+    Systolic1: data[1].answer,
+    Diastolic1: data[2].answer,
+    Systolic2: data[3].answer,
+    Diastolic2: data[4].answer,
+  };
+  return newState;
+};
+
 class BloodPressure extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      age: "",
-      Systolic1: "NIL",
-      Diastolic1: "NIL",
-      Systolic2: "NIL",
-      Diastolic2: "NIL",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleSubmit() {
     //get final data of form
@@ -106,6 +116,7 @@ class BloodPressure extends Component {
                       aria-label="age"
                       name="age"
                       onChange={this.handleAgeChange.bind(this)}
+                      value={this.state.age}
                     >
                       <FormControlLabel
                         value="Above 18"
@@ -149,6 +160,7 @@ class BloodPressure extends Component {
                       disabled={
                         this.state.age === "18 and below" ? true : false
                       }
+                      defaultValue={this.state[question.key]}
                     />
                     <p />
                   </span>

@@ -116,7 +116,7 @@ const getTestData = (id) => {
       },
     ],
     oralHealth: [
-      { num: 1, question: "Dental ID", answer: "" },
+      { num: 1, question: "Dental ID", answer: "12345" },
       {
         num: 2,
         question:
@@ -138,18 +138,18 @@ const getTestData = (id) => {
         num: 5,
         question:
           "If Y to having consumed, for how long have you been consuming",
-        answer: "Something",
+        answer: "5 years",
       },
       {
         num: 6,
         question: "If Y to having consumed, why do you still consume",
-        answer: "Something",
+        answer: "",
       },
       { num: 7, question: "Are you still consuming", answer: "N" },
       {
         num: 8,
         question: "If N to consuming now, when did you stop consuming",
-        answer: "1 year ago",
+        answer: "",
       },
       {
         num: 9,
@@ -163,6 +163,12 @@ const getTestData = (id) => {
       },
       {
         num: 11,
+        question:
+          "If Y, for how long? (e.g. Enter '4y, 5m' if 4 years and 5 months)",
+        answer: "",
+      },
+      {
+        num: 12,
         question: "If Y to having tried quitting, what made you consume again",
         answer: "",
       },
@@ -188,7 +194,7 @@ const getTestData = (id) => {
             : [
                 "Family member with coronory artery disease",
                 "Family member with high cholesterol",
-                "Smoling/intoxication consumption e.g. tobacco",
+                "Smoking/intoxication consumption e.g. tobacco",
               ],
       },
       { num: 3, question: "Vimta Registration No.", answer: "12345678" },

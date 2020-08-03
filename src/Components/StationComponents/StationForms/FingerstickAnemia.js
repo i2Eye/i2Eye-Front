@@ -7,10 +7,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData";
 
 const questions = [
-  { question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
+  { num: 1, question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
   {
+    num: 2,
     question: "How many meals do you eat a day?",
     label: "Meals per day",
     id: "meals",
@@ -19,36 +21,43 @@ const questions = [
 
 const radioQuestions = [
   {
+    num: 3,
     question:
       "How often do you eat protein (eg. daal, mung, rajma, chole, chana)",
     id: "protein",
   },
   {
+    num: 4,
     question: "How often do you eat carbohydrates (eg. chapati, rice)",
     id: "carbohydrates",
   },
   {
+    num: 5,
     question: "How often do you eat vegetables (eg. gobhi, patta gobhi, saag)",
     id: "vegetables",
   },
   {
+    num: 6,
     question: "How often do you eat sweets/desserts (eg. gulab jamun)",
     id: "sweets",
   },
 ];
 
+const handleEdit = (id) => {
+  const data = getTestData(id).fingerstickAnemia;
+  const newState = {
+    Hb: data[0].answer,
+    meals: data[1].answer,
+    protein: data[2].answer,
+    carbohydrates: data[3].answer,
+    vegetables: data[4].answer,
+    sweets: data[5].answer,
+  };
+  return newState;
+};
+
 class Fingerstick extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      Hb: "",
-      meals: "",
-      protein: "",
-      carbohydrates: "",
-      vegetables: "",
-      sweets: "",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleRadioChange(e) {
     if (e.target.name === "protein") {
@@ -91,6 +100,9 @@ class Fingerstick extends Component {
   }
 
   render() {
+    const data = getTestData(this.props.patientID);
+    const prevData = data.fingerstickAnemia;
+
     return (
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
@@ -119,6 +131,11 @@ class Fingerstick extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.label}
+                      defaultValue={
+                        prevData[question.num - 1].answer === ""
+                          ? false
+                          : prevData[question.num - 1].answer
+                      }
                     />
                     <p />
                   </span>
@@ -146,6 +163,7 @@ class Fingerstick extends Component {
                       aria-label="frequency"
                       name={question.id}
                       onChange={this.handleRadioChange.bind(this)}
+                      value={this.state[question.id]}
                     >
                       <FormControlLabel
                         value="Never"

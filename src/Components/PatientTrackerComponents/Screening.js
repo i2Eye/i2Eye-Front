@@ -61,8 +61,8 @@ class Screening extends Component {
         name: "registration",
       },
       {
-        label: "Oral Health",
-        name: "oralHealth",
+        label: "Blood Pressure Test",
+        name: "bloodPressure",
       },
       {
         label: "BMI & Abdominal Obesity",
@@ -73,16 +73,20 @@ class Screening extends Component {
         name: "eyeScreening",
       },
       {
-        label: "Phlebotomy Test",
-        name: "phlebotomy",
-      },
-      {
         label: "Fingerstick Blood Test (Anemia)",
         name: "fingerstickAnemia",
       },
       {
         label: "Fingerstick Blood Test (RCBG)",
         name: "fingerstickRCBG",
+      },
+      {
+        label: "Oral Health",
+        name: "oralHealth",
+      },
+      {
+        label: "Phlebotomy Test",
+        name: "phlebotomy",
       },
     ];
 
