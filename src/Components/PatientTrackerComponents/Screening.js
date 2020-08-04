@@ -158,14 +158,7 @@ class Screening extends Component {
             })}
           </Grid>
 
-          <Grid item xs={4}>
-            <Paper
-              style={{
-                height: 200,
-                width: "100%",
-              }}
-            ></Paper>
-          </Grid>
+          <Grid item xs={4}></Grid>
         </Grid>
       </React.Fragment>
     );

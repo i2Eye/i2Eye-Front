@@ -9,7 +9,7 @@ self.addEventListener("message", function (event) {
     case "save excel": {
       const csvData = [];
       for (let i = 1; i <= 10000; i++) {
-        csvData[i - 1] = getTestData(i);
+        csvData[i - 1] = { id: i, ...getTestData(i) };
       }
       self.postMessage(exportCSV(csvData));
       self.close();
