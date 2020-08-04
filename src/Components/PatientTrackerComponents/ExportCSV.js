@@ -12,13 +12,15 @@ const exportCSV = (csvData) => {
     const dataList = csvData.map((person) => {
       const personData = {};
       person[fieldName].forEach((question) => {
+        personData[0] = person.id;
         personData[question.num] = Array.isArray(question.answer)
-          ? question.answer.toString()
+          ? question.answer.toString().replace(/,/g, ", ")
           : question.answer;
       });
       return personData;
     });
     const header = {};
+    header[0] = "ID";
     questionRef[fieldName].forEach((question) => {
       header[question.num] = question.num + ". " + question.question;
     });
