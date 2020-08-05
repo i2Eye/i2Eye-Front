@@ -118,7 +118,7 @@ class PatientTracker extends Component {
     if (window.Worker) {
       saveWorker = new SaveWorker();
       const data = "save pdf";
-      saveWorker.postMessage(data);
+      saveWorker.postMessage({data : data});
       this.setState({ printOpen: 5 });
       saveWorker.addEventListener("message", (event) => {
         FileSaver.saveAs(event.data, fileName + ".pdf");
@@ -437,7 +437,8 @@ class PatientTracker extends Component {
     const { fileName } = this.state;
     if (window.Worker) {
       saveWorker = new SaveWorker();
-      saveWorker.postMessage("save excel");
+      const data = "save excel";
+      saveWorker.postMessage({data :data});
       this.setState({ printOpen: 4 });
       saveWorker.addEventListener("message", (event) => {
         FileSaver.saveAs(event.data, fileName);
