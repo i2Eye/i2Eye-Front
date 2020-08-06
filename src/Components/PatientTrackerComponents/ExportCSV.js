@@ -11,8 +11,8 @@ const exportCSV = (csvData) => {
   const formatJSON = (fieldName) => {
     const dataList = csvData.map((person) => {
       const personData = {};
+      personData[0] = person.id;
       person[fieldName].forEach((question) => {
-        personData[0] = person.id;
         personData[question.num] = Array.isArray(question.answer)
           ? question.answer.toString().replace(/,/g, ", ")
           : question.answer;

@@ -8,7 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
 import Filter from "./Components/PatientTrackerComponents/Filter";
 import VirtualizedTable from "./Components/PatientTrackerComponents/VirtualizedTable";
-import PrintIcon from "@material-ui/icons/Print";
+import Tooltip from "@material-ui/core/Tooltip";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import EditIcon from "@material-ui/icons/Edit";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -21,7 +22,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Tooltip from "@material-ui/core/Tooltip";
 import getTestData from "./TestData";
 import SaveWorker from "./Components/PatientTrackerComponents/save.worker";
 import * as FileSaver from "file-saver";
@@ -117,8 +117,7 @@ class PatientTracker extends Component {
     const { fileName } = this.state;
     if (window.Worker) {
       saveWorker = new SaveWorker();
-      const data = "save pdf";
-      saveWorker.postMessage({data : data});
+      saveWorker.postMessage({ message: "save pdf" });
       this.setState({ printOpen: 5 });
       saveWorker.addEventListener("message", (event) => {
         FileSaver.saveAs(event.data, fileName + ".pdf");
@@ -232,6 +231,11 @@ class PatientTracker extends Component {
   };
 
   cancelPDF = () => {
+    if (saveWorker !== null) {
+      saveWorker.terminate();
+      saveWorker = null;
+      //console.log("save cancelled");
+    }
     this.setState({ printOpen: 3 });
   };
 
@@ -437,8 +441,7 @@ class PatientTracker extends Component {
     const { fileName } = this.state;
     if (window.Worker) {
       saveWorker = new SaveWorker();
-      const data = "save excel";
-      saveWorker.postMessage({data :data});
+      saveWorker.postMessage({ message: "save excel" });
       this.setState({ printOpen: 4 });
       saveWorker.addEventListener("message", (event) => {
         FileSaver.saveAs(event.data, fileName);
@@ -591,9 +594,11 @@ class PatientTracker extends Component {
 
         <h1>
           Patient Tracker{" "}
-          <IconButton onClick={() => this.setState({ printOpen: 1 })}>
-            <PrintIcon fontSize="large" />
-          </IconButton>
+          <Tooltip title="Download">
+            <IconButton onClick={() => this.setState({ printOpen: 1 })}>
+              <GetAppIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
         </h1>
         <TextField
           id="patient-tracker-search"
