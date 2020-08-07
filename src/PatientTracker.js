@@ -378,7 +378,7 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
                       <InputLabel id="BMI">BMI</InputLabel>
                       <Select
@@ -394,7 +394,7 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
                       <InputLabel id="EyeScreening">EyeScreening</InputLabel>
                       <Select
@@ -403,6 +403,86 @@ class PatientTracker extends Component {
                         labelId="EyeScreening"
                         onChange={this.handleChange}
                         defaultValue={patientData.eyeScreening}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Phlebotomy Test">Phlebotomy Test</InputLabel>
+                      <Select
+                        name="phlebotomy"
+                        id="phlebotomy"
+                        labelId="Phlebotomy Test"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.phlebotomy}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Fingerstick Anemia">Fingerstick Anemia</InputLabel>
+                      <Select
+                        name="fingerstickAnemia"
+                        id="fingerstickAnemia"
+                        labelId="Fingerstick Anemia"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.fingerstickAnemia}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Fingerstick RCBG">Fingerstick RCBG</InputLabel>
+                      <Select
+                        name="fingerstickRCBG"
+                        id="fingerstickRCBG"
+                        labelId="Fingerstick RCBG"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.fingerstickRCBG}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Blood Pressure">Blood Pressure</InputLabel>
+                      <Select
+                        name="bloodPressure"
+                        id="bloodPressure"
+                        labelId="Blood Pressure"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.bloodPressure}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Doctor's Consult">Doctor's Consult</InputLabel>
+                      <Select
+                        name="doctorConsult"
+                        id="doctorConsult"
+                        labelId="Doctor's Consult"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.doctorConsult}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
