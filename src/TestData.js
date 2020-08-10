@@ -13,7 +13,7 @@ const getTestData = (id) => {
       { num: 6, question: "Do you have tubercolosis", answer: "N" },
       {
         num: 7,
-        question: "Do ou live with someone with tubercolosis",
+        question: "Do you live with someone with tubercolosis",
         answer: "Y",
       },
       {
@@ -174,9 +174,9 @@ const getTestData = (id) => {
       },
     ],
     bmi: [
-      { num: 1, question: "Height (m)", answer: 1.7 },
-      { num: 2, question: "Weight (kg)", answer: 60 },
-      { num: 3, question: "Waist circumference (cm)", answer: 75 },
+      { num: 1, question: "Height (m)", answer: "" },
+      { num: 2, question: "Weight (kg)", answer: "" },
+      { num: 3, question: "Waist circumference (cm)", answer: "" },
     ],
     eyeScreening: [{ num: 1, question: "SNC ID", answer: "12345678" }],
     phlebotomy: [

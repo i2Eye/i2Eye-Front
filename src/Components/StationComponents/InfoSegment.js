@@ -7,10 +7,26 @@ const information = [
   { info: "Gender", id: "gender" },
   { info: "Birthdate", id: "birthdate" },
   { info: "Age", id: "age" },
-  { info: "Contact Number", id: "contact" },
-  { info: "Spoken Language", id: "language" },
-  { info: "Any drug allergy", id: "allergy" },
-  { info: "Any blood borne diseases", id: "diseases" },
+  {
+    info: "Have tubercolosis?",
+    id: "tubercolosis",
+  },
+  {
+    info: "Living with someone with tubercolosis?",
+    id: "livingWithTubercolosis",
+  },
+  {
+    info: "Any blood borne diseases?",
+    id: "anyBloodBorneDiseases",
+  },
+  {
+    info: "Blood borne disease",
+    id: "bloodBorneDisease",
+  },
+  {
+    info: "Pre-existing medical conditions",
+    id: "medicalConditions",
+  },
 ];
 
 const handleEdit = (id) => {
@@ -21,10 +37,11 @@ const handleEdit = (id) => {
     gender: data[2].answer,
     birthdate: data[3].answer,
     age: data[4].answer,
-    contact: data[7].answer,
-    language: data[8].answer,
-    allergy: data[9].answer,
-    diseases: data[10].answer,
+    tubercolosis: data[5].answer,
+    livingWithTubercolosis: data[6].answer,
+    anyBloodBorneDiseases: data[9].answer,
+    bloodBorneDiseases: data[10].answer,
+    medicalConditions: data[11].answer,
   };
   return newState;
 };
