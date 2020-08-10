@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 import Filter from "./Components/PatientTrackerComponents/Filter";
 import VirtualizedTable from "./Components/PatientTrackerComponents/VirtualizedTable";
 import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import EditIcon from "@material-ui/icons/Edit";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -412,7 +413,9 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
-                      <InputLabel id="Phlebotomy Test">Phlebotomy Test</InputLabel>
+                      <InputLabel id="Phlebotomy Test">
+                        Phlebotomy Test
+                      </InputLabel>
                       <Select
                         name="phlebotomy"
                         id="phlebotomy"
@@ -428,7 +431,9 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
-                      <InputLabel id="Fingerstick Anemia">Fingerstick Anemia</InputLabel>
+                      <InputLabel id="Fingerstick Anemia">
+                        Fingerstick Anemia
+                      </InputLabel>
                       <Select
                         name="fingerstickAnemia"
                         id="fingerstickAnemia"
@@ -444,7 +449,9 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
-                      <InputLabel id="Fingerstick RCBG">Fingerstick RCBG</InputLabel>
+                      <InputLabel id="Fingerstick RCBG">
+                        Fingerstick RCBG
+                      </InputLabel>
                       <Select
                         name="fingerstickRCBG"
                         id="fingerstickRCBG"
@@ -460,7 +467,9 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
-                      <InputLabel id="Blood Pressure">Blood Pressure</InputLabel>
+                      <InputLabel id="Blood Pressure">
+                        Blood Pressure
+                      </InputLabel>
                       <Select
                         name="bloodPressure"
                         id="bloodPressure"
@@ -476,7 +485,9 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
-                      <InputLabel id="Doctor's Consult">Doctor's Consult</InputLabel>
+                      <InputLabel id="Doctor's Consult">
+                        Doctor's Consult
+                      </InputLabel>
                       <Select
                         name="doctorConsult"
                         id="doctorConsult"
@@ -654,6 +665,117 @@ class PatientTracker extends Component {
     });
   };
 
+  getColumns = (people) => {
+    const columns = [
+      {
+        width: 120,
+        label: "Actions",
+        dataKey: "actions",
+      },
+      {
+        width: 70,
+        label: "ID",
+        dataKey: "id",
+      },
+      {
+        width: 230,
+        label: "Name",
+        dataKey: "name",
+      },
+      {
+        width: 70,
+        label: "Age",
+        dataKey: "age",
+        numeric: true,
+      },
+      {
+        width: 120,
+        label: "Gender",
+        dataKey: "gender",
+      },
+      {
+        width: 150,
+        label: "Oral Health",
+        dataKey: "oralHealth",
+      },
+      {
+        width: 150,
+        label: "BMI",
+        dataKey: "bmi",
+      },
+      {
+        width: 150,
+        label: "Eye Screening",
+        dataKey: "eyeScreening",
+      },
+      {
+        width: 150,
+        label: "Phlebotomy Test",
+        dataKey: "phlebotomy",
+      },
+      {
+        width: 150,
+        label: "Fingerstick Anemia",
+        dataKey: "fingerstickAnemia",
+      },
+      {
+        width: 150,
+        label: "Fingerstick RCBG",
+        dataKey: "fingerstickRCBG",
+      },
+      {
+        width: 150,
+        label: "Blood Pressure",
+        dataKey: "bloodPressure",
+      },
+      {
+        width: 150,
+        label: "Doctor's Consult",
+        dataKey: "doctorConsult",
+      },
+    ];
+
+    const getStationSummary = (dataKey) => (
+      <React.Fragment>
+        <p>Station Summary:</p>
+        <p>
+          {"Total no. of people registered: " +
+            people.filter(
+              (person) =>
+                person[dataKey] === "In Queue" ||
+                person[dataKey] === "Completed"
+            ).length}
+        </p>
+        <p>
+          {"No. of people in queue: " +
+            people.filter((person) => person[dataKey] === "In Queue").length}
+        </p>
+        <p>
+          {"No. of people in queue: " +
+            people.filter((person) => person[dataKey] === "Completed").length}
+        </p>
+      </React.Fragment>
+    );
+
+    for (let i = 5; i < columns.length; i++) {
+      columns[i].label = (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p style={{ display: "inline" }}>{columns[i].label}</p>
+          <Tooltip
+            title={getStationSummary(columns[i].dataKey)}
+            placement="top"
+          >
+            <InfoIcon
+              color="disabled"
+              style={{ marginLeft: 7, fontSize: 11 }}
+            />
+          </Tooltip>
+        </div>
+      );
+    }
+    return columns;
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -715,74 +837,7 @@ class PatientTracker extends Component {
               rowGetter={({ index }) => filteredPeople[index]}
               updateRow={this.updateRow}
               overscanRowCount={10}
-              columns={[
-                {
-                  width: 120,
-                  label: "Actions",
-                  dataKey: "actions",
-                },
-                {
-                  width: 70,
-                  label: "ID",
-                  dataKey: "id",
-                },
-                {
-                  width: 200,
-                  label: "Name",
-                  dataKey: "name",
-                },
-                {
-                  width: 120,
-                  label: "Age",
-                  dataKey: "age",
-                  numeric: true,
-                },
-                {
-                  width: 120,
-                  label: "Gender",
-                  dataKey: "gender",
-                },
-                {
-                  width: 150,
-                  label: "Oral Health",
-                  dataKey: "oralHealth",
-                },
-                {
-                  width: 150,
-                  label: "BMI",
-                  dataKey: "bmi",
-                },
-                {
-                  width: 150,
-                  label: "Eye Screening",
-                  dataKey: "eyeScreening",
-                },
-                {
-                  width: 150,
-                  label: "Phlebotomy Test",
-                  dataKey: "phlebotomy",
-                },
-                {
-                  width: 150,
-                  label: "Fingerstick Anemia",
-                  dataKey: "fingerstickAnemia",
-                },
-                {
-                  width: 150,
-                  label: "Fingerstick RCBG",
-                  dataKey: "fingerstickRCBG",
-                },
-                {
-                  width: 150,
-                  label: "Blood Pressure",
-                  dataKey: "bloodPressure",
-                },
-                {
-                  width: 150,
-                  label: "Doctor's Consult",
-                  dataKey: "doctorConsult",
-                },
-              ]}
+              columns={this.getColumns(filteredPeople)}
             />
           </Paper>
         </Paper>

@@ -147,7 +147,10 @@ MuiVirtualizedTable.propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataKey: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      label: PropTypes.PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.object.isRequired,
+      ]),
       numeric: PropTypes.bool,
       width: PropTypes.number.isRequired,
     })
