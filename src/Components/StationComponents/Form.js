@@ -26,11 +26,19 @@ class Form extends Component {
           color="primary"
           style={{ marginBottom: 20 }}
           component={Link}
-          to={`/stations/patient_search/${params.stationName}/${params.patientID}`}
+          to={
+            this.props.location.pathname ===
+            `/stations/${params.stationName}/edit/${params.patientID}`
+              ? `/patient_tracker/screening_review/${params.patientID}`
+              : `/stations/patient_search/${params.stationName}/${params.patientID}`
+          }
         >
-          Back
+          {this.props.location.pathname ===
+          `/stations/${params.stationName}/edit/${params.patientID}`
+            ? "Cancel"
+            : "Back"}
         </Button>
-        <FormAbled stationName={params.stationName} id={params.patientID}/>
+        <FormAbled stationName={params.stationName} id={params.patientID} />
       </div>
     );
   }

@@ -397,7 +397,6 @@ class Screening extends Component {
         label: "Fingerstick Blood Test (Anemia)",
         name: "fingerstickAnemia",
       },
-
       {
         label: "Fingerstick Blood Test (RCBG)",
         name: "fingerstickRCBG",
@@ -470,7 +469,7 @@ class Screening extends Component {
                         to={
                           station.name === "registration"
                             ? `/registration/edit/${params.patientID}`
-                            : `/stations/${station.name}/${params.patientID}`
+                            : `/stations/${station.name}/edit/${params.patientID}`
                         }
                       >
                         <IconButton>

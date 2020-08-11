@@ -53,6 +53,11 @@ export default function App() {
                 path="/stations/:stationName/:patientID"
                 component={Form}
               />
+              <Route
+                exact
+                path="/stations/:stationName/edit/:patientID"
+                component={Form}
+              />
             </Switch>
           </Suspense>
         </div>
