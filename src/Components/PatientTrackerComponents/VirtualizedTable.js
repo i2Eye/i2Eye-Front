@@ -95,6 +95,7 @@ class MuiVirtualizedTable extends React.PureComponent {
       rowHeight,
       headerHeight,
       updateRow,
+      overscanRowCount,
       ...tableProps
     } = this.props;
     return (
@@ -115,6 +116,7 @@ class MuiVirtualizedTable extends React.PureComponent {
               filtering: true,
             }}
             onRowMouseOver={updateRow}
+            overscanRowCount={overscanRowCount}
           >
             {columns.map(({ dataKey, ...other }, index) => {
               return (
@@ -145,7 +147,10 @@ MuiVirtualizedTable.propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataKey: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      label: PropTypes.PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.object.isRequired,
+      ]),
       numeric: PropTypes.bool,
       width: PropTypes.number.isRequired,
     })

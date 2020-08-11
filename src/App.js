@@ -72,5 +72,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 80,
     marginRight: 80,
     marginTop: 30,
+    marginBottom: 30,
   },
 }));

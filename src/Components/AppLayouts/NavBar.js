@@ -13,7 +13,7 @@ class NavBar extends Component {
   render() {
     const { className: classes } = this.props;
     return (
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" className={classes.root}>
             i2Eye
