@@ -7,6 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData.js";
 
 const questions = [
   { question: "Dental ID", label: "Dental ID", id: "id", type: "text" },
@@ -79,24 +80,33 @@ const questions = [
   },
 ];
 
+const handleEdit = (id) => {
+  const data = getTestData(id).oralHealth;
+  const newState = {
+    id: data[0].answer,
+    intoxication:
+      data[1].answer === "Y" ? "Yes" : data[1].answer === "N" ? "No" : "",
+    product: data[2].answer,
+    amount: data[3].answer.includes("<1")
+      ? "<1 a day"
+      : data[3].answer.includes("1-10")
+      ? "1-10 a day"
+      : ">10 a day",
+    duration: data[4].answer,
+    reason: data[5].answer,
+    consuming:
+      data[6].answer === "Y" ? "Yes" : data[6].answer === "N" ? "No" : "",
+    stopDate: data[7].answer,
+    stopReason: data[8].answer,
+    quit: data[9].answer === "Y" ? "Yes" : data[9].answer === "N" ? "No" : "",
+    quitDuration: data[10].answer,
+    consumeAgainReason: data[11].answer,
+  };
+  return newState;
+};
+
 class OralHealth extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: "",
-      intoxication: "",
-      product: "",
-      amount: "",
-      duration: "",
-      reason: "",
-      consuming: "",
-      stopDate: "",
-      stopReason: "",
-      quit: "",
-      quitDuration: "",
-      consumeAgainReason: "",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleChange(e) {
     if (e.target.id === "id") {
@@ -217,6 +227,7 @@ class OralHealth extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="text"
                       label={question.label}
+                      defaultValue={this.state[question.id]}
                       disabled={
                         question.id === "id"
                           ? false
@@ -267,6 +278,7 @@ class OralHealth extends Component {
                   <RadioGroup
                     name={question.name}
                     onChange={this.handleRadioChange.bind(this)}
+                    value={this.state[question.name]}
                   >
                     {question.options.map((option) => (
                       <FormControlLabel

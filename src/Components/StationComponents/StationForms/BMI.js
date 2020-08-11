@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData";
 
 const questions = [
   { question: "Height (m)", id: "height" },
@@ -9,15 +10,18 @@ const questions = [
   { question: "Waist circumference (cm)", id: "waist" },
 ];
 
+const handleEdit = (id) => {
+  const data = getTestData(id).bmi;
+  const newState = {
+    height: data[0].answer,
+    weight: data[1].answer,
+    waist: data[2].answer,
+  };
+  return newState;
+};
+
 class BMI extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      height: 0,
-      weight: 0,
-      waist: 0,
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleChange(e) {
     if (e.target.id === "height") {
@@ -72,6 +76,7 @@ class BMI extends Component {
                       label={question.question}
                       type="number"
                       style={{ width: "250px" }}
+                      defaultValue={this.state[question.id]}
                     />
                     <p />
                   </span>

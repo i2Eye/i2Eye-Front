@@ -31,6 +31,11 @@ export default function App() {
                 path="/stations/patient_search/:stationName"
                 component={PatientSearch}
               />
+              <Route
+                exact
+                path="/stations/patient_search/:stationName/:patientID"
+                component={PatientSearch}
+              />
               <Route exact path="/registration" component={RegForm} />
               <Route
                 exact

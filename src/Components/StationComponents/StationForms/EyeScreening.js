@@ -2,16 +2,20 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData";
 
 const questions = [{ question: "SNC ID" }];
 
+const handleEdit = (id) => {
+  const data = getTestData(id).eyeScreening;
+  const newState = {
+    id: data[0].answer,
+  };
+  return newState;
+};
+
 class EyeScreening extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: "",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleChange(e) {
     this.setState({ id: e.target.value });
@@ -27,6 +31,9 @@ class EyeScreening extends Component {
   }
 
   render() {
+    const data = getTestData(this.props.patientID);
+    const prevData = data.eyeScreening;
+
     return (
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
@@ -56,6 +63,7 @@ class EyeScreening extends Component {
                       name="search"
                       type="text"
                       label={question.question}
+                      defaultValue={this.state.id}
                     />
                     <p />
                   </span>

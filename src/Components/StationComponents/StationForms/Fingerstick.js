@@ -8,29 +8,41 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
+import getTestData from "../../../TestData";
+
+const radioQuestions = [
+  {
+    num: 1,
+    question: "Is patient > 18 years old?",
+    helper: "If Yes, proceed. If No, skip RCBG station.",
+  },
+];
 
 const questions = [
   {
+    num: 2,
     question: "Randomy capillary blood glucose (mg/dL)",
     label: "RCBG (mg/dL)",
     id: "RCBG",
   },
 ];
 
-const radioQuestions = [
-  {
-    question: "Is patient > 18 years old?",
-    helper: "If Yes, proceed. If No, skip RCBG station.",
-  },
-];
+const handleEdit = (id) => {
+  const data = getTestData(id).fingerstickRCBG;
+  const newState = {
+    age:
+      data[0].answer === "Y"
+        ? "Above 18"
+        : data[0].answer === "N"
+        ? "18 and below"
+        : "",
+    RCBG: data[1].answer,
+  };
+  return newState;
+};
+
 class EyeScreening extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      RCBG: 0,
-      age: "",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleSubmit() {
     //get final data of form
@@ -46,6 +58,9 @@ class EyeScreening extends Component {
   }
 
   render() {
+    const data = getTestData(this.props.patientID);
+    const prevData = data.fingerstickRCBG;
+
     return (
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
@@ -73,6 +88,7 @@ class EyeScreening extends Component {
                       aria-label="age"
                       name="age"
                       onChange={this.handleAgeChange.bind(this)}
+                      value={this.state.age}
                     >
                       <FormControlLabel
                         value="Above 18"
@@ -114,6 +130,7 @@ class EyeScreening extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.label}
+                      defaultValue={this.state.RCBG}
                     />
                     <p />
                   </li>
