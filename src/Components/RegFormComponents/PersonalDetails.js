@@ -1,8 +1,7 @@
 import React from "react";
-import { Field } from 'formik';
+import { Field, ErrorMessage } from 'formik';
 import { Grid, Paper, FormHelperText } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -17,16 +16,23 @@ export const PersonalDetails = ({
   touched,
   handleChange,
   isValid,
+  validateForm,
+  validationSchema,
 }) => {
   
-  const nextStep = (e) => {
+  const nextStep = async (e) => {
     e.preventDefault();
     // validate
+    const errorsResult = await validateForm();
     // check if is valid
-    setStep(++step);
+    if (errorsResult.length === 0) {
+      setStep(++step);
+    }
+    return ;
   }
 
   return (
+    console.log(<ErrorMessage name="name" />),
     <React.Fragment>
       <h1>Registration</h1>
       <Grid container spacing={3}>
@@ -50,15 +56,17 @@ export const PersonalDetails = ({
                   name="name"
                   id="name"
                   label="Name"
-                  onChange={handleChange}
-                  defaultValue={values.name}
+                  //onChange={handleChange}
+                  //defaultValue={values.name}
                   autoComplete="off"
                   fullWidth
-                  error={touched.name && errors.name}
-                  helperText={touched.name && errors.name}
+                  // error={touched.name && errors.name}
+                  // helperText={touched.name && errors.name}
+                  //error={<ErrorMessage name="name"/>}
+                  helperText={<ErrorMessage name="name" key="name"/>}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <Field
                   as={TextField}
                   required
@@ -166,19 +174,11 @@ export const PersonalDetails = ({
                   </Field>
                 <FormHelperText>{(touched.occupation && errors.occupation) && errors.occupation}</FormHelperText>  
                 </FormControl>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Paper>
         </Grid>
       </Grid>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: 20 }}
-        onClick={nextStep}
-      >
-        Next
-      </Button>
     </React.Fragment>
     );
 }

@@ -8,17 +8,17 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
 class Lifestyle extends Component {
-  nextStep = (e) => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
+  // nextStep = (e) => {
+  //   e.preventDefault();
+  //   this.props.nextStep();
+  // };
 
-  prevStep = () => {
-    this.props.prevStep();
-  };
+  // prevStep = () => {
+  //   this.props.prevStep();
+  // };
 
   render() {
-    const { values, handleChange } = this.props;
+    const { values } = this.props;
 
     return (
       <React.Fragment>
@@ -44,7 +44,7 @@ class Lifestyle extends Component {
                       name="exercise_freq"
                       labelId="exercise_freq-label"
                       id="exercise_freq"
-                      onChange={handleChange}
+                      //onChange={handleChange}
                       value={values.gender}
                       InputLabelProps={{
                         shrink: true,
@@ -63,7 +63,7 @@ class Lifestyle extends Component {
                     name="exercise_duration"
                     id="exercise_duration"
                     type="number"
-                    onChange={handleChange}
+                    //onChange={handleChange}
                     defaultValue={values.exercise_duration}
                     fullWidth
                   />
@@ -73,7 +73,7 @@ class Lifestyle extends Component {
             </Paper>
           </Grid>
         </Grid>
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginRight: 20 }}
@@ -88,7 +88,7 @@ class Lifestyle extends Component {
           onClick={this.nextStep}
         >
           Next
-        </Button>
+        </Button> */}
       </React.Fragment>
     );
   }
