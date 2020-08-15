@@ -8,19 +8,19 @@ export const getStepValidationSchema = (step) => {
         nric: Yup.string().required("This field is required"),
         gender: Yup.string().required("This field is required"),
         birthday: Yup.date().required("This field is required"),
-        age: Yup.number().min(0).required("Age must be at least zero"),
+        age: Yup.number().min(0, "Age must be at least zero").required("This field is required"),
         education: Yup.string().required("This field is required"),
         occupation: Yup.string().required("This field is required"),
       });
     case 1:
       return Yup.object({
         exercise_freq: Yup.string().required("This field is required"),
-        exercise_duration: Yup.number().min(0).required("Hours must be at least zero"),
+        exercise_duration: Yup.number().min(0, "Hours must be at least zero").required("This field is required"),
       });
     case 2:
       return Yup.object({
-        monthly_household_income: Yup.number().min(0).required("Income must be at least zero"),
-        household_count: Yup.number().min(0).required("Household count must be at least zero"),
+        monthly_household_income: Yup.number().min(0, "Income must be at least zero").required("This field is required"),
+        household_count: Yup.number().min(0,"Household count must be at least zero").required("This field is required"),
       });
     case 3:
       return Yup.object({
@@ -41,16 +41,15 @@ export const getStepValidationSchema = (step) => {
         has_pre_existing_medical_conditions: Yup.boolean().required("This field is required"),
             
         family_has_diabetes: Yup.boolean().required("This field is required"),
-        family_diabetes_count: Yup.number().min(0).required("This field must be at least zero"),
+        family_diabetes_count: Yup.number().min(0, "This field must be at least zero").required("This field is required"),
         
         family_has_anemia: Yup.boolean().required("This field is required"),
-        family_anemia_count: Yup.number().min(0).required("This field must be at least zero"),
+        family_anemia_count: Yup.number().min(0, "This field must be at least zero").required("This field is required"),
         
         family_has_oral_cancer: Yup.boolean().required("This field is required"),
-        family_oral_cancer_count: Yup.number().min(0).required("This field must be at least zero"),
+        family_oral_cancer_count: Yup.number().min(0, "This field must be at least zero").required("This field is required"),
         
         pre_existing_conditions: Yup.string().required("This field is required"),
-        family_pre_existing_conditions: Yup.boolean().required("This field is required"),
       });
     default:
       return null;
