@@ -137,7 +137,7 @@ export const MedicalConditions = ({
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.blood_borne_disease && errors.blood_borne_disease}>
                     <FormLabel htmlFor="has_blood_borne_disease">If "Yes" to having a blood borne disease, what Blood Borne Disease do you have?</FormLabel>
                     <Field
                       as={TextField}
@@ -155,7 +155,7 @@ export const MedicalConditions = ({
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.pre_existing_conditions && errors.pre_existing_conditions}>
                     <FormLabel htmlFor="pre_existing_conditions">Do you have any pre-existing medical conditions?</FormLabel>
                     <Field
                       as={TextField}
@@ -190,7 +190,7 @@ export const MedicalConditions = ({
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.family_diabetes_count && errors.family_diabetes_count}>
                     <FormLabel htmlFor="family_diabetes_count">If "Yes" to knowing anyone in the family who has diabetes, how many family members have diabetes?</FormLabel>
                     <Field
                       as={TextField}
@@ -225,7 +225,7 @@ export const MedicalConditions = ({
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.family_anemia_count && errors.family_anemia_count}>
                     <FormLabel htmlFor="family_anemia_count">If "Yes" to knowing anyone in the family who has anemia, how many family members have anemia?</FormLabel>
                     <Field
                       as={TextField}

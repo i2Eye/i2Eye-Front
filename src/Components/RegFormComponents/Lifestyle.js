@@ -53,7 +53,7 @@ export const Lifestyle = ({
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required error={touched.exercise_duration && errors.exercise_duration}>
                     <FormLabel id="exercise_duration-label">How long do you exercise per session (in hours)?</FormLabel>
                   <Field
                     as={TextField}

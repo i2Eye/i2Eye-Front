@@ -54,7 +54,7 @@ export const HouseholdInfo = ({
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl>
+                  <FormControl required error={touched.household_count && errors.household_count}>
                     <FormLabel htmlFor="household_count">How many people are there in the household (including yourself)</FormLabel>
                   </FormControl>
                   <Field
