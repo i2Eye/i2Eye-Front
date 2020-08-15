@@ -1,22 +1,17 @@
 import React, { Component } from "react";
+import { Field } from 'formik';
 import { Grid, Paper, InputAdornment, FormLabel } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
 
-class HouseholdInfo extends Component {
-  nextStep = (e) => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
-  
-  prevStep = () => {
-    this.props.prevStep();
-  };
-
-  render() {
-    const { values, handleChange } = this.props;
+export const HouseholdInfo = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+}) => {
 
     return (
       <React.Fragment>
@@ -36,12 +31,14 @@ class HouseholdInfo extends Component {
                   <Typography variant='h4'>Household Information</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
+                  <Field
+                    as={TextField}
+                    required
                     name="monthly_household_income"
                     id="monthly_household_income"
                     label="Monthly Household Income (INR) [total]"
                     onChange={handleChange}
-                    defaultValue={values.monthly_household_income}
+                    value={values.monthly_household_income}
                     type="number"
                     autoComplete="off"
                     fullWidth
@@ -52,44 +49,33 @@ class HouseholdInfo extends Component {
                         </InputAdornment>
                       ),
                     }}
+                    error={touched.monthly_household_income && errors.monthly_household_income}
+                    helperText={touched.monthly_household_income && errors.monthly_household_income}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl>
                     <FormLabel htmlFor="household_count">How many people are there in the household (including yourself)</FormLabel>
                   </FormControl>
-                  <TextField
+                  <Field
+                    as={TextField}
+                    required
                     name="household_count"
                     id="household_count"
                     type="number"
                     onChange={handleChange}
-                    defaultValue={values.household_count}
+                    value={values.household_count}
                     fullWidth
+                    error={touched.household_count && errors.household_count}
+                    helperText={touched.household_count && errors.household_count}
                   />
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
         </Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20, marginRight: 20 }}
-          onClick={this.prevStep}
-        >
-          Back
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.nextStep}
-        >
-          Next
-        </Button>
       </React.Fragment>
     );
-  }
 }
 
 export default HouseholdInfo;

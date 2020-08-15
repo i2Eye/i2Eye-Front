@@ -1,24 +1,18 @@
-import React, { Component } from "react";
-import { Grid, Paper, FormLabel } from "@material-ui/core";
+import React from "react";
+import { Field } from 'formik';
+import { Grid, Paper, FormLabel, FormHelperText } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-class Lifestyle extends Component {
-  // nextStep = (e) => {
-  //   e.preventDefault();
-  //   this.props.nextStep();
-  // };
-
-  // prevStep = () => {
-  //   this.props.prevStep();
-  // };
-
-  render() {
-    const { values } = this.props;
+export const Lifestyle = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+}) => {
 
     return (
       <React.Fragment>
@@ -38,14 +32,15 @@ class Lifestyle extends Component {
                   <Typography variant='h4'>Lifestyle</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.exercise_freq && errors.exercise_freq}>
                     <FormLabel id="exercise_freq-label">How often do you exercise or do strenuous activity (lifting heavy objects, farming, construction work) per week?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="exercise_freq"
                       labelId="exercise_freq-label"
                       id="exercise_freq"
-                      //onChange={handleChange}
-                      value={values.gender}
+                      onChange={handleChange}
+                      value={values.exercise_freq}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -53,19 +48,25 @@ class Lifestyle extends Component {
                       <MenuItem value="1-2_times">1-2 times week</MenuItem>
                       <MenuItem value="3-4_times">3-4 times a week</MenuItem>
                       <MenuItem value="5-7_times">5-7 times a week</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.exercise_freq && errors.exercise_freq) && errors.exercise_freq}</FormHelperText>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                 <FormControl fullWidth>
                     <FormLabel id="exercise_duration-label">How long do you exercise per session (in hours)?</FormLabel>
-                  <TextField
+                  <Field
+                    as={TextField}
+                    required
                     name="exercise_duration"
                     id="exercise_duration"
                     type="number"
-                    //onChange={handleChange}
-                    defaultValue={values.exercise_duration}
+                    onChange={handleChange}
+                    value={values.exercise_duration}
+                    autoComplete="off"
                     fullWidth
+                    error={touched.exercise_duration && errors.exercise_duration}
+                    helperText={touched.exercise_duration && errors.exercise_duration}
                   />
                   </FormControl>
                 </Grid>
@@ -73,25 +74,8 @@ class Lifestyle extends Component {
             </Paper>
           </Grid>
         </Grid>
-        {/* <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20, marginRight: 20 }}
-          onClick={this.prevStep}
-        >
-          Back
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.nextStep}
-        >
-          Next
-        </Button> */}
       </React.Fragment>
     );
-  }
 }
 
 export default Lifestyle;

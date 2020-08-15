@@ -1,24 +1,18 @@
-import React, { Component } from "react";
-import { Grid, Paper, Typography, FormLabel, Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
+import React from "react";
+import { Field } from 'formik';
+import { Grid, Paper, Typography, FormLabel, Checkbox, FormControlLabel, FormGroup, FormHelperText } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
-class MedicalConditions extends Component {
-
-  nextStep = (e) => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
-
-  prevStep = () => {
-    this.props.prevStep();
-  };
-
-  render() {
-    const { values, handleChange } = this.props;
+export const MedicalConditions = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+}) => {
 
     return (
       <React.Fragment>
@@ -75,9 +69,10 @@ class MedicalConditions extends Component {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.has_tubercolosis && errors.has_tubercolosis}>
                     <FormLabel htmlFor="has_tubercolosis">Do you have tubercolosis?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="has_tubercolosis"
                       id="has_tubercolosis"
                       onChange={handleChange}
@@ -85,14 +80,16 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.has_tubercolosis && errors.has_tubercolosis) && errors.has_tubercolosis}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.live_with_someone_with_tubercolosis && errors.live_with_someone_with_tubercolosis}>
                     <FormLabel htmlFor="live_with_someone_with_tubercolosis">Do you live with someone with tubercolosis?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="live_with_someone_with_tubercolosis"
                       id="live_with_someone_with_tubercolosis"
                       onChange={handleChange}
@@ -100,14 +97,16 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.live_with_someone_with_tubercolosis && errors.live_with_someone_with_tubercolosis) && errors.live_with_someone_with_tubercolosis}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.other_diagnosed_with_tubercolosis_beyond_4_months && errors.other_diagnosed_with_tubercolosis_beyond_4_months}>
                     <FormLabel htmlFor="other_diagnosed_with_tubercolosis_beyond_4_months">If "Yes" to living with someone with tubercolosis, was he/she diagnosed more than 4 months ago? </FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="other_diagnosed_with_tubercolosis_beyond_4_months"
                       id="other_diagnosed_with_tubercolosis_beyond_4_months"
                       onChange={handleChange}
@@ -115,14 +114,16 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.other_diagnosed_with_tubercolosis_beyond_4_months && errors.other_diagnosed_with_tubercolosis_beyond_4_months) && errors.other_diagnosed_with_tubercolosis_beyond_4_months}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.has_blood_borne_disease && errors.has_blood_borne_disease}>
                     <FormLabel htmlFor="has_blood_borne_disease">Do you have any blood borne diseases?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="has_blood_borne_disease"
                       id="has_blood_borne_disease"
                       onChange={handleChange}
@@ -130,20 +131,25 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.has_blood_borne_disease && errors.has_blood_borne_disease) && errors.has_blood_borne_disease}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <FormLabel htmlFor="has_blood_borne_disease">If "Yes" to having a blood borne disease, what Blood Borne Disease do you have?</FormLabel>
-                    <TextField
+                    <Field
+                      as={TextField}
+                      required
                       name="blood_borne_disease"
                       id="blood_borne_disease"
                       onChange={handleChange}
-                      defaultValue={values.blood_borne_disease}
+                      value={values.blood_borne_disease}
                       autoComplete="off"
                       fullWidth
+                      error={touched.blood_borne_disease && errors.blood_borne_disease}
+                      helperText={touched.blood_borne_disease && errors.blood_borne_disease}
                     />
                   </FormControl>
                 </Grid>
@@ -151,20 +157,26 @@ class MedicalConditions extends Component {
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <FormLabel htmlFor="pre_existing_conditions">Do you have any pre-existing medical conditions?</FormLabel>
-                    <TextField
+                    <Field
+                      as={TextField}
+                      required
                       name="pre_existing_conditions"
                       id="pre_existing_conditions"
                       onChange={handleChange}
-                      defaultValue={values.pre_existing_conditions}
+                      value={values.pre_existing_conditions}
+                      autoComplete="off"
                       fullWidth
+                      error={touched.pre_existing_conditions && errors.pre_existing_conditions}
+                      helperText={touched.pre_existing_conditions && errors.pre_existing_conditions}
                     />
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.family_has_diabetes && errors.family_has_diabetes}>
                     <FormLabel htmlFor="family_has_diabetes">Do you know anyone in your family who has diabetes?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="family_has_diabetes"
                       id="family_has_diabetes"
                       onChange={handleChange}
@@ -172,28 +184,34 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.family_has_diabetes && errors.family_has_diabetes) && errors.family_has_diabetes}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <FormLabel htmlFor="family_diabetes_count">If "Yes" to knowing anyone in the family who has diabetes, how many family members have diabetes?</FormLabel>
-                    <TextField
+                    <Field
+                      as={TextField}
+                      required
                       name="family_diabetes_count"
                       id="family_diabetes_count"
                       type="number"
                       onChange={handleChange}
-                      defaultValue={values.family_diabetes_count}
+                      value={values.family_diabetes_count}
                       fullWidth
+                      error={touched.family_diabetes_count && errors.family_diabetes_count}
+                      helperText={touched.family_diabetes_count && errors.family_diabetes_count}
                     />
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.family_has_anemia && errors.family_has_anemia}>
                     <FormLabel htmlFor="family_has_anemia">Do you know anyone in your family who has anemia?</FormLabel>
-                    <Select
+                    <Field
+                      as={Select}
                       name="family_has_anemia"
                       id="family_has_anemia"
                       onChange={handleChange}
@@ -201,28 +219,34 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.family_has_anemia && errors.family_has_anemia) && errors.family_has_anemia}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <FormLabel htmlFor="family_anemia_count">If "Yes" to knowing anyone in the family who has anemia, how many family members have anemia?</FormLabel>
-                    <TextField
+                    <Field
+                      as={TextField}
+                      required
                       name="family_anemia_count"
                       id="family_anemia_count"
                       type="number"
                       onChange={handleChange}
-                      defaultValue={values.family_anemia_count}
+                      value={values.family_anemia_count}
                       fullWidth
+                      error={touched.family_anemia_count && errors.family_anemia_count}
+                      helperText={touched.family_anemia_count && errors.family_anemia_count}
                     />
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <FormLabel htmlFor="family_has_diabetes">Do you know anyone in your family who has oral cancer?</FormLabel>
-                    <Select
+                  <FormControl fullWidth required error={touched.family_has_oral_cancer && errors.family_has_oral_cancer}>
+                    <FormLabel htmlFor="family_has_oral_cancer">Do you know anyone in your family who has oral cancer?</FormLabel>
+                    <Field
+                      as={Select}
                       name="family_has_oral_cancer"
                       id="family_has_oral_cancer"
                       onChange={handleChange}
@@ -230,20 +254,25 @@ class MedicalConditions extends Component {
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
-                    </Select>
+                    </Field>
+                    <FormHelperText>{(touched.family_has_oral_cancer && errors.family_has_oral_cancer) && errors.family_has_oral_cancer}</FormHelperText>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required error={touched.family_oral_cancer_count && errors.family_oral_cancer_count}>
                     <FormLabel htmlFor="family_oral_cancer_count">If "Yes" to knowing anyone in the family who has oral cancer, how many family members have oral cancer?</FormLabel>
-                    <TextField
+                    <Field
+                      as={TextField}
+                      required
                       name="family_oral_cancer_count"
                       id="family_oral_cancer_count"
                       type="number"
                       onChange={handleChange}
-                      defaultValue={values.family_oral_cancer_count}
+                      value={values.family_oral_cancer_count}
                       fullWidth
+                      error={touched.family_oral_cancer_count && errors.family_oral_cancer_count}
+                      helperText={touched.family_oral_cancer_count && errors.family_oral_cancer_count}
                     />
                   </FormControl>
                 </Grid>
@@ -255,7 +284,7 @@ class MedicalConditions extends Component {
                       name="family_pre_existing_conditions"
                       id="family_pre_existing_conditions"
                       onChange={handleChange}
-                      defaultValue={values.family_pre_existing_conditions}
+                      value={values.family_pre_existing_conditions}
                       fullWidth
                     />
                   </FormControl>
@@ -265,25 +294,8 @@ class MedicalConditions extends Component {
             </Paper>
           </Grid>
         </Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20, marginRight: 20 }}
-          onClick={this.prevStep}
-        >
-          Back
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.nextStep}
-        >
-          Next
-        </Button>
       </React.Fragment>
     );
-  }
 }
 
 export default MedicalConditions;

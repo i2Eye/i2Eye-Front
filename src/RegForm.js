@@ -6,10 +6,8 @@ import HouseholdInfo from "./Components/RegFormComponents/HouseholdInfo";
 import MedicalConditions from "./Components/RegFormComponents/MedicalConditions";
 import Confirm from "./Components/RegFormComponents/Confirm";
 import Success from "./Components/RegFormComponents/Success";
-import * as Yup from "yup";
 import {getStepValidationSchema} from "./Components/RegFormComponents/validationSchema";
 import Button from "@material-ui/core/Button";
-
 
 const renderStep = (step, {values, errors, touched, handleChange}) => {
   switch (step) {
@@ -20,47 +18,38 @@ const renderStep = (step, {values, errors, touched, handleChange}) => {
           errors={errors}
           touched={touched}
           handleChange={handleChange}
-          //isValid={isValid}
-          //validateForm={validateForm}
         />
       );
     case 1:
       return (
         <Lifestyle
-          step={step}
           values={values}
           errors={errors}
           touched={touched}
           handleChange={handleChange}
-          //isValid={isValid}
         />
       );
     case 2:
       return (
         <HouseholdInfo
-          step={step}
           values={values}
           errors={errors}
           touched={touched}
           handleChange={handleChange}
-          //isValid={isValid}
         />
       );
     case 3:
       return (
         <MedicalConditions
-          step={step}
           values={values}
           errors={errors}
           touched={touched}
           handleChange={handleChange}
-          //isValid={isValid}
         />
       );
     case 4:
       return (
         <Confirm
-          step={step}
           values={values}
         />
       );
@@ -121,7 +110,7 @@ export const RegForm = () => {
     family_pre_existing_conditions: "",
   }
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(3);
   const isSubmitStep = step === 5;
 
   // a snapshot of form state is used as initialValues after each transition
@@ -163,7 +152,7 @@ export const RegForm = () => {
               variant="contained"
               color="primary"
               style={{ marginTop: 20, marginRight: 20 }}
-              onClick={prevStep}
+              onClick={() => prevStep(formik.values)}
             >
               Back
             </Button>
