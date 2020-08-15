@@ -9,30 +9,13 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
 export const PersonalDetails = ({
-  step,
-  setStep,
   values,
   errors,
   touched,
   handleChange,
-  isValid,
-  validateForm,
-  validationSchema,
 }) => {
-  
-  const nextStep = async (e) => {
-    e.preventDefault();
-    // validate
-    const errorsResult = await validateForm();
-    // check if is valid
-    if (errorsResult.length === 0) {
-      setStep(++step);
-    }
-    return ;
-  }
 
   return (
-    console.log(<ErrorMessage name="name" />),
     <React.Fragment>
       <h1>Registration</h1>
       <Grid container spacing={3}>
@@ -56,17 +39,15 @@ export const PersonalDetails = ({
                   name="name"
                   id="name"
                   label="Name"
-                  //onChange={handleChange}
-                  //defaultValue={values.name}
+                  onChange={handleChange}
+                  value={values.name}
                   autoComplete="off"
                   fullWidth
-                  // error={touched.name && errors.name}
-                  // helperText={touched.name && errors.name}
-                  //error={<ErrorMessage name="name"/>}
-                  helperText={<ErrorMessage name="name" key="name"/>}
+                  error={touched.name && errors.name}
+                  helperText={touched.name && errors.name}
                 />
               </Grid>
-              {/* <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Field
                   as={TextField}
                   required
@@ -74,7 +55,7 @@ export const PersonalDetails = ({
                   id="nric"
                   label="NRIC"
                   onChange={handleChange}
-                  defaultValue={values.nric}
+                  value={values.nric}
                   autoComplete="off"
                   fullWidth
                   error={touched.nric && errors.nric}
@@ -107,7 +88,7 @@ export const PersonalDetails = ({
                   label="Age"
                   type="number"
                   onChange={handleChange}
-                  defaultValue={values.age}
+                  value={values.age}
                   fullWidth
                   error={touched.age && errors.age}
                   helperText={touched.age && errors.age}
@@ -122,7 +103,7 @@ export const PersonalDetails = ({
                   label="Birthday"
                   type="date"
                   onChange={handleChange}
-                  defaultValue={values.birthday}
+                  value={values.birthday}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -174,7 +155,7 @@ export const PersonalDetails = ({
                   </Field>
                 <FormHelperText>{(touched.occupation && errors.occupation) && errors.occupation}</FormHelperText>  
                 </FormControl>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Paper>
         </Grid>
