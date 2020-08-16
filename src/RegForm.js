@@ -9,7 +9,7 @@ import Success from "./Components/RegFormComponents/Success";
 import {getStepValidationSchema} from "./Components/RegFormComponents/validationSchema";
 import Button from "@material-ui/core/Button";
 
-const renderStep = (step, {values, errors, touched, handleChange}) => {
+const renderStep = (step, {values, errors, touched, handleChange, setFieldValue}) => {
   switch (step) {
     case 0:
       return (
@@ -45,6 +45,7 @@ const renderStep = (step, {values, errors, touched, handleChange}) => {
           errors={errors}
           touched={touched}
           handleChange={handleChange}
+          setFieldValue={setFieldValue}
         />
       );
     case 4:
@@ -95,7 +96,6 @@ export const RegForm = () => {
     
     has_blood_borne_disease: "",
     blood_borne_disease: "",
-    has_pre_existing_medical_conditions: "",
         
     family_has_diabetes: "",
     family_diabetes_count: 0,
