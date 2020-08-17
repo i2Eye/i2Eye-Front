@@ -41,7 +41,7 @@ export const getStepValidationSchema = (step) => {
         live_with_someone_with_tubercolosis: Yup.boolean().required("This field is required"),
         other_diagnosed_with_tubercolosis_beyond_4_months: Yup.boolean().when('live_with_someone_with_tubercolosis', {
           is: true,
-          then: Yup.string().required("This field is required"),
+          then: Yup.boolean().required("This field is required"),
         }),        
         
         has_blood_borne_disease: Yup.boolean().required("This field is required"),
