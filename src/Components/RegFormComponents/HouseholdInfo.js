@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Field } from 'formik';
 import { Grid, Paper, InputAdornment, FormLabel } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
 

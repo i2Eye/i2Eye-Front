@@ -1,18 +1,30 @@
-import React, { Component } from "react";
-import Button from "@material-ui/core/Button";
+import React from "react";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 
 export const Confirm = ({
   values,
 }) => {
-  const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, cough_2_weeks, cough_up_blood, breathlessness, weight_loss, loss_of_apetite, fever, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions } = values;
+  const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions } = values;
 
   const getBooleanLabel = value => {
     if (value === true) {
       return 'Yes';
     }
     return 'No';
+  }
+
+  const getSymptomsLabel = () => {
+    var symptomsLabel = "";
+
+    symptoms.forEach((value, index) => {
+      if (index === symptoms.length - 1) {
+        symptomsLabel = symptomsLabel.concat(value, " ");  
+      } else {
+        symptomsLabel = symptomsLabel.concat(value, ", ");
+      }
+    })
+    return symptomsLabel;
   }
 
     return (
@@ -42,7 +54,7 @@ export const Confirm = ({
         </List>
 
         <List subheader={<h3>Part 4: Medical conditions</h3>} >
-          {/* need to include symptoms */}
+          <ListItemText primary="Are you currently suffering from any of the following symptoms?" secondary={getSymptomsLabel()}/>
 
           <ListItemText primary="Do you have tubercolosis?" secondary={getBooleanLabel(has_tubercolosis)} />
           <ListItemText primary="Do you live with someone with tubercolosis?" secondary={getBooleanLabel(live_with_someone_with_tubercolosis)} />

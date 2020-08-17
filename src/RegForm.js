@@ -87,7 +87,7 @@ export const RegForm = () => {
     cough_up_blood: false,
     breathlessness: false,
     weight_loss: false,
-    loss_of_apetite: false,
+    loss_of_appetite: false,
     fever: false,
 
     has_tubercolosis: "",
@@ -110,8 +110,8 @@ export const RegForm = () => {
     family_pre_existing_conditions: "",
   }
 
-  const [step, setStep] = useState(3);
-  const isSubmitStep = step === 5;
+  const [step, setStep] = useState(0);
+  const isSubmitStep = step === 4;
 
   // a snapshot of form state is used as initialValues after each transition
   const [snapshot, setSnapshot] = useState({...regFormData});  
@@ -126,8 +126,8 @@ export const RegForm = () => {
     setStep(Math.max(step - 1, 0));
   };
 
-  const handleSubmit = (event, values, formikBag) => {
-        if (isSubmitStep) {
+  const handleSubmit = (values, formikBag) => {
+    if (isSubmitStep) {
       // code to send form data to backend here
       //return onSubmit(values, formikBag);
     } else {
@@ -137,9 +137,6 @@ export const RegForm = () => {
   };
 
   return (
-
-    // const values = { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, cough_2_weeks, cough_up_blood, breathlessness, weight_loss, loss_of_apetite, fever, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, has_pre_existing_medical_conditions, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions };
-
     <Formik
         initialValues={snapshot}
         onSubmit={handleSubmit}
@@ -148,23 +145,24 @@ export const RegForm = () => {
         {formik => (
           <Form noValidate>
             {renderStep(step, formik)}
-            <Button
+            {step > 0 && <Button
               variant="contained"
               color="primary"
               style={{ marginTop: 20, marginRight: 20 }}
               onClick={() => prevStep(formik.values)}
             >
               Back
-            </Button>
+            </Button>}
             <Button
               variant="contained"
               color="primary"
               style={{ marginTop: 20 }}
               type="submit"
+              disabled={formik.isSubmitting}
             >
-              Next
+              {isSubmitStep ? 'Submit' : 'Next'}
             </Button>
-            {/* <pre>{JSON.stringify(formik, null, 2)}</pre> */}
+            <pre>{JSON.stringify(formik, null, 2)}</pre>
           </Form>
         )}
       </Formik>
