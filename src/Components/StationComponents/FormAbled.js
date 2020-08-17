@@ -20,6 +20,9 @@ class FormAbled extends Component {
     eyeScreening: EyeScreening,
     phlebotomy: Phlebotomy,
     fingerstickAnemia: FingerstickAnemia,
+    doctorConsult: Doctor,
+    fingerstickRCBG: Fingerstick,
+    bloodPressure: BloodPressure,
   };
 
   render() {
@@ -37,7 +40,7 @@ class FormAbled extends Component {
                 paddingBottom: 20,
               }}
             >
-              <StationTag />
+              <StationTag id={this.props.id} />
             </Paper>
           </Grid>
           <Grid item md={5}>
@@ -49,7 +52,7 @@ class FormAbled extends Component {
                 paddingBottom: 20,
               }}
             >
-              <InfoSegment />
+              <InfoSegment id={this.props.id} />
             </Paper>
           </Grid>
         </Grid>

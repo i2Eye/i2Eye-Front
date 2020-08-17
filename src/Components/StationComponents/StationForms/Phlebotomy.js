@@ -10,16 +10,11 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-
-const questions = [
-  {
-    question: "Vimta Registration No.",
-    helper: "Indicate NIL if did not fulfil any of the criteria for test.",
-  },
-];
+import getTestData from "../../../TestData";
 
 const radioQuestions = [
   {
+    num: 1,
     question: "Are you 40 years old or above?",
     helper: "If Yes, proceed with test. If No, check the following conditions.",
   },
@@ -34,22 +29,45 @@ const checkBoxOptions = [
   { option: "Smoking/ intoxication consumption e.g. tobacco", id: "Smoking" },
 ];
 
+const questions = [
+  {
+    num: 3,
+    question: "Vimta Registration No.",
+    helper: "Indicate NIL if did not fulfil any of the criteria for test.",
+  },
+];
+
+const handleEdit = (id) => {
+  const data = getTestData(id).phlebotomy;
+  const newState = {
+    age:
+      data[0].answer === "Y"
+        ? "40 and above"
+        : data[0].answer === "N"
+        ? "Below 40"
+        : "",
+    conditions: {
+      BP: data[1].answer.includes("High blood pressure"),
+      Diabetes: data[1].answer.includes("Diabetes"),
+      Coronory: data[1].answer.includes(
+        "Family member with coronory artery disease"
+      ),
+      Cholesterol: data[1].answer.includes(
+        "Family member with high cholesterol"
+      ),
+      Kidney: data[1].answer.includes("Chronic kidney disease"),
+      Smoking: data[1].answer.includes(
+        "Smoking/intoxication consumption e.g. tobacco"
+      ),
+    },
+    vimta: data[2].answer,
+    count: data[1].answer.length,
+  };
+  return newState;
+};
+
 class Phlebotomy extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      age: "",
-      conditions: {
-        BP: false,
-        Diabetes: false,
-        Coronory: false,
-        Cholesterol: false,
-        Kidney: false,
-        Smoking: false,
-      },
-      vimta: "",
-    };
-  }
+  state = handleEdit(this.props.id);
 
   handleSubmit() {
     if (!this.state.age || !this.state.vimta) {
@@ -143,6 +161,7 @@ class Phlebotomy extends Component {
                       aria-label="age"
                       name="age"
                       onChange={this.handleAgeChange.bind(this)}
+                      value={this.state.age}
                     >
                       <FormControlLabel
                         value="40 and above"
@@ -188,7 +207,7 @@ class Phlebotomy extends Component {
                       <Checkbox
                         onChange={this.handleConditionsChange.bind(this)}
                         name={option.id}
-                        value="Yes"
+                        checked={this.state.conditions[option.id]}
                       />
                     }
                     label={option.option}
@@ -216,11 +235,18 @@ class Phlebotomy extends Component {
                       {question.question}
                     </InputLabel>
                     <TextField
+                      disabled={this.state.count > 2 ? false : true}
                       key={question.question}
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.question}
                       style={{ width: 200 }}
+                      // defaultValue={
+                      //   prevData[question.num - 1].answer === ""
+                      //     ? false
+                      //     : prevData[question.num - 1].answer
+                      // }
+                      defaultValue={this.state.vimta}
                     />
                     <p />
                   </span>

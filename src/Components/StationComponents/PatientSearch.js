@@ -34,10 +34,12 @@ const StyledSwitch = withStyles({
   root: { verticalAlign: "baseline", marginLeft: 20 },
 })(Switch);
 
+const getPatientID = (id) => (isNaN(Number(id)) ? 0 : Number(id));
+
 class PatientSearch extends Component {
   state = {
     input: "",
-    patientID: 0,
+    patientID: getPatientID(this.props.match.params.patientID),
     toggle: true,
   };
 
@@ -125,6 +127,9 @@ class PatientSearch extends Component {
       { name: "Eye Screening", tag: "eyeScreening" },
       { name: "Phlebotomy Test", tag: "phlebotomy" },
       { name: "Fingerstick Blood Test", tag: "fingerstickAnemia" },
+      { name: "Doctor Consult", tag: "doctorConsult" },
+      { name: "Fingerstick Test (RCBG)", tag: "fingerstickRCBG" },
+      { name: "Blood Pressure Test", tag: "bloodPressure" },
     ];
     return stations.find((station) => station.tag === stationTag).name;
   };
@@ -135,6 +140,9 @@ class PatientSearch extends Component {
       classes,
       match: { params },
     } = this.props;
+
+    console.log(patientID);
+
     return (
       <div>
         <div>

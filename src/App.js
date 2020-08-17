@@ -31,6 +31,11 @@ export default function App() {
                 path="/stations/patient_search/:stationName"
                 component={PatientSearch}
               />
+              <Route
+                exact
+                path="/stations/patient_search/:stationName/:patientID"
+                component={PatientSearch}
+              />
               <Route exact path="/registration" component={RegForm} />
               <Route
                 exact
@@ -46,6 +51,11 @@ export default function App() {
               <Route
                 exact
                 path="/stations/:stationName/:patientID"
+                component={Form}
+              />
+              <Route
+                exact
+                path="/stations/:stationName/edit/:patientID"
                 component={Form}
               />
             </Switch>
@@ -67,5 +77,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 80,
     marginRight: 80,
     marginTop: 30,
+    marginBottom: 30,
   },
 }));

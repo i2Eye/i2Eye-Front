@@ -8,8 +8,11 @@ import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
 import Filter from "./Components/PatientTrackerComponents/Filter";
 import VirtualizedTable from "./Components/PatientTrackerComponents/VirtualizedTable";
-import PrintIcon from "@material-ui/icons/Print";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoIcon from "@material-ui/icons/Info";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import EditIcon from "@material-ui/icons/Edit";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -20,7 +23,13 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Tooltip from "@material-ui/core/Tooltip";
+import getTestData from "./TestData";
+import SaveWorker from "./Components/PatientTrackerComponents/save.worker";
+import * as FileSaver from "file-saver";
+import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
+import jsPDF from "jspdf";
+
+var saveWorker;
 
 const useStyles = (theme) => ({
   root: {
@@ -46,7 +55,10 @@ class PatientTracker extends Component {
     isFemale: true,
     hasIncompleteStations: true,
     completedAllStations: true,
-    open: false,
+    editOpen: false,
+    printOpen: 0,
+    fileName: "",
+    saveError: false,
   };
 
   seeMoreButton = (
@@ -64,7 +76,7 @@ class PatientTracker extends Component {
   );
 
   edit = () => {
-    this.setState({ open: true });
+    this.setState({ editOpen: true });
   };
 
   handleChange = (e) => {
@@ -76,22 +88,232 @@ class PatientTracker extends Component {
     });
   };
 
-  dialog = () => {
-    const { clickedRow, open } = this.state;
+  handleOpenSave = (x) => {
+    var today = new Date();
+    const name =
+      "Overall_Information_List_" +
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() < 9 ? 0 : "") +
+      (today.getMonth() + 1) +
+      "-" +
+      (today.getDate() < 10 ? 0 : "") +
+      today.getDate() +
+      "_" +
+      (today.getHours() < 10 ? 0 : "") +
+      today.getHours() +
+      (today.getMinutes() < 10 ? 0 : "") +
+      today.getMinutes() +
+      (today.getSeconds() < 10 ? 0 : "") +
+      today.getSeconds();
+
+    this.setState({ fileName: name, printOpen: x });
+  };
+
+  handlePrintClose = () => {
+    this.setState({ printOpen: 0 });
+  };
+
+  handlePDF = () => {
+    const { fileName } = this.state;
+    if (window.Worker) {
+      saveWorker = new SaveWorker();
+      saveWorker.postMessage({ message: "save pdf" });
+      this.setState({ printOpen: 5 });
+      saveWorker.addEventListener("message", (event) => {
+        FileSaver.saveAs(event.data, fileName + ".pdf");
+        this.handlePrintClose();
+        saveWorker = null;
+      });
+    } else {
+      var doc = new jsPDF({ orientation: "l", unit: "cm", format: "a4" });
+      doc.text("test", 1, 1);
+
+      doc.save(fileName);
+    }
+  };
+
+  getSaveDialog = (fileType) => {
+    const { printOpen, fileName } = this.state;
+    return (
+      <Dialog
+        open={printOpen > 0}
+        onClose={this.handlePrintClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle id="print-dialog-title">
+          Save {fileType === "excel" ? "Excel" : "PDF"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            id="excel-save-file-name"
+            name="fileName"
+            label="Enter File Name"
+            variant="outlined"
+            required
+            onChange={this.handleChange}
+            style={{ width: 300 }}
+            autoComplete="off"
+            defaultValue={fileName}
+            error={fileName === "" || fileName.indexOf(":") >= 0}
+            helperText={
+              fileName === ""
+                ? "File name cannot be blank"
+                : fileName.indexOf(":") >= 0
+                ? "File name cannot contain ':'"
+                : ""
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            style={{ marginRight: "auto" }}
+            onClick={() => {
+              this.setState({ printOpen: 1 });
+            }}
+            color="primary"
+          >
+            Back
+          </Button>
+          <Button
+            disabled={fileName === "" || fileName.indexOf(":") >= 0}
+            onClick={() => {
+              fileType === "excel" ? this.handleExcel() : this.handlePDF();
+            }}
+            color="primary"
+          >
+            Save
+          </Button>
+          <Button onClick={this.handlePrintClose} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  getLoadingDialog = (fileType) => {
+    const { printOpen } = this.state;
+    return (
+      <Dialog open={printOpen > 0} aria-labelledby="print-dialog-title">
+        <DialogTitle id="print-dialog-title">Loading</DialogTitle>
+        <DialogContent>
+          <div
+            style={{
+              width: 300,
+              height: 56,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={fileType === "excel" ? this.cancelExcel : this.cancelPDF}
+            color="primary"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  cancelExcel = () => {
+    if (saveWorker !== null) {
+      saveWorker.terminate();
+      saveWorker = null;
+      //console.log("save cancelled");
+    }
+    this.setState({ printOpen: 2 });
+  };
+
+  cancelPDF = () => {
+    if (saveWorker !== null) {
+      saveWorker.terminate();
+      saveWorker = null;
+      //console.log("save cancelled");
+    }
+    this.setState({ printOpen: 3 });
+  };
+
+  printDialog = () => {
+    const { printOpen } = this.state;
+
+    switch (printOpen) {
+      case 0:
+        return null;
+
+      case 1:
+        return (
+          <Dialog
+            open={printOpen > 0}
+            onClose={this.handlePrintClose}
+            aria-labelledby="print-dialog-title"
+          >
+            <DialogTitle id="print-dialog-title">Save as</DialogTitle>
+            <DialogContent style={{ overflowY: "visible" }}>
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <Button
+                    onClick={() => this.handleOpenSave(3)}
+                    color="primary"
+                  >
+                    PDF
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    onClick={() => this.handleOpenSave(2)}
+                    color="primary"
+                  >
+                    Excel
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handlePrintClose} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        );
+
+      case 2:
+        return this.getSaveDialog("excel");
+      case 3:
+        return this.getSaveDialog("pdf");
+      case 4:
+        return this.getLoadingDialog("excel");
+      case 5:
+        return this.getLoadingDialog("pdf");
+      default:
+        return 0;
+    }
+  };
+
+  editDialog = () => {
+    const { clickedRow, editOpen } = this.state;
     //console.log(clickedRow);
 
-    var a = this.getPeople().filter(
+    const patientData = this.getPeople().find(
       (person) => person.id.toString() === clickedRow.toString()
     );
-    //console.log(a[0].oralHealth);
+    //console.log(patientData.oralHealth);
 
     return (
       <Dialog
-        open={open}
+        open={editOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Patient ID: {a[0].id}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          Patient ID: {patientData.id}
+        </DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -109,7 +331,7 @@ class PatientTracker extends Component {
                       id="name"
                       label="Name"
                       onChange={this.handleChange}
-                      defaultValue={a[0].name}
+                      defaultValue={patientData.name}
                       autoComplete="off"
                       fullWidth
                     />
@@ -123,7 +345,7 @@ class PatientTracker extends Component {
                         labelId="gender-label"
                         id="gender"
                         onChange={this.handleChange}
-                        value={a[0].gender}
+                        value={patientData.gender}
                       >
                         <MenuItem value={"F"}>Female</MenuItem>
                         <MenuItem value={"M"}>Male</MenuItem>
@@ -137,7 +359,7 @@ class PatientTracker extends Component {
                       label="Age"
                       type="number"
                       onChange={this.handleChange}
-                      defaultValue={a[0].age}
+                      defaultValue={patientData.age}
                       fullWidth
                     />
                   </Grid>
@@ -149,7 +371,7 @@ class PatientTracker extends Component {
                         id="oralHealth"
                         labelId="OralHealth"
                         onChange={this.handleChange}
-                        defaultValue={a[0].oralHealth}
+                        defaultValue={patientData.oralHealth}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -157,7 +379,7 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
                       <InputLabel id="BMI">BMI</InputLabel>
                       <Select
@@ -165,7 +387,7 @@ class PatientTracker extends Component {
                         id="bmi"
                         labelId="BMI"
                         onChange={this.handleChange}
-                        defaultValue={a[0].bmi}
+                        defaultValue={patientData.bmi}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -173,7 +395,7 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={5}>
                     <FormControl fullWidth>
                       <InputLabel id="EyeScreening">EyeScreening</InputLabel>
                       <Select
@@ -181,7 +403,97 @@ class PatientTracker extends Component {
                         id="eyeScreening"
                         labelId="EyeScreening"
                         onChange={this.handleChange}
-                        defaultValue={a[0].eyeScreening}
+                        defaultValue={patientData.eyeScreening}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Phlebotomy Test">
+                        Phlebotomy Test
+                      </InputLabel>
+                      <Select
+                        name="phlebotomy"
+                        id="phlebotomy"
+                        labelId="Phlebotomy Test"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.phlebotomy}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Fingerstick Anemia">
+                        Fingerstick Anemia
+                      </InputLabel>
+                      <Select
+                        name="fingerstickAnemia"
+                        id="fingerstickAnemia"
+                        labelId="Fingerstick Anemia"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.fingerstickAnemia}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Fingerstick RCBG">
+                        Fingerstick RCBG
+                      </InputLabel>
+                      <Select
+                        name="fingerstickRCBG"
+                        id="fingerstickRCBG"
+                        labelId="Fingerstick RCBG"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.fingerstickRCBG}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Blood Pressure">
+                        Blood Pressure
+                      </InputLabel>
+                      <Select
+                        name="bloodPressure"
+                        id="bloodPressure"
+                        labelId="Blood Pressure"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.bloodPressure}
+                      >
+                        <MenuItem value={"In Queue"}>In Queue</MenuItem>
+                        <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
+                        <MenuItem value={"Completed"}>Completed</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <InputLabel id="Doctor's Consult">
+                        Doctor's Consult
+                      </InputLabel>
+                      <Select
+                        name="doctorConsult"
+                        id="doctorConsult"
+                        labelId="Doctor's Consult"
+                        onChange={this.handleChange}
+                        defaultValue={patientData.doctorConsult}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -204,7 +516,7 @@ class PatientTracker extends Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ editOpen: false });
   };
 
   editButton = (
@@ -216,8 +528,24 @@ class PatientTracker extends Component {
   );
 
   //print data to excel
-  handlePrint = () => {
-    //console.log("printed");
+  handleExcel = () => {
+    const { fileName } = this.state;
+    if (window.Worker) {
+      saveWorker = new SaveWorker();
+      saveWorker.postMessage({ message: "save excel" });
+      this.setState({ printOpen: 4 });
+      saveWorker.addEventListener("message", (event) => {
+        FileSaver.saveAs(event.data, fileName);
+        this.handlePrintClose();
+        saveWorker = null;
+      });
+    } else {
+      const csvData = [];
+      for (let i = 1; i <= 10000; i++) {
+        csvData[i - 1] = getTestData(i);
+      }
+      FileSaver.saveAs(exportCSV(csvData), fileName);
+    }
   };
 
   handleInput = (e) => {
@@ -243,7 +571,17 @@ class PatientTracker extends Component {
         bmi:
           i % 7 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
         eyeScreening:
-          i % 6 === 0 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
+          i % 6 === 0 ? "Completed" : i % 5 === 0 ? "In Queue" : "Not Queued",
+        phlebotomy:
+          i % 4 === 0 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
+        fingerstickAnemia:
+          i % 5 === 2 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
+        fingerstickRCBG:
+          i % 6 === 3 ? "Completed" : i % 5 === 2 ? "In Queue" : "Not Queued",
+        bloodPressure:
+          i % 7 === 2 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
+        doctorConsult:
+          i % 6 === 5 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
       };
     }
     return people;
@@ -258,10 +596,10 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    return this.getPeople()
+    return people
       .filter(
         (person) =>
-          person.name.indexOf(input) !== -1 ||
+          person.name.toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
           person.id.toString().indexOf(input) !== -1
       )
       .filter((person) => {
@@ -327,6 +665,117 @@ class PatientTracker extends Component {
     });
   };
 
+  getColumns = (people) => {
+    const columns = [
+      {
+        width: 120,
+        label: "Actions",
+        dataKey: "actions",
+      },
+      {
+        width: 70,
+        label: "ID",
+        dataKey: "id",
+      },
+      {
+        width: 230,
+        label: "Name",
+        dataKey: "name",
+      },
+      {
+        width: 70,
+        label: "Age",
+        dataKey: "age",
+        numeric: true,
+      },
+      {
+        width: 120,
+        label: "Gender",
+        dataKey: "gender",
+      },
+      {
+        width: 150,
+        label: "Oral Health",
+        dataKey: "oralHealth",
+      },
+      {
+        width: 150,
+        label: "BMI",
+        dataKey: "bmi",
+      },
+      {
+        width: 150,
+        label: "Eye Screening",
+        dataKey: "eyeScreening",
+      },
+      {
+        width: 150,
+        label: "Phlebotomy Test",
+        dataKey: "phlebotomy",
+      },
+      {
+        width: 150,
+        label: "Fingerstick Anemia",
+        dataKey: "fingerstickAnemia",
+      },
+      {
+        width: 150,
+        label: "Fingerstick RCBG",
+        dataKey: "fingerstickRCBG",
+      },
+      {
+        width: 150,
+        label: "Blood Pressure",
+        dataKey: "bloodPressure",
+      },
+      {
+        width: 150,
+        label: "Doctor's Consult",
+        dataKey: "doctorConsult",
+      },
+    ];
+
+    const getStationSummary = (dataKey) => (
+      <React.Fragment>
+        <p>Station Summary:</p>
+        <p>
+          {"Total no. of people registered: " +
+            people.filter(
+              (person) =>
+                person[dataKey] === "In Queue" ||
+                person[dataKey] === "Completed"
+            ).length}
+        </p>
+        <p>
+          {"No. of people in queue: " +
+            people.filter((person) => person[dataKey] === "In Queue").length}
+        </p>
+        <p>
+          {"No. of people in queue: " +
+            people.filter((person) => person[dataKey] === "Completed").length}
+        </p>
+      </React.Fragment>
+    );
+
+    for (let i = 5; i < columns.length; i++) {
+      columns[i].label = (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p style={{ display: "inline" }}>{columns[i].label}</p>
+          <Tooltip
+            title={getStationSummary(columns[i].dataKey)}
+            placement="top"
+          >
+            <InfoIcon
+              color="disabled"
+              style={{ marginLeft: 7, fontSize: 11 }}
+            />
+          </Tooltip>
+        </div>
+      );
+    }
+    return columns;
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -336,18 +785,22 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    //console.log(open);
+    //console.log(editOpen);
 
-    const people = this.filterPeople();
+    const people = this.getPeople();
+    const filteredPeople = this.filterPeople(people);
     return (
       <div>
-        {this.state.open ? this.dialog() : null}
+        {this.state.editOpen ? this.editDialog() : null}
+        {this.printDialog()}
 
         <h1>
           Patient Tracker{" "}
-          <IconButton>
-            <PrintIcon fontSize="large" />
-          </IconButton>
+          <Tooltip title="Download">
+            <IconButton onClick={() => this.setState({ printOpen: 1 })}>
+              <GetAppIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
         </h1>
         <TextField
           id="patient-tracker-search"
@@ -374,58 +827,19 @@ class PatientTracker extends Component {
         </div>
 
         <Typography variant="subtitle2" style={{ marginBottom: 5 }}>
-          {people.length} results
+          {filteredPeople.length} results
         </Typography>
 
-        <Paper style={{ height: 272, width: "100%" }}>
-          <VirtualizedTable
-            rowCount={people.length}
-            rowGetter={({ index }) => people[index]}
-            updateRow={this.updateRow}
-            columns={[
-              {
-                width: 120,
-                label: "Actions",
-                dataKey: "actions",
-              },
-              {
-                width: 70,
-                label: "ID",
-                dataKey: "id",
-              },
-              {
-                width: 200,
-                label: "Name",
-                dataKey: "name",
-              },
-              {
-                width: 120,
-                label: "Age",
-                dataKey: "age",
-                numeric: true,
-              },
-              {
-                width: 120,
-                label: "Gender",
-                dataKey: "gender",
-              },
-              {
-                width: 150,
-                label: "Oral Health",
-                dataKey: "oralHealth",
-              },
-              {
-                width: 150,
-                label: "BMI",
-                dataKey: "bmi",
-              },
-              {
-                width: 150,
-                label: "Eye Screening",
-                dataKey: "eyeScreening",
-              },
-            ]}
-          />
+        <Paper style={{ maxWidth: "100%", overflowX: "scroll" }}>
+          <Paper style={{ height: 250, width: 1830 }}>
+            <VirtualizedTable
+              rowCount={filteredPeople.length}
+              rowGetter={({ index }) => filteredPeople[index]}
+              updateRow={this.updateRow}
+              overscanRowCount={10}
+              columns={this.getColumns(filteredPeople)}
+            />
+          </Paper>
         </Paper>
       </div>
     );

@@ -5,6 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Switch from "@material-ui/core/Switch";
+import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -32,6 +33,13 @@ class StationSelect extends Component {
         tag: "fingerstickAnemia",
         checked: true,
       },
+      { name: "Doctor Consult", tag: "doctorConsult", checked: true },
+      {
+        name: "Fingerstick Test (RCBG)",
+        tag: "fingerstickRCBG",
+        checked: true,
+      },
+      { name: "Blood Pressure Test", tag: "bloodPressure", checked: true },
     ],
   };
 
@@ -50,27 +58,29 @@ class StationSelect extends Component {
 
     return (
       //using map to render so that we only have to change the stations state property
-      <List className={classes.root}>
-        {stations.map((station, index) => (
-          <ListItem
-            key={index}
-            button
-            disabled={!station.checked} //handles the check if the station is off
-            component={Link}
-            to={`/stations/patient_search/${station.tag}`}
-          >
-            <ListItemText id={station.name} primary={station.name} />
-            <ListItemSecondaryAction>
-              <Switch
-                edge="end"
-                onChange={this.handleToggle(index)}
-                checked={station.checked}
-                inputProps={{ "aria-labelledby": "switch-list-label-1" }}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+      <Paper className={classes.root} style={{ overflow: "hidden" }}>
+        <List className={classes.root}>
+          {stations.map((station, index) => (
+            <ListItem
+              key={index}
+              button
+              disabled={!station.checked} //handles the check if the station is off
+              component={Link}
+              to={`/stations/patient_search/${station.tag}`}
+            >
+              <ListItemText id={station.name} primary={station.name} />
+              <ListItemSecondaryAction>
+                <Switch
+                  edge="end"
+                  onChange={this.handleToggle(index)}
+                  checked={station.checked}
+                  inputProps={{ "aria-labelledby": "switch-list-label-1" }}
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     );
   }
 }

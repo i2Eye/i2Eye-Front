@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../../App.css";
 import FormAbled from "./FormAbled";
+import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
 
 class Form extends Component {
   constructor(props) {
@@ -19,7 +21,24 @@ class Form extends Component {
       <div>
         <h2>Station {this.state.station}</h2>
         <h3 className="text-right">Currently serving : {params.patientID}</h3>
-        <FormAbled stationName={params.stationName} />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: 20 }}
+          component={Link}
+          to={
+            this.props.location.pathname ===
+            `/stations/${params.stationName}/edit/${params.patientID}`
+              ? `/patient_tracker/screening_review/${params.patientID}`
+              : `/stations/patient_search/${params.stationName}/${params.patientID}`
+          }
+        >
+          {this.props.location.pathname ===
+          `/stations/${params.stationName}/edit/${params.patientID}`
+            ? "Cancel"
+            : "Back"}
+        </Button>
+        <FormAbled stationName={params.stationName} id={params.patientID} />
       </div>
     );
   }
