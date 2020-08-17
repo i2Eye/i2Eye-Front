@@ -7,7 +7,7 @@ export const getStepValidationSchema = (step) => {
         name: Yup.string().required("This field is required"),
         nric: Yup.string().required("This field is required"),
         gender: Yup.string().required("This field is required"),
-        birthday: Yup.date().required("This field is required"),
+        birthday: Yup.date().max(new Date(), "Date must be past").required("This field is required"),
         age: Yup.number().min(0, "Age must be at least zero").required("This field is required"),
         education: Yup.string().required("This field is required"),
         occupation: Yup.string().required("This field is required"),
