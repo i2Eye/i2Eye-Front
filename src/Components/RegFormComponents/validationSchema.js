@@ -24,14 +24,19 @@ export const getStepValidationSchema = (step) => {
       });
     case 3:
       return Yup.object({
-        symptoms: Yup.array().of(Yup.string()).min(1),
+        symptoms: Yup.array().when('no_symptom', {
+          is: true,
+          then: Yup.array().of(Yup.string()),
+          otherwise: Yup.array().of(Yup.string()).min(1),
+        }),
         cough_2_weeks: Yup.boolean(),
         cough_up_blood: Yup.boolean(),
         breathlessness: Yup.boolean(),
         weight_loss: Yup.boolean(),
         loss_of_appetite: Yup.boolean(),
         fever: Yup.boolean(),
-
+        no_symptom: Yup.boolean(),
+        
         has_tubercolosis: Yup.boolean().required("This field is required"),
         live_with_someone_with_tubercolosis: Yup.boolean().required("This field is required"),
         other_diagnosed_with_tubercolosis_beyond_4_months: Yup.boolean().when('live_with_someone_with_tubercolosis', {
