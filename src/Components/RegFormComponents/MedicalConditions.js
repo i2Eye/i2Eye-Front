@@ -2,7 +2,6 @@ import React from "react";
 import { Field } from 'formik';
 import { Grid, Paper, Typography, FormLabel, Checkbox, FormControlLabel, FormGroup, FormHelperText } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,6 +13,15 @@ export const MedicalConditions = ({
   handleChange,
   setFieldValue,
 }) => {
+
+    const manageSymptoms = (name, boolValue) => {
+      if (boolValue === true && values.symptoms.indexOf(name) === -1) {
+        values.symptoms.push(name);
+      } else if (!boolValue && values.symptoms.indexOf(name) !== -1) {
+        const removeIndex = values.symptoms.indexOf(name);
+        values.symptoms.splice(removeIndex, 1);
+      }
+    };
 
     return (
       <React.Fragment>
@@ -38,31 +46,73 @@ export const MedicalConditions = ({
                     <FormLabel htmlFor="symptoms">Are you currently suffering from any of the following symptoms?</FormLabel>
                     <FormGroup>
                       <FormControlLabel
-                        control={<Checkbox checked={values.cough_2_weeks} onChange={handleChange} name="cough_2_weeks" />}
+                        control={<Checkbox checked={values.cough_2_weeks} 
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Cough lasting for > 2 weeks", e.target.checked);
+                        }} 
+                        name="cough_2_weeks" />}
                         label="Cough lasting for > 2 weeks"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.cough_up_blood} onChange={handleChange} name="cough_up_blood" />}
+                        control={<Checkbox checked={values.cough_up_blood} 
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Coughing up blood", e.target.checked);
+                        }}
+                        name="cough_up_blood" />}
                         label="Coughing up blood"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.breathlessness} onChange={handleChange} name="breathlessness" />}
+                        control={<Checkbox checked={values.breathlessness} 
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Breathlessness", e.target.checked);
+                        }}
+                        name="breathlessness" />}
                         label="Breathlessness"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.weight_loss} onChange={handleChange} name="weight_loss" />}
+                        control={<Checkbox checked={values.weight_loss} 
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Weight loss", e.target.checked);
+                        }} 
+                        name="weight_loss" />}
                         label="Weight loss"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.loss_of_apetite} onChange={handleChange} name="loss_of_apetite" />}
-                        label="Loss of apetite"
+                        control={<Checkbox checked={values.loss_of_appetite} 
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Loss of appetite", e.target.checked);
+                        }} 
+                        name="loss_of_appetite" />}
+                        label="Loss of appetite"
                       />
                       <FormControlLabel
-                        control={<Checkbox checked={values.fever} onChange={handleChange} name="fever" />}
+                        control={<Checkbox checked={values.fever}
+                        onChange={(e) => {
+                          handleChange(e); 
+                          manageSymptoms("Fever", e.target.checked);
+                        }} 
+                        name="fever" />}
                         label="Fever"
                       />
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={<Checkbox
+                          onChange={(e) => {
+                            if (e.target.checked){
+                              setFieldValue('cough_2_weeks', false);
+                              setFieldValue('cough_up_blood', false);
+                              setFieldValue('breathlessness', false);
+                              setFieldValue('weight_loss', false);
+                              setFieldValue('loss_of_appetite', false);
+                              setFieldValue('fever', false);
+                              // no symptoms when this option is chosen
+                              setFieldValue('symptoms', []); 
+                            }                            
+                          }}/>}
                         label="None of the above"
                       />
                     </FormGroup>
