@@ -48,7 +48,8 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.cough_2_weeks} 
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Cough lasting for > 2 weeks", e.target.checked);
                         }} 
                         name="cough_2_weeks" />}
@@ -57,7 +58,8 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.cough_up_blood} 
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Coughing up blood", e.target.checked);
                         }}
                         name="cough_up_blood" />}
@@ -66,7 +68,8 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.breathlessness} 
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Breathlessness", e.target.checked);
                         }}
                         name="breathlessness" />}
@@ -75,7 +78,8 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.weight_loss} 
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Weight loss", e.target.checked);
                         }} 
                         name="weight_loss" />}
@@ -84,7 +88,8 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.loss_of_appetite} 
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Loss of appetite", e.target.checked);
                         }} 
                         name="loss_of_appetite" />}
@@ -93,14 +98,15 @@ export const MedicalConditions = ({
                       <FormControlLabel
                         control={<Checkbox checked={values.fever}
                         onChange={(e) => {
-                          handleChange(e); 
+                          handleChange(e);
+                          setFieldValue('no_symptom', false); 
                           manageSymptoms("Fever", e.target.checked);
                         }} 
                         name="fever" />}
                         label="Fever"
                       />
                       <FormControlLabel
-                        control={<Checkbox
+                        control={<Checkbox checked={values.no_symptom}
                           onChange={(e) => {
                             if (e.target.checked){
                               setFieldValue('cough_2_weeks', false);
@@ -111,8 +117,10 @@ export const MedicalConditions = ({
                               setFieldValue('fever', false);
                               // no symptoms when this option is chosen
                               setFieldValue('symptoms', []); 
-                            }                            
-                          }}/>}
+                            }
+                            handleChange(e);                            
+                          }}
+                        name="no_symptom"/>}
                         label="None of the above"
                       />
                     </FormGroup>
