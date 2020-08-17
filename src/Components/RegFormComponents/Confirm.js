@@ -8,6 +8,13 @@ export const Confirm = ({
 }) => {
   const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, cough_2_weeks, cough_up_blood, breathlessness, weight_loss, loss_of_apetite, fever, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions } = values;
 
+  const getBooleanLabel = value => {
+    if (value === true) {
+      return 'Yes';
+    }
+    return 'No';
+  }
+
     return (
       <div>
         <h1>Confirmation Page</h1>
@@ -21,7 +28,7 @@ export const Confirm = ({
           <ListItemText primary="Birthday" secondary={birthday} />
           <ListItemText primary="Age" secondary={age} />
           <ListItemText primary="Education" secondary={education} />
-          <ListItemText primary="occupation" secondary={occupation} />
+          <ListItemText primary="Occupation" secondary={occupation} />
         </List>
 
         <List subheader={<h3>Part 2: Lifestyle</h3>} >
@@ -37,22 +44,22 @@ export const Confirm = ({
         <List subheader={<h3>Part 4: Medical conditions</h3>} >
           {/* need to include symptoms */}
 
-          <ListItemText primary="Do you have tubercolosis?" secondary={has_tubercolosis} />
-          <ListItemText primary="Do you live with someone with tubercolosis?" secondary={live_with_someone_with_tubercolosis} />
-          <ListItemText primary="If 'Yes' to living with someone with tubercolosis, was he/she diagnosed more than 4 months ago?" secondary={other_diagnosed_with_tubercolosis_beyond_4_months} />
+          <ListItemText primary="Do you have tubercolosis?" secondary={getBooleanLabel(has_tubercolosis)} />
+          <ListItemText primary="Do you live with someone with tubercolosis?" secondary={getBooleanLabel(live_with_someone_with_tubercolosis)} />
+          <ListItemText primary="If 'Yes' to living with someone with tubercolosis, was he/she diagnosed more than 4 months ago?" secondary={getBooleanLabel(other_diagnosed_with_tubercolosis_beyond_4_months)} />
 
-          <ListItemText primary="Do you have any blood borne diseases?" secondary={has_blood_borne_disease} />
+          <ListItemText primary="Do you have any blood borne diseases?" secondary={getBooleanLabel(has_blood_borne_disease)} />
           <ListItemText primary="If 'Yes' to having a blood borne disease, what Blood Borne Disease do you have?" secondary={blood_borne_disease} />
 
           <ListItemText primary="Please enter any pre-existing medical conditions that you have." secondary={pre_existing_conditions} />
 
-          <ListItemText primary="Do you know anyone in your family who has diabetes?" secondary={family_has_diabetes} />
+          <ListItemText primary="Do you know anyone in your family who has diabetes?" secondary={getBooleanLabel(family_has_diabetes)} />
           <ListItemText primary="If 'Yes' to knowing anyone in the family who has diabetes, how many family members have diabetes?" secondary={family_diabetes_count} />
 
-          <ListItemText primary="Do you know anyone in your family who has anemia?" secondary={family_has_anemia} />
+          <ListItemText primary="Do you know anyone in your family who has anemia?" secondary={getBooleanLabel(family_has_anemia)} />
           <ListItemText primary="If 'Yes' to knowing anyone in the family who has anemia, how many family members have anemia?" secondary={family_anemia_count} />
 
-          <ListItemText primary="Do you know anyone in your family who has oral cancer?" secondary={family_has_oral_cancer} />
+          <ListItemText primary="Do you know anyone in your family who has oral cancer?" secondary={getBooleanLabel(family_has_oral_cancer)} />
           <ListItemText primary="If 'Yes' to knowing anyone in the family who has oral cancer, how many family members have oral cancer?" secondary={family_oral_cancer_count} />
           
           <ListItemText primary="Other pre-existing conditions of family member(s) (if any)" secondary={family_pre_existing_conditions} />
