@@ -306,7 +306,7 @@ export const getEmptyTestData = (id) => {
       {
         num: 9,
         question:
-          "Are you currently suffereing from any of the following symptoms",
+          "Are you currently suffering from any of the following symptoms",
         answer: ["None of the above"],
       },
       {
