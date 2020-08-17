@@ -15,7 +15,6 @@ export const PersonalDetails = ({
   handleChange,
 }) => {
 
-<<<<<<< HEAD
   return (
     <React.Fragment>
       <h1>Registration</h1>
@@ -71,44 +70,6 @@ export const PersonalDetails = ({
                     name="gender"
                     labelId="gender-label"
                     id="gender"
-=======
-  render() {
-    const { values, handleChange } = this.props;
-
-    return (
-      <React.Fragment>
-        <h1>Registration</h1>
-        <Grid container spacing={3}>
-          <Grid item xs={8}>
-            <Paper
-              style={{
-                paddingTop: 20,
-                paddingLeft: 30,
-                paddingRight: 30,
-                paddingBottom: 20,
-              }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <Typography variant="h4">Personal Details</Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="name"
-                    id="name"
-                    label="Name"
-                    onChange={handleChange}
-                    defaultValue={values.name}
-                    autoComplete="off"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="nric"
-                    id="nric"
-                    label="NRIC"
->>>>>>> ab5f0578c4f48805e2504b0028702269a9839685
                     onChange={handleChange}
                     value={values.gender}
                   >
@@ -180,7 +141,6 @@ export const PersonalDetails = ({
                     labelId="occupation-label"
                     id="occupation"
                     onChange={handleChange}
-<<<<<<< HEAD
                     value={values.occupation}
                   >
                     <MenuItem value="student">Student</MenuItem>
@@ -195,77 +155,6 @@ export const PersonalDetails = ({
                   </Field>
                 <FormHelperText>{(touched.occupation && errors.occupation) && errors.occupation}</FormHelperText>  
                 </FormControl>
-=======
-                    defaultValue={values.birthday}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="education-label">
-                      Highest Education Qualification
-                    </InputLabel>
-                    <Select
-                      name="education"
-                      labelId="education-label"
-                      id="education"
-                      onChange={handleChange}
-                      value={values.education}
-                    >
-                      <MenuItem value="No formal qualification">
-                        No formal qualification
-                      </MenuItem>
-                      <MenuItem value="Primary">
-                        Primary(complete 6th standard)
-                      </MenuItem>
-                      <MenuItem value="Secondary">Secondary</MenuItem>
-                      <MenuItem value="Higher secondary">
-                        Higher Secondary
-                      </MenuItem>
-                      <MenuItem value="Above higher secondary">
-                        Above higher secondary
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="occupation-label">Occupation</InputLabel>
-                    <Select
-                      name="occupation"
-                      labelId="occupation-label"
-                      id="occupation"
-                      onChange={handleChange}
-                      value={values.occupation}
-                    >
-                      <MenuItem value="Student">Student</MenuItem>
-                      <MenuItem value="Homemaker">Homemaker/Housewife</MenuItem>
-                      <MenuItem value="Religious work">Religious Work</MenuItem>
-                      <MenuItem value="Professional">
-                        Professional (teacher, engineer, architect, doctor,
-                        nurse, lawyer, management, finance, etc)
-                      </MenuItem>
-                      <MenuItem value="Service industry">
-                        Service industry (e.g. restaurant server, call centre,
-                        receptionist, hotel staff)
-                      </MenuItem>
-                      <MenuItem value="Manual labourer">
-                        Manual labourer (e.g. farming, mining, construction,
-                        cleaning)
-                      </MenuItem>
-                      <MenuItem value="Skilled labourer">
-                        Skilled labourer (e.g. plumbing, electrician, cook,
-                        tailor)
-                      </MenuItem>
-                      <MenuItem value="Manufacturing">Manufacturing</MenuItem>
-                      <MenuItem value="Unemployed">Unemployed</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
->>>>>>> ab5f0578c4f48805e2504b0028702269a9839685
               </Grid>
             </Grid>
           </Paper>

@@ -65,22 +65,22 @@ export const RegForm = () => {
 
   const regFormData = {
     // personal details
-    name: data[0].answer,
-    nric: data[1].answer,
-    gender: data[2].answer,
-    birthday: data[3].answer,
-    age: data[4].answer,
-    education: data[15].answer,
-    occupation: data[12].answer,
+    name: "",
+    nric: "",
+    gender: "",
+    birthday: "",
+    age: 0,
+    education: "",
+    occupation: "",
 
     // lifestyle
-    exercise_freq: data[16].answer,
-    exercise_duration: data[17].answer,
+    exercise_freq: "",
+    exercise_duration: 0,
 
     // household info
-    monthly_household_income: data[13].answer,
-    household_count: data[14].answer,
-
+    monthly_household_income: 0.00,
+    household_count: 0,
+    
     // medical conditions
     symptoms: [],
     cough_2_weeks: false,

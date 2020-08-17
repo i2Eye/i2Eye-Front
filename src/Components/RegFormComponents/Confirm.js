@@ -2,7 +2,6 @@ import React from "react";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 
-<<<<<<< HEAD
 export const Confirm = ({
   values,
 }) => {
@@ -27,54 +26,6 @@ export const Confirm = ({
     })
     return symptomsLabel;
   }
-=======
-class Confirm extends Component {
-  confirm = (e) => {
-    e.preventDefault();
-    console.log("Save Edit");
-    // *** submit to database *** //
-    this.props.nextStep();
-  };
-
-  saveEdit = (e) => {
-    e.preventDefault();
-    console.log("Save Edit");
-    this.props.nextStep();
-  };
-
-  getSubmitButton = (isEdit) => {
-    if (isEdit) {
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.saveEdit}
-        >
-          Save
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.confirm}
-        >
-          Submit
-        </Button>
-      );
-    }
-  };
-
-  render() {
-    const {
-      isEdit,
-      values: { name, gender, age, birthday },
-      prevStep,
-    } = this.props;
->>>>>>> ab5f0578c4f48805e2504b0028702269a9839685
 
     return (
       <div>
@@ -125,18 +76,6 @@ class Confirm extends Component {
           
           <ListItemText primary="Other pre-existing conditions of family member(s) (if any)" secondary={family_pre_existing_conditions} />
         </List>
-<<<<<<< HEAD
-=======
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20, marginRight: 20 }}
-          onClick={prevStep}
-        >
-          Back
-        </Button>
-        {this.getSubmitButton(isEdit)}
->>>>>>> ab5f0578c4f48805e2504b0028702269a9839685
       </div>
     );
 }
