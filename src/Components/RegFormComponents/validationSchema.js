@@ -24,19 +24,19 @@ export const getStepValidationSchema = (step) => {
       });
     case 3:
       return Yup.object({
-        //symptoms: [],
-        cough_2_weeks: Yup.boolean().required("This field is required"),
-        cough_up_blood: Yup.boolean().required("This field is required"),
-        breathlessness: Yup.boolean().required("This field is required"),
-        weight_loss: Yup.boolean().required("This field is required"),
-        loss_of_apetite: Yup.boolean().required("This field is required"),
-        fever: Yup.boolean().required("This field is required"),
+        symptoms: Yup.array().of(Yup.string()).min(1),
+        cough_2_weeks: Yup.boolean(),
+        cough_up_blood: Yup.boolean(),
+        breathlessness: Yup.boolean(),
+        weight_loss: Yup.boolean(),
+        loss_of_appetite: Yup.boolean(),
+        fever: Yup.boolean(),
 
         has_tubercolosis: Yup.boolean().required("This field is required"),
         live_with_someone_with_tubercolosis: Yup.boolean().required("This field is required"),
         other_diagnosed_with_tubercolosis_beyond_4_months: Yup.boolean().when('live_with_someone_with_tubercolosis', {
           is: true,
-          then: Yup.string(). required("This field is required"),
+          then: Yup.string().required("This field is required"),
         }),        
         
         has_blood_borne_disease: Yup.boolean().required("This field is required"),
@@ -63,9 +63,7 @@ export const getStepValidationSchema = (step) => {
         family_oral_cancer_count: Yup.number().when('family_has_oral_cancer', {
           is: true,
           then: Yup.number().min(1, "This field must be at least 1").required("This field is required"),
-        }),    
-        
-        family_pre_existing_conditions: Yup.string().required("This field is required"),
+        }),
       });
     default:
       return null;
