@@ -170,7 +170,7 @@ export const RegForm = () => {
             >
               {isSubmitStep ? 'Submit' : step < 5 ? 'Next' : 'Register new patient'}
             </Button>
-            <pre>{JSON.stringify(formik, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(formik, null, 2)}</pre> */}
           </Form>
         )}
       </Formik>
