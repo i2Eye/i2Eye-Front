@@ -41,7 +41,7 @@ export const Lifestyle = ({
                       id="exercise_freq"
                       onChange={handleChange}
                       value={values.exercise_freq}
-                      InputLabelProps={{
+                      inputlabelprops={{
                         shrink: true,
                       }}
                     >

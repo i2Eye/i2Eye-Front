@@ -1,27 +1,12 @@
-import React, { Component } from "react";
-import Button from "@material-ui/core/Button";
+import React from "react";
 
-class Success extends Component {
-  resetForm = (e) => {
-    e.preventDefault();
-    this.props.resetForm();
-  };
+export const Success = () => {
 
-  render() {
     return (
       <div>
-        <h1>Submitted Successfully</h1>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          onClick={this.resetForm}
-        >
-          Submit Another
-        </Button>
+        <h1>Registration Form submitted successfully!</h1>
       </div>
     );
-  }
 }
 
 export default Success;

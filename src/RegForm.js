@@ -55,7 +55,7 @@ const renderStep = (step, {values, errors, touched, handleChange, setFieldValue}
         />
       );
     case 5:
-      return <Success resetForm={this.resetForm} />;
+      return <Success />;
     default:
       return 0;
   }
@@ -89,6 +89,7 @@ export const RegForm = () => {
     weight_loss: false,
     loss_of_appetite: false,
     fever: false,
+    no_symptom: false,
 
     has_tubercolosis: "",
     live_with_someone_with_tubercolosis: "",
@@ -130,6 +131,13 @@ export const RegForm = () => {
     if (isSubmitStep) {
       // code to send form data to backend here
       //return onSubmit(values, formikBag);
+      return nextStep(values);
+    } else if (step === 5) {
+      // reset form
+      setSnapshot(snapshot => ({...regFormData}));
+      formikBag.setValues({...regFormData});
+      // go back to first step of form (step 0)
+      setStep(0);
     } else {
       formikBag.setTouched({}); // need to check if success page needs this
       nextStep(values);
@@ -145,7 +153,7 @@ export const RegForm = () => {
         {formik => (
           <Form noValidate>
             {renderStep(step, formik)}
-            {step > 0 && <Button
+            {(step > 0 && step < 5) && <Button
               variant="contained"
               color="primary"
               style={{ marginTop: 20, marginRight: 20 }}
@@ -158,9 +166,9 @@ export const RegForm = () => {
               color="primary"
               style={{ marginTop: 20 }}
               type="submit"
-              disabled={formik.isSubmitting}
+              // disabled={step === 4 && formik.isSubmitting}
             >
-              {isSubmitStep ? 'Submit' : 'Next'}
+              {isSubmitStep ? 'Submit' : step < 5 ? 'Next' : 'Register new patient'}
             </Button>
             <pre>{JSON.stringify(formik, null, 2)}</pre>
           </Form>
