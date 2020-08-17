@@ -1,12 +1,9 @@
 import React, { Component } from "react";
+import StationSelect from "./Components/StationComponents/StationSelect";
 
 class Stations extends Component {
   render() {
-    return (
-      <div>
-        <h1>Stations</h1>
-      </div>
-    );
+    return <StationSelect />;
   }
 }
 

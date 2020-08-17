@@ -38,12 +38,15 @@ export const MedicalConditions = ({
             >
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <Typography variant='h4'>Medical Conditions</Typography>
+                  <Typography variant="h4">Medical Conditions</Typography>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl>
-                    <FormLabel htmlFor="symptoms">Are you currently suffering from any of the following symptoms?</FormLabel>
+                    <FormLabel htmlFor="symptoms">
+                      Are you currently suffering from any of the following
+                      symptoms?
+                    </FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={<Checkbox checked={values.cough_2_weeks} 
@@ -179,7 +182,9 @@ export const MedicalConditions = ({
                       name="other_diagnosed_with_tubercolosis_beyond_4_months"
                       id="other_diagnosed_with_tubercolosis_beyond_4_months"
                       onChange={handleChange}
-                      value={values.other_diagnosed_with_tubercolosis_beyond_4_months}
+                      value={
+                        values.other_diagnosed_with_tubercolosis_beyond_4_months
+                      }
                     >
                       <MenuItem value={true}>Yes</MenuItem>
                       <MenuItem value={false}>No</MenuItem>
@@ -387,7 +392,9 @@ export const MedicalConditions = ({
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel htmlFor="family_pre_existing_conditions">Other pre-existing conditions of family member(s) (if any)</FormLabel>
+                    <FormLabel htmlFor="family_pre_existing_conditions">
+                      Other pre-existing conditions of family member(s) (if any)
+                    </FormLabel>
                     <TextField
                       name="family_pre_existing_conditions"
                       id="family_pre_existing_conditions"
@@ -397,7 +404,6 @@ export const MedicalConditions = ({
                     />
                   </FormControl>
                 </Grid>
-
               </Grid>
             </Paper>
           </Grid>

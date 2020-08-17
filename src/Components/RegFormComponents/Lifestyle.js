@@ -28,8 +28,8 @@ export const Lifestyle = ({
               }}
             >
               <Grid container spacing={3}>
-              <Grid item xs={12}>
-                  <Typography variant='h4'>Lifestyle</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="h4">Lifestyle</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth required error={touched.exercise_freq && errors.exercise_freq}>
