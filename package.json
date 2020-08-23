@@ -48,5 +48,6 @@
   "devDependencies": {
     "react-app-rewired": "^2.1.6",
     "worker-loader": "^3.0.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
