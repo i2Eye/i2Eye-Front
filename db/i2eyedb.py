@@ -25,14 +25,18 @@ def submit_registration():
         num_of_stations = cursor.fetchall()[0][0]
         print(num_of_stations)
 
-        patient_id_query = """ SELECT COUNT(*) from patient """
+        # initialise array with 0s of size = num_of_stations
+        completed_stations = [0] * num_of_stations
+
+        # Registration station is completed
+        completed_stations[0] = 2
+        insert_patient("false", completed_stations)
+
+        patient_id_query = """ SELECT patient_id from patient ORDER BY patient_id DESC LIMIT 1 """
         cursor.execute(patient_id_query)
         connection.commit()
-        patient_id = cursor.fetchall()[0][0] + 1
+        patient_id = cursor.fetchall()[0][0]
         print(patient_id)
-
-      # initialise array with 0s of size = num_of_stations
-        completed_stations = [0] * num_of_stations
 
         data = request.get_json()
         registration_questions = data['registration']
@@ -52,9 +56,6 @@ def submit_registration():
 
             insert_answer(patient_id, answer, question_id, 1)
 
-      # Registration station is completed
-        completed_stations[0] = 2
-        insert_patient("false", completed_stations)
         print("Successful submission of registration.")
         return str(patient_id)
 
@@ -142,7 +143,7 @@ def get_all_patients():
         connection = connect_db()
         cursor = connection.cursor()
         # Get all existing patient IDs in DB.
-        patient_select_query = """ SELECT patient_id FROM patient"""
+        patient_select_query = """ SELECT patient_id FROM patient ORDER BY patient_id ASC"""
         cursor.execute(patient_select_query)
         connection.commit()
         patient_ID_list = cursor.fetchall()
@@ -346,6 +347,50 @@ def update_patient_data(patient_id):
             #print("PostgreSQL connection is closed")
 
 
+# insert patient data
+
+@app.route('/insert_patient_data/<int:patient_id>', methods=["POST"])
+def insert_patient_data(patient_id):
+    try:
+        connection = connect_db()
+
+        cursor = connection.cursor()
+
+        data = request.get_json()
+        for station in data.keys():
+            for json_question in data[station]:
+                question = json_question['question']
+
+                answer = json_question['answers']
+
+                cursor2 = connection.cursor()
+                station_id_query = """SELECT station_id FROM station WHERE station_name = %s"""
+                station_to_get = (station,)
+                cursor2.execute(station_id_query, station_to_get)
+                station_id = cursor2.fetchall()[0]
+
+                question_id_query = """SELECT question_id FROM question WHERE question = %s AND station_id = %s"""
+                question_to_get = (question, station_id,)
+                cursor2.execute(question_id_query, question_to_get)
+                question_id = cursor2.fetchall()[0]
+
+                print(question_id)
+
+                insert_answer(patient_id, answer, question_id, station_id)
+
+        return "Data successfully inserted"
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error while inserting data.", error)
+
+    finally:
+        # closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            #print("PostgreSQL connection is closed")
+
+
 # 4: Delete the patient's data (id and answers) from the database
 
 
@@ -449,22 +494,123 @@ def set_availability():
             #print("PostgreSQL connection is closed")
 
 
+# update status of patient
+
+@app.route('/update_patient_status', methods=["POST"])
+def update_patient_status():
+    try:
+        connection = connect_db()
+        cursor = connection.cursor()
+
+        data = request.get_json()
+        print(data)
+
+        for key, value in data.items():
+
+            if (key == "patient_id"):
+                patient_id = (value)
+
+            if (key == "boolean"):
+                patient_status = (value)
+
+            # print(key)
+            # print(value)
+
+        postgres_update_query = """ UPDATE patient SET status = %s WHERE patient_id = %s"""
+        record_to_update = (patient_status, patient_id,)
+        cursor.execute(postgres_update_query, record_to_update)
+        connection.commit()
+
+        print("ok")
+
+        return "Patient status updated"
+
+    except (Exception, psycopg2.Error) as error:
+        if(connection):
+            print("Failed to insert record into patient table", error)
+    finally:
+        if(connection):
+            cursor.close()
+            connection.close()
+            #print("PostgreSQL connection is closed")
+
+
+# update completed_stations of patient
+
+@app.route('/update_completed_stations/<int:patient_id>', methods=["POST"])
+def update_completed_stations(patient_id):
+    try:
+        connection = connect_db()
+        cursor = connection.cursor()
+        cursor2 = connection.cursor()
+
+        data = request.get_json()
+        print(data)
+
+        # initialise empty stations array
+        station_count_query = """ SELECT COUNT(*) from station """
+        cursor.execute(station_count_query)
+        connection.commit()
+        num_of_stations = cursor.fetchall()[0][0]
+        print(num_of_stations)
+
+        completed_stations = [0] * num_of_stations
+
+        for station_name, completion_info in data.items():
+            station_id_query = """SELECT station_id FROM station WHERE station_name = '{0}' """.format(
+                station_name)
+            cursor2.execute(station_id_query)
+            connection.commit()
+            station_id = cursor2.fetchall()[0][0]-1
+            print(station_id)
+
+            if completion_info == "Not Queued":
+                completed_stations[station_id] = 0
+            elif completion_info == "In Queue":
+                completed_stations[station_id] = 1
+            elif completion_info == "Completed":
+                completed_stations[station_id] = 2
+            else:
+                completed_stations[station_id] = -1
+
+            # print(key)
+            # print(value)
+
+        postgres_update_query = """ UPDATE patient SET completed_station = %s WHERE patient_id = %s"""
+        record_to_update = (completed_stations, patient_id,)
+        cursor.execute(postgres_update_query, record_to_update)
+        connection.commit()
+
+        print("ok")
+
+        return "Completed stations updated"
+
+    except (Exception, psycopg2.Error) as error:
+        if(connection):
+            print("Failed to insert record into patient table", error)
+    finally:
+        if(connection):
+            cursor.close()
+            connection.close()
+            #print("PostgreSQL connection is closed")
+
+
 # Use localhost for local database (with the default password set for your system). For now, I think we should
 # continue using the postgres db on heroku so that everyone can perform queries on it. - Wei Kit
 # This one i'm not v sure how to connect to a local db, so i've connected to another one i've deployed on heroku, can i get some help here?
 
 
 def connect_db():
-    connection = psycopg2.connect(user="jhfdzctgeytrkt",
-                                  password="6f0913d556bf6eee840e0e2ba8b4c0b3ef0331f6855852008be07eeb840cdb6f",
-                                  host="ec2-35-173-94-156.compute-1.amazonaws.com",
+    # connection = psycopg2.connect(user="jhfdzctgeytrkt",
+    #                               password="6f0913d556bf6eee840e0e2ba8b4c0b3ef0331f6855852008be07eeb840cdb6f",
+    #                               host="ec2-35-173-94-156.compute-1.amazonaws.com",
+    #                               port="5432",
+    #                               database="dbpduk6f0fbp8q")
+    connection = psycopg2.connect(user="postgres",
+                                  password="P@ssw0rd",
+                                  host="localhost",
                                   port="5432",
-                                  database="dbpduk6f0fbp8q")
-    # connection = psycopg2.connect(user="postgres",
-    #                             password="relaxaholics",
-    #                             host="localhost",
-    #                             port="5432",
-    #                             database="postgres")
+                                  database="postgres")
     return connection
 
 # Create station table
@@ -988,7 +1134,9 @@ def main():
     # set_availability_false("Registration")
     # get_station_availability()
 
-    insert_stuff_test_patch_4()
+    # insert_stuff_test_patch_4()
+
+    create_patient()
 
     # insert_type("text")
     # insert_question("Name", 1, 1)
