@@ -30,7 +30,7 @@ def submit_registration():
 
         # Registration station is completed
         completed_stations[0] = 2
-        insert_patient("false", completed_stations)
+        insert_patient("true", completed_stations)
 
         patient_id_query = """ SELECT patient_id from patient ORDER BY patient_id DESC LIMIT 1 """
         cursor.execute(patient_id_query)
@@ -39,11 +39,12 @@ def submit_registration():
         print(patient_id)
 
         data = request.get_json()
-        registration_questions = data['registration']
+        print(data)
+        registration_questions = data['Registration']
 
         for json_question in registration_questions:
             question = json_question['question']
-            answer = json_question['answer']
+            answer = json_question['answers']
 
             question_id_query = """SELECT question_id FROM question WHERE question = '{0}' """.format(
                 question)
@@ -55,6 +56,9 @@ def submit_registration():
             connection.commit()
 
             insert_answer(patient_id, answer, question_id, 1)
+
+        insert_blank_data(patient_id)
+        insert_blank_registration_data(patient_id)
 
         print("Successful submission of registration.")
         return str(patient_id)
@@ -349,35 +353,101 @@ def update_patient_data(patient_id):
 
 # insert patient data
 
-@app.route('/insert_patient_data/<int:patient_id>', methods=["POST"])
-def insert_patient_data(patient_id):
+# @app.route('/insert_patient_data/<int:patient_id>', methods=["POST"])
+# def insert_patient_data(patient_id):
+#     try:
+#         connection = connect_db()
+
+#         cursor = connection.cursor()
+
+#         data = request.get_json()
+#         for station in data.keys():
+#             for json_question in data[station]:
+#                 question = json_question['question']
+
+#                 answer = json_question['answers']
+
+#                 cursor2 = connection.cursor()
+#                 station_id_query = """SELECT station_id FROM station WHERE station_name = %s"""
+#                 station_to_get = (station,)
+#                 cursor2.execute(station_id_query, station_to_get)
+#                 station_id = cursor2.fetchall()[0]
+
+#                 question_id_query = """SELECT question_id FROM question WHERE question = %s AND station_id = %s"""
+#                 question_to_get = (question, station_id,)
+#                 cursor2.execute(question_id_query, question_to_get)
+#                 question_id = cursor2.fetchall()[0]
+
+#                 print(question_id)
+
+#                 insert_answer(patient_id, answer, question_id, station_id)
+
+#         return "Data successfully inserted"
+
+#     except (Exception, psycopg2.DatabaseError) as error:
+#         print("Error while inserting data.", error)
+
+#     finally:
+#         # closing database connection.
+#         if(connection):
+#             cursor.close()
+#             connection.close()
+#             #print("PostgreSQL connection is closed")
+
+def insert_blank_data(patient_id):
     try:
         connection = connect_db()
 
         cursor = connection.cursor()
 
-        data = request.get_json()
-        for station in data.keys():
-            for json_question in data[station]:
-                question = json_question['question']
+        insert_blanks_query = """ INSERT INTO answer (question_id, station_id, answers, patient_id)
+                                  SELECT question_id, station_id, '', %s 
+                                  FROM question
+                                  WHERE station_id != 
+                                    (SELECT station_id 
+                                    FROM station
+                                    WHERE station_name = 'Registration');  """
 
-                answer = json_question['answers']
+        patient_id_to_insert = (patient_id,)
+        cursor.execute(insert_blanks_query, patient_id_to_insert)
+        connection.commit()
 
-                cursor2 = connection.cursor()
-                station_id_query = """SELECT station_id FROM station WHERE station_name = %s"""
-                station_to_get = (station,)
-                cursor2.execute(station_id_query, station_to_get)
-                station_id = cursor2.fetchall()[0]
+        print("Successful addition of blank answers")
+        return "Data successfully inserted"
 
-                question_id_query = """SELECT question_id FROM question WHERE question = %s AND station_id = %s"""
-                question_to_get = (question, station_id,)
-                cursor2.execute(question_id_query, question_to_get)
-                question_id = cursor2.fetchall()[0]
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error while inserting blank data.", error)
 
-                print(question_id)
+    finally:
+        # closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            #print("PostgreSQL connection is closed")
 
-                insert_answer(patient_id, answer, question_id, station_id)
 
+def insert_blank_registration_data(patient_id):
+    try:
+        connection = connect_db()
+
+        cursor = connection.cursor()
+
+        insert_blanks_query = """ INSERT INTO answer (question_id, station_id, answers, patient_id)
+                                  SELECT question_id, station_id, '', %s
+                                  FROM question
+                                  WHERE (question_id NOT IN 
+                                  (SELECT question_id 
+                                  FROM answer
+                                  WHERE (patient_id = %s)))
+                                  AND station_id = 
+                                    (SELECT station_id 
+                                    FROM station
+                                    WHERE station_name = 'Registration')  """
+
+        cursor.execute(insert_blanks_query, (patient_id, patient_id,))
+        connection.commit()
+
+        print("Successful addition of blank answers")
         return "Data successfully inserted"
 
     except (Exception, psycopg2.DatabaseError) as error:
@@ -389,7 +459,6 @@ def insert_patient_data(patient_id):
             cursor.close()
             connection.close()
             #print("PostgreSQL connection is closed")
-
 
 # 4: Delete the patient's data (id and answers) from the database
 
