@@ -28,6 +28,7 @@ import SaveWorker from "./Components/PatientTrackerComponents/save.worker";
 import * as FileSaver from "file-saver";
 import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
 import jsPDF from "jspdf";
+import { getAllPatients } from "./dbFunctions";
 
 var saveWorker;
 
@@ -59,6 +60,7 @@ class PatientTracker extends Component {
     printOpen: 0,
     fileName: "",
     saveError: false,
+    people: [],
   };
 
   seeMoreButton = (
@@ -297,10 +299,10 @@ class PatientTracker extends Component {
   };
 
   editDialog = () => {
-    const { clickedRow, editOpen } = this.state;
+    const { clickedRow, editOpen, people } = this.state;
     //console.log(clickedRow);
 
-    const patientData = this.getPeople().find(
+    const patientData = people.find(
       (person) => person.id.toString() === clickedRow.toString()
     );
     //console.log(patientData.oralHealth);
@@ -553,38 +555,32 @@ class PatientTracker extends Component {
   };
 
   getPeople = () => {
-    const people = [];
-    for (let i = 1; i <= 10000; i++) {
-      people[i - 1] = {
-        actions: (
-          <React.Fragment>
-            {this.editButton}
-            {this.seeMoreButton}
-          </React.Fragment>
-        ),
-        id: i,
-        name: "Person " + ((i * 173) % 190),
-        age: (i * 151) % 111,
-        gender: i % 2 === 0 ? "F" : "M",
-        oralHealth:
-          i % 5 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        bmi:
-          i % 7 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        eyeScreening:
-          i % 6 === 0 ? "Completed" : i % 5 === 0 ? "In Queue" : "Not Queued",
-        phlebotomy:
-          i % 4 === 0 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
-        fingerstickAnemia:
-          i % 5 === 2 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
-        fingerstickRCBG:
-          i % 6 === 3 ? "Completed" : i % 5 === 2 ? "In Queue" : "Not Queued",
-        bloodPressure:
-          i % 7 === 2 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        doctorConsult:
-          i % 6 === 5 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
-      };
-    }
-    return people;
+    console.log("retrieved people");
+    const peoplePromise = getAllPatients();
+    peoplePromise.then((result) =>
+      this.setState({
+        people: result.map((person) => ({
+          actions: (
+            <React.Fragment>
+              {this.editButton}
+              {this.seeMoreButton}
+            </React.Fragment>
+          ),
+          id: person["id"],
+          name: person["Name"],
+          age: person["Age"],
+          gender: person["Gender"],
+          oralHealth: person["Oral Health"],
+          bmi: person["BMI"],
+          eyeScreening: person["Eye Screening"],
+          phlebotomy: person["Phlebotomy Test"],
+          fingerstickAnemia: person["Fingerstick Blood Test (Anemia)"],
+          fingerstickRCBG: person["Fingerstick Blood Test (RCBG)"],
+          bloodPressure: person["Blood Pressure"],
+          doctorConsult: person["Doctor's Consult"],
+        })),
+      })
+    );
   };
 
   filterPeople = (people) => {
@@ -776,6 +772,10 @@ class PatientTracker extends Component {
     return columns;
   };
 
+  componentDidMount() {
+    this.getPeople();
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -784,10 +784,10 @@ class PatientTracker extends Component {
       isFemale,
       hasIncompleteStations,
       completedAllStations,
+      people,
     } = this.state;
     //console.log(editOpen);
 
-    const people = this.getPeople();
     const filteredPeople = this.filterPeople(people);
     return (
       <div>
