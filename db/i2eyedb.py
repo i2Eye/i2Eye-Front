@@ -216,6 +216,13 @@ def get_all_patients():
                 # Append each station and the status to the list.
                 this_patient_data.update({station_name: outcome})
 
+            availability_query = """SELECT status from patient WHERE patient_id = {0}""".format(
+                id)
+            cursor.execute(availability_query)
+            connection.commit()
+            availability = cursor.fetchall()[0][0]
+            this_patient_data.update({"Is Available": availability})
+
             # Processing of this patient is done. Append to results.
             results.append(this_patient_data)
             # Iterate to next patient.
