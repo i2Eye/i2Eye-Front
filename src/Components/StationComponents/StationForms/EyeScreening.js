@@ -3,6 +3,8 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import "../../../dbFunctions";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [{ question: "SNC ID" }];
 
@@ -27,6 +29,17 @@ class EyeScreening extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      const answers = {
+        "Eye Screening": [
+          {
+            answers: this.state.id,
+            num: 1,
+            question: "SNC ID",
+          },
+        ],
+      };
+
+      updatePatientData(1, answers).then((response) => console.log(response));
     }
   }
 

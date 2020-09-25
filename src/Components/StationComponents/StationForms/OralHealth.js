@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData.js";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [
   { question: "Dental ID", label: "Dental ID", id: "id", type: "text" },
@@ -177,6 +178,80 @@ class OralHealth extends Component {
       alert("Required fields cannot be left empty!");
     } else {
       console.log(this.state);
+      const answers = {
+        "Oral Health": [
+          {
+            answers: this.state.Hb,
+            num: 1,
+            question: "Dental ID",
+          },
+          {
+            answers: this.state.Hb,
+            num: 1,
+            question:
+              "Have you ever consumed in the past/present any form of intoxications e.g. tobacco beedit, cigarettes (include chewing/smoking)?",
+          },
+          {
+            answers: this.state.meals,
+            num: 2,
+            question: "If Y to having consumed, what do you consume?",
+          },
+          {
+            answers: this.state.protein,
+            num: 3,
+            question:
+              "If Y to having consumed, how many pieces/sticks on average do you consume a day?",
+          },
+          {
+            answers: this.state.carbohydrates,
+            num: 4,
+            question:
+              "If Y to having consumed, for how long have u been consuming?",
+          },
+          {
+            answers: this.state.vegetables,
+            num: 5,
+            question: "If Y to having consumed, why do u still consume?",
+          },
+          {
+            answers: this.state.sweets,
+            num: 6,
+            question: "Are you still consuming?",
+          },
+          {
+            answers: this.state.sweets,
+            num: 7,
+            question: "If N to consuming now, when did you stop consuming?",
+          },
+          {
+            answers: this.state.sweets,
+            num: 8,
+            question: "If N to consuming now, why did you choose to stop?",
+          },
+          {
+            answers: this.state.sweets,
+            num: 9,
+            question:
+              "If Y to consuming now, have you tried quitting? (and if so, for how long?)",
+          },
+          {
+            answers: this.state.sweets,
+            num: 9,
+            question:
+              "If Y, for how long? (e.g. Enter '4y, 5m' if 4 years and 5 months)",
+          },
+          {
+            answers: this.state.sweets,
+            num: 10,
+            question:
+              "If Y to having tried quitting, what made you consume again?",
+          },
+        ],
+      };
+
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 

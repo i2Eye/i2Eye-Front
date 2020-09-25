@@ -9,6 +9,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import "../../../dbFunctions";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [
   {
@@ -59,6 +61,39 @@ class BloodPressure extends Component {
   handleSubmit() {
     //get final data of form
     console.log(this.state);
+    const answers = {
+      "Blood Pressure": [
+        {
+          answers: this.state.age,
+          num: 1,
+          question: "Is patient > 18 years old?",
+        },
+        {
+          answers: this.state.Systolic1,
+          num: 2,
+          question: "Systolic BP Reading 1 (mmHg)",
+        },
+        {
+          answers: this.state.Diastolic1,
+          num: 3,
+          question: "Diastolic BP Reading 1 (mmHg)",
+        },
+        {
+          answers: this.state.Systolic2,
+          num: 4,
+          question: "Systolic BP Reading 2 (mmHg)",
+        },
+        {
+          answers: this.state.Diastolic2,
+          num: 5,
+          question: "Diastolic BP Reading 2 (mmHg)",
+        },
+      ],
+    };
+
+    updatePatientData(this.props.id, answers).then((response) =>
+      console.log(response)
+    );
   }
 
   handleChange(e) {

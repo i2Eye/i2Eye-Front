@@ -3,6 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [
   { question: "Height (m)", id: "height" },
@@ -41,6 +42,29 @@ class BMI extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      const answers = {
+        BMI: [
+          {
+            answers: this.state.height,
+            num: 1,
+            question: "Height (m)",
+          },
+          {
+            answers: this.state.weight,
+            num: 2,
+            question: "Weight (kg)",
+          },
+          {
+            answers: this.state.waist,
+            num: 3,
+            question: "Waist circumference (cm)",
+          },
+        ],
+      };
+
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 

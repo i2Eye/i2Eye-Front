@@ -11,6 +11,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import { updatePatientData } from "../../../dbFunctions";
 
 const radioQuestions = [
   {
@@ -75,6 +76,29 @@ class Phlebotomy extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      const answers = {
+        "Phlebotomy Test": [
+          {
+            answers: this.state.age,
+            num: 1,
+            question: "Are you 40 years old or above?",
+          },
+          {
+            answers: this.state.conditions,
+            num: 2,
+            question: "Are you suffering from any of the following conditions?",
+          },
+          {
+            answers: this.state.vimta,
+            num: 3,
+            question: "Vimta Registration No.",
+          },
+        ],
+      };
+
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 
