@@ -1000,7 +1000,8 @@ def insert_stuff_test_patch_4():
                    "Are you still consuming?",
                    "If N to consuming now, when did you stop consuming?",
                    "If N to consuming now, why did you choose to stop?",
-                   "If Y to consuming now, have you tried quitting? (and if so, for how long?)",
+                   "If Y to consuming now, have you tried quitting?",
+                   "If so, for how long?",
                    "If Y to having tried quitting, what made you consume again?"]
 
     bmi = ["Height (m)", "Weight (kg)", "Waist circumference (cm)"]
@@ -1027,8 +1028,10 @@ def insert_stuff_test_patch_4():
                       "Systolic BP Reading 2 (mmHg)",
                       "Diastolic BP Reading 2 (mmHg)"]
 
-    doctors_consult = ["Urgent doctor's consult: doctor's notes",
-                       "Standard doctor's consult: doctor's notes"]
+    doctors_consult = ["Urgent doctor's consult: Reason for consultation/chief complaint",
+                       "Urgent doctor's consult: Others (include prescriptions if any)",
+                       "Standard doctor's consult: Reason for consultation/chief complaint",
+                       "Standard doctor's consult: Others (include prescriptions if any)"]
 
     for question in registration:
         insert_question(question, 1, 1)
