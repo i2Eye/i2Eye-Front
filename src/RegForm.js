@@ -9,6 +9,8 @@ import Success from "./Components/RegFormComponents/Success";
 import { getStepValidationSchema } from "./Components/RegFormComponents/validationSchema";
 import Button from "@material-ui/core/Button";
 import getTestData from "./TestData";
+import { postRegistration } from "./dbFunctions";
+import { regFormJson } from "./Components/RegFormComponents/formatJson";
 
 const renderStep = (
   step,
@@ -192,9 +194,15 @@ export const RegForm = (props) => {
 
   const handleSubmit = (values, formikBag) => {
     if (isSubmitStep) {
-      // code to send form data to backend here
+      const newUser = regFormJson(values);
+      // create test user below
+      // newUser = getTestData(1).registration
+      postRegistration(newUser).then(res => {
+        if (res === true) {
+          return nextStep(values); 
+        }
+      });
       //return onSubmit(values, formikBag);
-      return nextStep(values);
     } else if (step === 5) {
       // reset form
       setSnapshot((snapshot) => ({ ...regFormData }));
