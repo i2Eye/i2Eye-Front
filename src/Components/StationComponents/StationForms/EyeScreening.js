@@ -39,14 +39,13 @@ class EyeScreening extends Component {
         ],
       };
 
-      updatePatientData(1, answers).then((response) => console.log(response));
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 
   render() {
-    const data = getTestData(this.props.patientID);
-    const prevData = data.eyeScreening;
-
     return (
       <div>
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
