@@ -64,6 +64,7 @@ def submit_registration():
         return str(patient_id)
 
     except (Exception, psycopg2.DatabaseError) as error:
+        delete_patient(patient_id)
         print("Error while submitting registration.", error)
 
     finally:

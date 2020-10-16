@@ -198,7 +198,7 @@ export const RegForm = (props) => {
       // create test user below
       // newUser = getTestData(1).registration
       console.log(newUser)
-      postRegistration({Registration: newUser}).then(res => {
+      postRegistration(newUser).then(res => {
         console.log(res)
       });
       //return onSubmit(values, formikBag);
