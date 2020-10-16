@@ -46,7 +46,7 @@ def submit_registration():
             question = json_question['question']
             answer = json_question['answers']
 
-            question_id_query = """SELECT question_id FROM question WHERE question = '{0}' """.format(
+            question_id_query = """SELECT question_id FROM question WHERE question = '{0}'""".format(
                 question)
 
             cursor2.execute(question_id_query)
@@ -265,11 +265,15 @@ def get_patient_data(patient_id):
             data = cursor2.fetchall()
             data = [dict(row) for row in data]
 
-            num = 1
+            cursor4 = connection.cursor()
+
             for j in data:
-                # print(j)
+                question_id_query = """SELECT question_id FROM question WHERE question LIKE '{0}'""".format(
+                    j["question"].replace("'", "''"))
+                cursor4.execute(question_id_query)
+                num = cursor4.fetchall()[0]
+                connection.commit()
                 j['num'] = num
-                num = num + 1
 
             results.update({station_name: data})
 

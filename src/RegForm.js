@@ -197,10 +197,9 @@ export const RegForm = (props) => {
       const newUser = regFormJson(values);
       // create test user below
       // newUser = getTestData(1).registration
-      postRegistration(newUser).then(res => {
-        if (res === true) {
-          return nextStep(values); 
-        }
+      console.log(newUser)
+      postRegistration({Registration: newUser}).then(res => {
+        console.log(res)
       });
       //return onSubmit(values, formikBag);
     } else if (step === 5) {
