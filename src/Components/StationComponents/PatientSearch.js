@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import Switch from "@material-ui/core/Switch";
-import { getAllPatients } from "../../dbFunctions";
+import { getAllPatients, updatePatientStatus } from "../../dbFunctions";
 
 const useStyles = (theme) => ({
   root: {
@@ -50,6 +50,8 @@ class PatientSearch extends Component {
   };
 
   handleMasterSearch = (e, v, r) => {
+    console.log(v)
+    const currPatient = this.state.patientID;
     this.setState({ patientID: v === null ? 0 : v.id });
   };
 
@@ -57,9 +59,15 @@ class PatientSearch extends Component {
     this.setState({ toggle: e.target.checked });
   };
 
+  handleCancel = () => {
+    const currPatient = this.state.patientID;
+    this.setState({ input: "", patientID: 0 });
+  }
+
   //Find a way to render an alert if there is no next person in the queue
   getNextPerson = () => {
     const { people } = this.state;
+    const currPatient = this.state.patientID;
     const availablePeople = people.filter((person) => person["Is Available"]);
     availablePeople.length <= 0
       ? this.setState({ patientID: 0 })
@@ -68,6 +76,7 @@ class PatientSearch extends Component {
   };
 
   getCard = (classes, patientID) => {
+    console.log(patientID)
     const patient = this.state.people.find(
       (patient) => patient["id"] === patientID
     );
@@ -189,7 +198,7 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginBottom: 20 }}
-          onClick={() => this.setState({ input: "", patientID: 0 })}
+          onClick={this.handleCancel}
           disabled={!toggle || patientID <= 0}
         >
           Cancel
@@ -209,6 +218,7 @@ class PatientSearch extends Component {
             marginTop: patientID <= 0 || people.length <= 0 ? 145.563 : 20,
           }}
           component={Link}
+          //onClick = {this.handleCancel}
           to="/stations"
         >
           Back
@@ -221,6 +231,7 @@ class PatientSearch extends Component {
           }}
           disabled={!toggle || patientID <= 0}
           component={Link}
+          onClick = {() => updatePatientStatus(patientID, false)}
           to={`/stations/${params.stationName}/${patientID}`}
         >
           Next

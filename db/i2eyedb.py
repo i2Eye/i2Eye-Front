@@ -633,8 +633,8 @@ def update_completed_stations(patient_id):
         completed_stations = [0] * num_of_stations
 
         for station_name, completion_info in data.items():
-            station_id_query = """SELECT station_id FROM station WHERE station_name = '{0}' """.format(
-                station_name)
+            station_id_query = """SELECT station_id FROM station WHERE station_name LIKE '{0}' """.format(
+                station_name.replace("'", "''"))
             cursor2.execute(station_id_query)
             connection.commit()
             station_id = cursor2.fetchall()[0][0]-1
