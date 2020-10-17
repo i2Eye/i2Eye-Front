@@ -200,7 +200,9 @@ export const RegForm = (props) => {
       console.log(newUser)
       postRegistration(newUser).then(res => {
         console.log(res)
+        nextStep(values);
       });
+      
       //return onSubmit(values, formikBag);
     } else if (step === 5) {
       // reset form
