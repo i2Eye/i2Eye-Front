@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
 import { updatePatientData } from "../../../dbFunctions";
+import Success from "./Success";
 
 const questions = [{ question: "SNC ID" }];
 
@@ -29,6 +30,7 @@ class EyeScreening extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      alert("Eye screening station form submitted successfully!");
       const answers = {
         "Eye Screening": [
           {

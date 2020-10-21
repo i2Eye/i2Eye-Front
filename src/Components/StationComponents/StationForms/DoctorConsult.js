@@ -59,6 +59,8 @@ class Doctor extends Component {
 
   handleSubmit() {
     //get final data of form
+    alert("Doctor's consult station form submitted successfully!");
+
     console.log(this.state);
     const answers = {
       "Doctor's Consult": [

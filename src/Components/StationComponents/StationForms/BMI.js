@@ -41,6 +41,7 @@ class BMI extends Component {
       alert("Required fields cannot be left empty!");
     } else {
       //get final data of form
+      alert("BMI station form submitted successfully!");
       console.log(this.state);
       const answers = {
         BMI: [

@@ -48,6 +48,11 @@ class EyeScreening extends Component {
 
   handleSubmit() {
     //get final data of form
+    if(!this.state.age) {
+      alert("Required fields cannot be left empty!");
+    } else if (this.state.age == "Above 18" && !this.state.RCBG) {
+      alert("Required fields cannot be left empty!");
+    } else {
     console.log(this.state);
     const answers = {
       "Fingerstick Blood Test (RCBG)": [
@@ -68,6 +73,7 @@ class EyeScreening extends Component {
       console.log(response)
     );
   }
+}
 
   handleAgeChange(e) {
     this.setState({ age: e.target.value });
