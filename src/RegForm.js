@@ -11,10 +11,14 @@ import Button from "@material-ui/core/Button";
 import getTestData from "./TestData";
 import { postRegistration } from "./dbFunctions";
 import { regFormJson } from "./Components/RegFormComponents/formatJson";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Backdrop } from "@material-ui/core";
 
 const renderStep = (
   step,
-  { values, errors, touched, handleChange, setFieldValue }
+  { values, errors, touched, handleChange, setFieldValue },
+  patientId,
+  errorPresent,
 ) => {
   switch (step) {
     case 0:
@@ -55,15 +59,16 @@ const renderStep = (
         />
       );
     case 4:
-      return <Confirm values={values} />;
+      return <Confirm values={values} errorPresent={errorPresent}/>;
     case 5:
-      return <Success />;
+      return <Success patientId={patientId}/>;
     default:
       return 0;
   }
 };
 
 export const RegForm = (props) => {
+
   const emptyRegFormData = {
     // personal details
     name: "",
@@ -181,6 +186,8 @@ export const RegForm = (props) => {
 
   // a snapshot of form state is used as initialValues after each transition
   const [snapshot, setSnapshot] = useState({ ...regFormData });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorPresent, setErrorPresent] = useState(false);
 
   const nextStep = (values) => {
     setSnapshot(values);
@@ -195,14 +202,38 @@ export const RegForm = (props) => {
   const handleSubmit = (values, formikBag) => {
     if (isSubmitStep) {
       const newUser = regFormJson(values);
+      setIsLoading(true);
+      //reset error state for re-submissions
+      setErrorPresent(false);
+
+      // ---- for testing ----
       // create test user below
       // newUser = getTestData(1).registration
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      //   // success case
+      //   // params.patientID = 1;
+      //   // return nextStep(values);
+      //   // error case
+      //   setErrorPresent(false); 
+      // }, 3000)
+      // ---- end of testing code ----
+      
       postRegistration(newUser).then(res => {
-        if (res === true) {
-          return nextStep(values); 
+        setIsLoading(false);
+        // check if response is a number (ie patientId)
+        if (isNaN(res)) {
+          setErrorPresent(true);
+        } else {
+          setErrorPresent(false);
+          // registration successful
+          params.patientID = res;
+          nextStep(values); 
         }
+      }).catch(err => {
+        setErrorPresent(true);
       });
-      //return onSubmit(values, formikBag);
+      
     } else if (step === 5) {
       // reset form
       setSnapshot((snapshot) => ({ ...regFormData }));
@@ -223,31 +254,37 @@ export const RegForm = (props) => {
     >
       {(formik) => (
         <Form noValidate>
-          {renderStep(step, formik)}
-          {step > 0 && step < 5 && (
+          {renderStep(step, formik, params.patientID, errorPresent)}
+          {step > 0 && step < 5 && !isLoading && (
             <Button
               variant="contained"
               color="primary"
               style={{ marginTop: 20, marginRight: 20 }}
               onClick={() => prevStep(formik.values)}
+              disabled={isLoading}
             >
               Back
             </Button>
           )}
-          <Button
+
+          {!isLoading 
+          ? <Button
             variant="contained"
             color="primary"
             style={{ marginTop: 20 }}
             type="submit"
-            // disabled={step === 4 && formik.isSubmitting}
+            disabled={isSubmitStep && isLoading}
           >
-            {isSubmitStep
-              ? "Submit"
+            {isSubmitStep  
+              ? "Submit" 
               : step < 5
               ? "Next"
               : "Register new patient"}
           </Button>
-          {/* <pre>{JSON.stringify(formik, null, 2)}</pre> */}
+          : <Backdrop open={isLoading}>
+              <CircularProgress />
+          </Backdrop>
+          }
         </Form>
       )}
     </Formik>
