@@ -78,6 +78,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     },
     stationNav: "",
@@ -339,6 +340,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     };
 
@@ -355,6 +357,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     };
 
