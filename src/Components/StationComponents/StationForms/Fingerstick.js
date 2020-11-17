@@ -9,6 +9,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import "../../../dbFunctions";
+import { updatePatientData } from "../../../dbFunctions";
 
 const radioQuestions = [
   {
@@ -21,7 +23,7 @@ const radioQuestions = [
 const questions = [
   {
     num: 2,
-    question: "Randomy capillary blood glucose (mg/dL)",
+    question: "Random capillary blood glucose (mg/dL)",
     label: "RCBG (mg/dL)",
     id: "RCBG",
   },
@@ -46,8 +48,32 @@ class EyeScreening extends Component {
 
   handleSubmit() {
     //get final data of form
+    if(!this.state.age) {
+      alert("Required fields cannot be left empty!");
+    } else if (this.state.age == "Above 18" && !this.state.RCBG) {
+      alert("Required fields cannot be left empty!");
+    } else {
     console.log(this.state);
+    const answers = {
+      "Fingerstick Blood Test (RCBG)": [
+        {
+          answers: this.state.age,
+          num: 1,
+          question: "Is patient > 18 years old?",
+        },
+        {
+          answers: this.state.RCBG,
+          num: 2,
+          question: "Random capillary blood glucose (mg/dL)",
+        },
+      ],
+    };
+
+    updatePatientData(this.props.id, answers).then((response) =>
+      console.log(response)
+    );
   }
+}
 
   handleAgeChange(e) {
     this.setState({ age: e.target.value });

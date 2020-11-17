@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import getTestData from "../../TestData";
+import { getPatient } from "../../dbFunctions";
 
 const information = [
   { info: "Name", id: "name" },
@@ -29,24 +29,39 @@ const information = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).registration;
-  const newState = {
-    name: data[0].answer,
-    nric: data[1].answer,
-    gender: data[2].answer,
-    birthdate: data[3].answer,
-    age: data[4].answer,
-    tubercolosis: data[5].answer,
-    livingWithTubercolosis: data[6].answer,
-    anyBloodBorneDiseases: data[9].answer,
-    bloodBorneDiseases: data[10].answer,
-    medicalConditions: data[11].answer,
-  };
-  return newState;
-};
 class InfoSegment extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      nric: "",
+      gender: "",
+      birthdate: "",
+      age: "",
+      tubercolosis: "",
+      livingWithTubercolosis: "",
+      anyBloodBorneDiseases: "",
+      bloodBorneDiseases: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        name: response.Registration[0].answers,
+        nric: response.Registration[1].answers,
+        gender: response.Registration[2].answers,
+        birthdate: response.Registration[3].answers,
+        age: response.Registration[4].answers,
+        tubercolosis: response.Registration[5].answers,
+        livingWithTubercolosis: response.Registration[6].answers,
+        anyBloodBorneDiseases: response.Registration[9].answers,
+        bloodBorneDiseases: response.Registration[10].answers,
+      });
+      console.log(response.Registration);
+    });
+  }
+
   render() {
     return (
       <div>

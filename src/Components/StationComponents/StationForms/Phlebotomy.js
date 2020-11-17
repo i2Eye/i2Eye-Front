@@ -11,6 +11,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import { updatePatientData } from "../../../dbFunctions";
 
 const radioQuestions = [
   {
@@ -61,7 +62,7 @@ const handleEdit = (id) => {
       ),
     },
     vimta: data[2].answer,
-    count: data[1].answer.length,
+    count: 0,
   };
   return newState;
 };
@@ -75,6 +76,29 @@ class Phlebotomy extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      const answers = {
+        "Phlebotomy Test": [
+          {
+            answers: this.state.age,
+            num: 1,
+            question: "Are you 40 years old or above?",
+          },
+          {
+            answers: this.state.conditions,
+            num: 2,
+            question: "Are you suffering from any of the following conditions?",
+          },
+          {
+            answers: this.state.vimta,
+            num: 3,
+            question: "Vimta Registration No.",
+          },
+        ],
+      };
+
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 
@@ -87,6 +111,11 @@ class Phlebotomy extends Component {
       this.setState({
         conditions: { ...this.state.conditions, BP: !this.state.conditions.BP },
       });
+      if (this.state.conditions.BP) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
     if (e.target.name === "Diabetes") {
       this.setState({
@@ -95,6 +124,11 @@ class Phlebotomy extends Component {
           Diabetes: !this.state.conditions.Diabetes,
         },
       });
+      if (this.state.conditions.Diabetes) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
     if (e.target.name === "Coronory") {
       this.setState({
@@ -103,6 +137,11 @@ class Phlebotomy extends Component {
           Coronory: !this.state.conditions.Coronory,
         },
       });
+      if (this.state.conditions.Coronory) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
     if (e.target.name === "Cholesterol") {
       this.setState({
@@ -111,6 +150,11 @@ class Phlebotomy extends Component {
           Cholesterol: !this.state.conditions.Cholesterol,
         },
       });
+      if (this.state.conditions.Cholesterol) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
     if (e.target.name === "Kidney") {
       this.setState({
@@ -119,6 +163,11 @@ class Phlebotomy extends Component {
           Kidney: !this.state.conditions.Kidney,
         },
       });
+      if (this.state.conditions.Kidney) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
     if (e.target.name === "Smoking") {
       this.setState({
@@ -127,6 +176,11 @@ class Phlebotomy extends Component {
           Smoking: !this.state.conditions.Smoking,
         },
       });
+      if (this.state.conditions.Smoking) {
+        this.setState({ count: this.state.count - 1 });
+      } else {
+        this.setState({ count: this.state.count + 1 });
+      }
     }
   }
 
@@ -235,17 +289,18 @@ class Phlebotomy extends Component {
                       {question.question}
                     </InputLabel>
                     <TextField
-                      disabled={this.state.count > 2 ? false : true}
+                      disabled={
+                        this.state.age === "40 and above"
+                          ? false
+                          : this.state.count < 2
+                          ? true
+                          : false
+                      }
                       key={question.question}
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.question}
                       style={{ width: 200 }}
-                      // defaultValue={
-                      //   prevData[question.num - 1].answer === ""
-                      //     ? false
-                      //     : prevData[question.num - 1].answer
-                      // }
                       defaultValue={this.state.vimta}
                     />
                     <p />
