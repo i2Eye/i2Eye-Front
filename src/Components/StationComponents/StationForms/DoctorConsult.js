@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import "../../../dbFunctions";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [
   { question: "Urgent doctor's consult: doctor's notes", id: "Urgent" },
@@ -57,7 +59,41 @@ class Doctor extends Component {
 
   handleSubmit() {
     //get final data of form
+    alert("Doctor's consult station form submitted successfully!");
+
     console.log(this.state);
+    const answers = {
+      "Doctor's Consult": [
+        {
+          answers: this.state.UrgentReason,
+          num: 1,
+          question:
+            "Urgent doctor's consult: Reason for consultation/chief complaint",
+        },
+        {
+          answers: this.state.UrgentOthers,
+          num: 2,
+          question:
+            "Urgent doctor's consult: Others (include prescriptions if any)",
+        },
+        {
+          answers: this.state.StandardReason,
+          num: 3,
+          question:
+            "Standard doctor's consult: Reason for consultation/chief complaint",
+        },
+        {
+          answers: this.state.StandardOthers,
+          num: 4,
+          question:
+            "Standard doctor's consult: Others (include prescriptions if any)",
+        },
+      ],
+    };
+
+    updatePatientData(this.props.id, answers).then((response) =>
+      console.log(response)
+    );
   }
 
   render() {

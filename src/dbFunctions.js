@@ -1,15 +1,32 @@
 //create
 //remember to initialise empty values for each station question//
-export const postRegistration = async (data) =>
-  await fetch("/submit_registration", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  }).then(function (response) {
+export const postRegistration = async (data) => {
+  try {
+    let response = await fetch("/submit_registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     return response.text();
-  });
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+}
+  // await fetch("/submit_registration", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // }).then(function (response) {
+  //   return response.text();
+  // }).catch(err => {
+  //   console.log(err);
+  //   return "error";
+  // });
 
 //read
 export const getAllPatients = async () =>

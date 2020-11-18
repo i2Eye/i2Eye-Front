@@ -1,9 +1,11 @@
 import React from "react";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 export const Confirm = ({
   values,
+  errorPresent
 }) => {
   const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions } = values;
 
@@ -76,6 +78,8 @@ export const Confirm = ({
           
           <ListItemText primary="Other pre-existing conditions of family member(s) (if any)" secondary={family_pre_existing_conditions} />
         </List>
+
+        {errorPresent && <ErrorSnackbar message={"Error in registration, please submit form again"}/> }
       </div>
     );
 }

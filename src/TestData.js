@@ -1,6 +1,6 @@
 const getTestData = (id) => {
   return {
-    registration: [
+    "registration": [
       { num: 1, question: "Name", answer: "Person " + ((id * 173) % 190) },
       { num: 2, question: "NRIC No.", answer: "S0000000" },
       { num: 3, question: "Gender", answer: id % 2 === 0 ? "F" : "M" },
