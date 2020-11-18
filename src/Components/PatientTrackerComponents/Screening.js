@@ -26,6 +26,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import { getPatient } from "../../dbFunctions.js"
 
 var saveWorker;
 
@@ -68,7 +69,8 @@ class Screening extends Component {
     disable: true,
     printOpen: 0,
     fileName: "",
-    id: this.props.match.params.patientID,
+    patient: this.props.match.params.patientID,
+    loaded: false,
     saveError: false,
     detailOpen: {
       registration: false,
@@ -78,6 +80,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     },
     stationNav: "",
@@ -307,7 +310,7 @@ class Screening extends Component {
     }
   };
 
-  handleIndivExcel = () => {
+  handleIndivExcel = (patientData) => {
     const { fileName } = this.state;
     if (window.Worker) {
       saveWorker = new SaveWorker();
@@ -322,11 +325,7 @@ class Screening extends Component {
         saveWorker = null;
       });
     } else {
-      const csvData = [];
-      for (let i = 1; i <= 10000; i++) {
-        csvData[i - 1] = getTestData(i);
-      }
-      FileSaver.saveAs(exportCSV(csvData), fileName);
+      console.log("indiv excel saving error");
     }
   };
 
@@ -339,6 +338,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     };
 
@@ -355,6 +355,7 @@ class Screening extends Component {
       phlebotomy: false,
       fingerstickAnemia: false,
       fingerstickRCBG: false,
+      bloodPressure: false,
       doctorsConsult: false,
     };
 
@@ -368,173 +369,189 @@ class Screening extends Component {
       match: { params },
     } = this.props;
 
-    const { detailOpen, stationNav } = this.state;
+    const { detailOpen, stationNav, loaded } = this.state;
 
-    const data = getTestData(params.patientID);
+    // do error handling
+    if (!loaded) {
+      getPatient(params.patientID).then((res) => this.setState({ patient: res, loaded: true })) 
+      return (<div>Loading...</div>)
+    } else {
+      const data = this.state.patient;
+      console.log(data)
 
-    const stations = [
-      {
-        label: "Registration Details",
-        name: "registration",
-      },
-      {
-        label: "Oral Health",
-        name: "oralHealth",
-      },
-      {
-        label: "BMI & Abdominal Obesity",
-        name: "bmi",
-      },
-      {
-        label: "Eye Screening",
-        name: "eyeScreening",
-      },
-      {
-        label: "Phlebotomy Test",
-        name: "phlebotomy",
-      },
-      {
-        label: "Fingerstick Blood Test (Anemia)",
-        name: "fingerstickAnemia",
-      },
-      {
-        label: "Fingerstick Blood Test (RCBG)",
-        name: "fingerstickRCBG",
-      },
-      {
-        label: "Blood Pressure Test",
-        name: "bloodPressure",
-      },
-      {
-        label: "Doctor's Consult",
-        name: "doctorsConsult",
-      },
-    ];
-
-    return (
-      <React.Fragment>
-        {this.printDialog()}
-
-        <div className="container">
-          <h1 style={{ display: "inline-block" }}>
-            Screening Review {/* <Link to={params.patientID}> */}
-            <Tooltip title="Download">
-              <IconButton onClick={() => this.setState({ printOpen: 1 })}>
-                <GetAppIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-          </h1>
-          <Typography
-            variant="h6"
-            style={{ float: "right", display: "inline-block" }}
-          >
-            ID: {params.patientID}
-          </Typography>
-        </div>
-
-        {/* I think for the editing we can reuse the station forms */}
-
-        <Grid container spacing={3}>
-          <Grid item xs={8}>
-            {stations.map((station) => {
-              return (
-                <Accordion
-                  key={station.name}
-                  expanded={detailOpen[station.name]}
-                  TransitionProps={{
-                    onEntered: () => {
-                      window.location.href = `${params.patientID}#${station.name}`;
-                    },
-                    onExited: () => {
-                      window.location.href = `${params.patientID}#${stationNav}`;
-                    },
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={station.name + "-content"}
-                    name={station.name}
-                    id={station.name + "-summary"}
-                    onClick={() => this.handleClick(station.name)}
-                  >
-                    <a className={classes.anchor} id={station.name}></a>
-
-                    <div className={classes.column}>
-                      <Typography className={classes.heading}>
-                        {station.label}
-                      </Typography>
-                    </div>
-                    <div className={classes.editIcon}>
-                      <Link
-                        to={
-                          station.name === "registration"
-                            ? `/registration/edit/${params.patientID}`
-                            : `/stations/${station.name}/edit/${params.patientID}`
-                        }
-                      >
-                        <IconButton>
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    className={classes.details}
-                    id={station.name + "-details"}
-                  >
-                    <Grid container spacing={3}>
-                      {data[station.name].map((question) => {
-                        return (
-                          <Grid item xs={12} md={6} key={question.num}>
-                            <Typography variant="subtitle2">
-                              {question.num}. {question.question}
-                            </Typography>
-                            <Typography variant="body1" color="textSecondary">
-                              {question.answer === ""
-                                ? "NIL"
-                                : Array.isArray(question.answer)
-                                ? question.answer.toString().replace(/,/g, ", ")
-                                : question.answer}
-                            </Typography>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
-          </Grid>
-
-          <Grid item xs={4}>
-            <Paper style={{ position: "sticky", top: 74 }}>
-              <List component="nav" aria-label="screening-navigation">
-                {stations.map((station) => (
-                  <ListItem
-                    button
-                    onClick={() => this.handleNavClick(station.name)}
+      const stations = [
+        {
+          label: "Registration Details",
+          station: "Registration",
+          name: "registration",
+        },
+        {
+          label: "Oral Health",
+          station: "Oral Health", 
+          name: "oralHealth",
+        },
+        {
+          label: "BMI & Abdominal Obesity",
+          station: "BMI",
+          name: "bmi",
+        },
+        {
+          label: "Eye Screening",
+          station: "Eye Screening",
+          name: "eyeScreening",
+        },
+        {
+          label: "Phlebotomy Test",
+          station: "Phlebotomy Test",
+          name: "phlebotomy",
+        },
+        {
+          label: "Fingerstick Blood Test (Anemia)",
+          station: "Fingerstick Blood Test (Anemia)",
+          name: "fingerstickAnemia",
+        },
+        {
+          label: "Fingerstick Blood Test (RCBG)",
+          station: "Fingerstick Blood Test (RCBG)",
+          name: "fingerstickRCBG",
+        },
+        {
+          label: "Blood Pressure Test",
+          station: "Blood Pressure",
+          name: "bloodPressure",
+        },
+        {
+          label: "Doctor's Consult",
+          station: "Doctor's Consult",
+          name: "doctorsConsult",
+        },
+      ];
+  
+      return (
+        <React.Fragment>
+          {this.printDialog()}
+  
+          <div className="container">
+            <h1 style={{ display: "inline-block" }}>
+              Screening Review {/* <Link to={params.patientID}> */}
+              <Tooltip title="Download">
+                <IconButton onClick={() => this.setState({ printOpen: 1 })}>
+                  <GetAppIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+            </h1>
+            <Typography
+              variant="h6"
+              style={{ float: "right", display: "inline-block" }}
+            >
+              ID: {params.patientID}
+            </Typography>
+          </div>
+  
+          {/* I think for the editing we can reuse the station forms */}
+  
+          <Grid container spacing={3}>
+            <Grid item xs={8}>
+              {stations.map((station) => {
+                return (
+                  <Accordion
                     key={station.name}
-                    /*                     href={"#" + station.name}
-                    component="a" */
+                    expanded={detailOpen[station.name]}
+                    TransitionProps={{
+                      onEntered: () => {
+                        window.location.href = `${params.patientID}#${station.name}`;
+                      },
+                      onExited: () => {
+                        window.location.href = `${params.patientID}#${stationNav}`;
+                      },
+                    }}
                   >
-                    <Typography variant="body2">{station.label}</Typography>
-                  </ListItem>
-                ))}
-              </List>
-            </Paper>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={station.name + "-content"}
+                      name={station.name}
+                      id={station.name + "-summary"}
+                      onClick={() => this.handleClick(station.name)}
+                    >
+                      <a className={classes.anchor} id={station.name}></a>
+  
+                      <div className={classes.column}>
+                        <Typography className={classes.heading}>
+                          {station.label}
+                        </Typography>
+                      </div>
+                      <div className={classes.editIcon}>
+                        <Link
+                          to={
+                            station.name === "registration"
+                              ? `/registration/edit/${params.patientID}`
+                              : `/stations/${station.name}/edit/${params.patientID}`
+                          }
+                        >
+                          <IconButton>
+                            <EditIcon />
+                          </IconButton>
+                        </Link>
+                      </div>
+                    </AccordionSummary>
+                    <AccordionDetails
+                      className={classes.details}
+                      id={station.name + "-details"}
+                    >
+                      <Grid container spacing={3}>
+                        {data[station.station].sort((t, o) => t.num - o.num).map((question) => {
+                          return (
+                            <Grid item xs={12} md={6} key={question.num}>
+                              <Typography variant="subtitle2">
+                                {question.num}. {question.question}
+                              </Typography>
+                              <Typography variant="body1" color="textSecondary">
+                                {question.answers === ""
+                                  ? "NIL"
+                                  : Array.isArray(question.answers)
+                                  ? question.answers.toString().replace(/,/g, ", ")
+                                  : question.answers}
+                              </Typography>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+            </Grid>
+  
+            <Grid item xs={4}>
+              <Paper style={{ position: "sticky", top: 74 }}>
+                <List component="nav" aria-label="screening-navigation">
+                  {stations.map((station) => (
+                    <ListItem
+                      button
+                      onClick={() => this.handleNavClick(station.name)}
+                      key={station.name}
+                      /*                     href={"#" + station.name}
+                      component="a" */
+                    >
+                      <Typography variant="body2">{station.label}</Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-          component={Link}
-          to="/patient_tracker"
-        >
-          Back
-        </Button>
-      </React.Fragment>
-    );
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginTop: 20 }}
+            component={Link}
+            to="/patient_tracker"
+          >
+            Back
+          </Button>
+        </React.Fragment>
+      );
+    }
   }
 }
 

@@ -46,7 +46,7 @@ def submit_registration():
             question = json_question['question']
             answer = json_question['answers']
 
-            question_id_query = """SELECT question_id FROM question WHERE question = '{0}' """.format(
+            question_id_query = """SELECT question_id FROM question WHERE question = '{0}'""".format(
                 question)
 
             cursor2.execute(question_id_query)
@@ -64,6 +64,7 @@ def submit_registration():
         return str(patient_id)
 
     except (Exception, psycopg2.DatabaseError) as error:
+        delete_patient(patient_id)
         print("Error while submitting registration.", error)
 
     finally:
@@ -216,6 +217,13 @@ def get_all_patients():
                 # Append each station and the status to the list.
                 this_patient_data.update({station_name: outcome})
 
+            availability_query = """SELECT status from patient WHERE patient_id = {0}""".format(
+                id)
+            cursor.execute(availability_query)
+            connection.commit()
+            availability = cursor.fetchall()[0][0]
+            this_patient_data.update({"Is Available": availability})
+
             # Processing of this patient is done. Append to results.
             results.append(this_patient_data)
             # Iterate to next patient.
@@ -265,11 +273,15 @@ def get_patient_data(patient_id):
             data = cursor2.fetchall()
             data = [dict(row) for row in data]
 
-            num = 1
+            cursor4 = connection.cursor()
+
             for j in data:
-                # print(j)
+                question_id_query = """SELECT question_id FROM question WHERE question LIKE '{0}'""".format(
+                    j["question"].replace("'", "''"))
+                cursor4.execute(question_id_query)
+                num = cursor4.fetchall()[0]
+                connection.commit()
                 j['num'] = num
-                num = num + 1
 
             results.update({station_name: data})
 
@@ -626,8 +638,8 @@ def update_completed_stations(patient_id):
         completed_stations = [0] * num_of_stations
 
         for station_name, completion_info in data.items():
-            station_id_query = """SELECT station_id FROM station WHERE station_name = '{0}' """.format(
-                station_name)
+            station_id_query = """SELECT station_id FROM station WHERE station_name LIKE '{0}' """.format(
+                station_name.replace("'", "''"))
             cursor2.execute(station_id_query)
             connection.commit()
             station_id = cursor2.fetchall()[0][0]-1
