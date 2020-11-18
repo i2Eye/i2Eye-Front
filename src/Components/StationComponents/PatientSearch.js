@@ -43,16 +43,17 @@ class PatientSearch extends Component {
     patientID: getPatientID(this.props.match.params.patientID),
     toggle: true,
     people: [],
+    next: false,
   };
 
   handleInput = (e, v, r) => {
-    this.setState({ input: v });
+    console.log(v)
+    this.setState({ input: v, next: v === "" ? false : true });
   };
 
   handleMasterSearch = (e, v, r) => {
-    console.log(v)
     const currPatient = this.state.patientID;
-    this.setState({ patientID: v === null ? 0 : v.id });
+    this.setState({ patientID: v === null ? currPatient : v.id, next: v === null ? false : true });
   };
 
   handleToggle = (e) => {
@@ -60,23 +61,21 @@ class PatientSearch extends Component {
   };
 
   handleCancel = () => {
-    const currPatient = this.state.patientID;
-    this.setState({ input: "", patientID: 0 });
+    this.setState({ input: "", next: false });
   }
 
   //Find a way to render an alert if there is no next person in the queue
-  getNextPerson = () => {
+  getNextPerson = (stationName) => {
     const { people } = this.state;
-    const currPatient = this.state.patientID;
-    const availablePeople = people.filter((person) => person["Is Available"]);
+    const currStation = this.getStationName(stationName)
+    const availablePeople = people.filter((person) => person["Is Available"] && person[currStation] === "In Queue");
     availablePeople.length <= 0
-      ? this.setState({ patientID: 0 })
-      : this.setState({ patientID: availablePeople[0].id });
+      ? this.setState({ next: false })
+      : this.setState({ patientID: availablePeople[0].id, next: true });
     this.setState({ input: "" });
   };
 
   getCard = (classes, patientID) => {
-    console.log(patientID)
     const patient = this.state.people.find(
       (patient) => patient["id"] === patientID
     );
@@ -104,10 +103,9 @@ class PatientSearch extends Component {
   };
 
   getWarning = (patientID) => {
-    const { people } = this.state;
+    const { people, next } = this.state;
     if (
-      patientID > 0 &&
-      people.length > 0 &&
+      next &&
       !people.find((patient) => patient["id"] === patientID)["Is Available"]
     ) {
       return (
@@ -137,14 +135,11 @@ class PatientSearch extends Component {
   }
 
   render() {
-    const { input, patientID, toggle, people } = this.state;
+    const { input, patientID, toggle, people, next } = this.state;
     const {
       classes,
       match: { params },
     } = this.props;
-
-    console.log(patientID);
-    console.log(people);
 
     return (
       <div>
@@ -188,7 +183,7 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginRight: 20, marginBottom: 20 }}
-          onClick={this.getNextPerson}
+          onClick={() => this.getNextPerson(params.stationName)}
           disabled={!toggle}
         >
           Get Next Person
@@ -199,14 +194,14 @@ class PatientSearch extends Component {
           color="primary"
           style={{ marginTop: 20, marginBottom: 20 }}
           onClick={this.handleCancel}
-          disabled={!toggle || patientID <= 0}
+          disabled={!toggle || !next }
         >
           Cancel
         </Button>
         {this.getWarning(patientID)}
         <br />
 
-        {patientID <= 0 || people.length <= 0
+        {!next || people.length <= 0
           ? null
           : this.getCard(classes, patientID)}
 
@@ -215,7 +210,7 @@ class PatientSearch extends Component {
           color="primary"
           style={{
             marginRight: 20,
-            marginTop: patientID <= 0 || people.length <= 0 ? 145.563 : 20,
+            marginTop: !next || people.length <= 0 ? 145.563 : 20,
           }}
           component={Link}
           //onClick = {this.handleCancel}
@@ -227,9 +222,9 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{
-            marginTop: patientID <= 0 || people.length <= 0 ? 145.563 : 20,
+            marginTop: !next || people.length <= 0 ? 145.563 : 20,
           }}
-          disabled={!toggle || patientID <= 0}
+          disabled={!toggle || !next }
           component={Link}
           onClick = {() => updatePatientStatus(patientID, false)}
           to={`/stations/${params.stationName}/${patientID}`}

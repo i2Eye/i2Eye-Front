@@ -63,7 +63,7 @@ class BloodPressure extends Component {
     if (!this.state.age) {
       alert("Required fields cannot be left empty!");
     } else if (
-      this.state.age == "Above 18" &&
+      this.state.age === "Above 18" &&
       (!this.state.Systolic1 ||
         !this.state.Systolic2 ||
         !this.state.Diastolic1 ||

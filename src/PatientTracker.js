@@ -88,14 +88,7 @@ class PatientTracker extends Component {
     this.setState({
       [name]: value,
     });
-  };
-
-  handleEdit = (e, patientData) => {
-    const name = e.target.name
-    const value = e.target.value
-    patientData[name] = value
-  }
-  
+  };  
 
   handleOpenSave = (x) => {
     var today = new Date();
@@ -309,15 +302,16 @@ class PatientTracker extends Component {
     const { clickedRow, editOpen, people } = this.state;
     //console.log(clickedRow);
 
-    const patientData = people.find(
+    const patient = people.find(
       (person) => person.id.toString() === clickedRow.toString()
     );
     //console.log(patientData["Oral Health"]);
 
+    const patientData = {...patient}
+
     return (
       <Dialog
         open={editOpen}
-        onClose={() => this.handleClose(patientData)}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
@@ -339,7 +333,7 @@ class PatientTracker extends Component {
                       name="Name"
                       id="Name"
                       label="Name"
-                      onChange={(e) => this.handleEdit(e, patientData)}
+                      onChange={(e) => {patientData["Name"] = e.target.value}}
                       defaultValue={patientData["Name"]}
                       autoComplete="off"
                       fullWidth
@@ -353,7 +347,7 @@ class PatientTracker extends Component {
                         name="Gender"
                         labelId="gender-label"
                         id="Gender"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Gender"] = e.target.value}}
                         defaultValue={patientData["Gender"]}
                       >
                         <MenuItem value={"F"}>Female</MenuItem>
@@ -367,7 +361,7 @@ class PatientTracker extends Component {
                       id="Age"
                       label="Age"
                       type="number"
-                      onChange={(e) => this.handleEdit(e, patientData)}
+                      onChange={(e) => {patientData["Age"] = e.target.value}}
                       defaultValue={patientData["Age"]}
                       fullWidth
                     />
@@ -379,7 +373,7 @@ class PatientTracker extends Component {
                         name="Oral Health"
                         id="Oral Health"
                         labelId="Oral Health"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Oral Health"] = e.target.value}}
                         defaultValue={patientData["Oral Health"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -395,7 +389,7 @@ class PatientTracker extends Component {
                         name="BMI"
                         id="BMI"
                         labelId="BMI"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["BMI"] = e.target.value}}
                         defaultValue={patientData.BMI}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -411,7 +405,7 @@ class PatientTracker extends Component {
                         name="Eye Screening"
                         id="Eye Screening"
                         labelId="Eye Screening"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Eye Screening"] = e.target.value}}
                         defaultValue={patientData["Eye Screening"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -429,7 +423,7 @@ class PatientTracker extends Component {
                         name="Phlebotomy Test"
                         id="Phlebotomy Test"
                         labelId="Phlebotomy Test"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Phlebotomy Test"] = e.target.value}}
                         defaultValue={patientData["Phlebotomy Test"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -447,7 +441,7 @@ class PatientTracker extends Component {
                         name="Fingerstick Blood Test (Anemia)"
                         id="Fingerstick Blood Test (Anemia)"
                         labelId="Fingerstick Anemia"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Fingerstick Blood Test (Anemia)"] = e.target.value}}
                         defaultValue={patientData["Fingerstick Blood Test (Anemia)"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -465,7 +459,7 @@ class PatientTracker extends Component {
                         name="Fingerstick Blood Test (RCBG)"
                         id="Fingerstick Blood Test (RCBG)"
                         labelId="Fingerstick RCBG"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Fingerstick Blood Test (RCBG)"] = e.target.value}}
                         defaultValue={patientData["Fingerstick Blood Test (RCBG)"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -483,7 +477,7 @@ class PatientTracker extends Component {
                         name="Blood Pressure"
                         id="Blood Pressure"
                         labelId="Blood Pressure"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Blood Pressure"] = e.target.value}}
                         defaultValue={patientData["Blood Pressure"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -501,7 +495,7 @@ class PatientTracker extends Component {
                         name="Doctor's Consult"
                         id="Doctor's Consult"
                         labelId="Doctor's Consult"
-                        onChange={(e) => this.handleEdit(e, patientData)}
+                        onChange={(e) => {patientData["Doctor's Consult"] = e.target.value}}
                         defaultValue={patientData["Doctor's Consult"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
@@ -516,8 +510,14 @@ class PatientTracker extends Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose(patientData)} color="primary">
-            Close
+          <Button onClick={() => {this.setState({editOpen: false})}} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => {
+            Object.assign(patient, patientData)
+            this.handleClose(patientData)}
+            } color="primary">
+            Save Changes
           </Button>
         </DialogActions>
       </Dialog>
@@ -546,8 +546,9 @@ class PatientTracker extends Component {
         station_completion[field] = patient[field]
       }
     }
+    station_completion["Registration"] = "Completed"
     updateCompletedStations(patient.id, station_completion)
-    this.setState({ editOpen: false });
+    this.setState({ editOpen: false,  });
   };
 
   editButton = (
@@ -620,49 +621,57 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    return people
-      .filter(
-        (person) =>
-          person["Name"].toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
-          person.id.toString().indexOf(input) !== -1
-      )
-      .filter((person) => {
-        if (ageRange[0] > 100) {
-          return person["Age"] > 100;
-        } else if (ageRange[1] > 100) {
-          return person["Age"] >= ageRange[0];
-        } else {
-          return person["Age"] >= ageRange[0] && person["Age"] <= ageRange[1];
-        }
-      })
-      .filter((person) => {
-        let m = false;
-        let f = false;
-        if (isMale) {
-          m = person["Gender"] === "M";
-        }
-        if (isFemale) {
-          f = person["Gender"] === "F";
-        }
-        return m || f;
-      })
-      .filter((person) => {
+
+    const match_search = people.filter((person) => person["Name"] !== undefined &&
+          (person["Name"].toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
+          person.id.toString().indexOf(input) !== -1))
+
+    const match_age = match_search.filter((person) => {
+      if (person["Age"] === undefined) {
+        return false
+      } else if (ageRange[0] > 100) {
+        return person["Age"] > 100
+      } else if (ageRange[1] > 100) {
+        return person["Age"] >= ageRange[0]
+      } else {
+        return person["Age"] >= ageRange[0] && person["Age"] <= ageRange[1]
+      }
+    })
+
+    const match_gender = match_age.filter((person) => person["Gender"] !== undefined &&
+      ((person["Gender"] === "M" && isMale) || (person["Gender"] === "F" && isFemale)))
+
+    const match_stations = match_gender.filter((person) => {
         let incomplete = false;
         let complete = false;
+        
         if (hasIncompleteStations) {
           incomplete =
             person["Oral Health"] === "In Queue" ||
             person.BMI === "In Queue" ||
-            person["Eye Screening"] === "In Queue";
+            person["Eye Screening"] === "In Queue" ||
+            person["Phlebotomy Test"] === "In Queue" ||
+            person["Fingerstick Blood Test (Anemia)"] === "In Queue" ||
+            person["Fingerstick Blood Test (RCBG)"] === "In Queue" ||
+            person["Blood Pressure"] === "In Queue" ||
+            person["Doctor's Consult"] === "In Queue"
         }
         if (completedAllStations) {
           complete =
-            person["Oral Health"] !== "In Queue" &&
-            person.BMI !== "In Queue" &&
-            person["Eye Screening"] !== "In Queue";
+          person["Oral Health"] !== "In Queue" &&
+          person.BMI !== "In Queue" &&
+          person["Eye Screening"] !== "In Queue" &&
+          person["Phlebotomy Test"] !== "In Queue" &&
+          person["Fingerstick Blood Test (Anemia)"] !== "In Queue" &&
+          person["Fingerstick Blood Test (RCBG)"] !== "In Queue" &&
+          person["Blood Pressure"] !== "In Queue" &&
+          person["Doctor's Consult"] !== "In Queue"
         }
         return incomplete || complete;
-      });
+    })
+
+
+    return match_gender
   };
 
   handleCheckbox = (event) => {
