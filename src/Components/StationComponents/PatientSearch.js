@@ -53,7 +53,7 @@ class PatientSearch extends Component {
 
   handleMasterSearch = (e, v, r) => {
     const currPatient = this.state.patientID;
-    this.setState({ patientID: v === null ? currPatient : v.id, next: v === null ? false : true });
+    this.setState({ patientID: v === null ? currPatient : v.id });
   };
 
   handleToggle = (e) => {
@@ -104,9 +104,11 @@ class PatientSearch extends Component {
 
   getWarning = (patientID) => {
     const { people, next } = this.state;
+    const person = people.find((patient) => patient["id"] === patientID)
     if (
       next &&
-      !people.find((patient) => patient["id"] === patientID)["Is Available"]
+      person !== undefined &&
+      !person["Is Available"]
     ) {
       return (
         <Typography variant="subtitle1" color="error">
@@ -171,8 +173,8 @@ class PatientSearch extends Component {
               fullWidth
             />
           )}
-          onInputChange={this.handleInput}
           inputValue={input}
+          onInputChange={this.handleInput}
           onChange={this.handleMasterSearch}
           //Find a better getOptionSelected function
           getOptionSelected={(option, value) => option.id === value.id}
