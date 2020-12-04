@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const questions = [
   { question: "Height (m)", id: "height" },
@@ -11,18 +11,25 @@ const questions = [
   { question: "Waist circumference (cm)", id: "waist" },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).bmi;
-  const newState = {
-    height: data[0].answer,
-    weight: data[1].answer,
-    waist: data[2].answer,
-  };
-  return newState;
-};
-
 class BMI extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      height: "",
+      weight: "",
+      waist: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        height: response.BMI[0].answers,
+        weight: response.BMI[1].answers,
+        waist: response.BMI[2].answers,
+      });
+    });
+  }
 
   handleChange(e) {
     if (e.target.id === "height") {
@@ -101,7 +108,8 @@ class BMI extends Component {
                       label={question.question}
                       type="number"
                       style={{ width: "250px" }}
-                      defaultValue={this.state[question.id]}
+                      //defaultValue={this.state.height}
+                      value={this.state[question.id]}
                     />
                     <p />
                   </span>

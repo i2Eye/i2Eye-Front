@@ -10,8 +10,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import getTestData from "../../../TestData";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const radioQuestions = [
   {
@@ -38,37 +37,50 @@ const questions = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).phlebotomy;
-  const newState = {
-    age:
-      data[0].answer === "Y"
-        ? "40 and above"
-        : data[0].answer === "N"
-        ? "Below 40"
-        : "",
-    conditions: {
-      BP: data[1].answer.includes("High blood pressure"),
-      Diabetes: data[1].answer.includes("Diabetes"),
-      Coronory: data[1].answer.includes(
-        "Family member with coronory artery disease"
-      ),
-      Cholesterol: data[1].answer.includes(
-        "Family member with high cholesterol"
-      ),
-      Kidney: data[1].answer.includes("Chronic kidney disease"),
-      Smoking: data[1].answer.includes(
-        "Smoking/intoxication consumption e.g. tobacco"
-      ),
-    },
-    vimta: data[2].answer,
-    count: 0,
-  };
-  return newState;
-};
-
 class Phlebotomy extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      age: "",
+      conditions: {
+        BP: "",
+        Diabetes: "",
+        Coronory: "",
+        Cholesterol: "",
+        Kidney: "",
+        Smoking: "",
+      },
+      vimta: "",
+      count: 0,
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        age: response["Phlebotomy Test"][0].answers,
+        conditions: {
+          BP: response["Phlebotomy Test"][1].answers.includes(
+            "High blood pressure"
+          ),
+          Diabetes: response["Phlebotomy Test"][1].answers.includes("Diabetes"),
+          Coronory: response["Phlebotomy Test"][1].answers.includes(
+            "Family member with coronory artery disease"
+          ),
+          Cholesterol: response["Phlebotomy Test"][1].answers.includes(
+            "Family member with high cholesterol"
+          ),
+          Kidney: response["Phlebotomy Test"][1].answers.includes(
+            "Chronic kidney disease"
+          ),
+          Smoking: response["Phlebotomy Test"][1].answers.includes(
+            "Smoking/intoxication consumption e.g. tobacco"
+          ),
+        },
+      });
+      console.log(response.bloodPressure);
+    });
+  }
 
   handleSubmit() {
     if (!this.state.age || !this.state.vimta) {
@@ -301,7 +313,7 @@ class Phlebotomy extends Component {
                       type="number"
                       label={question.question}
                       style={{ width: 200 }}
-                      defaultValue={this.state.vimta}
+                      value={this.state.vimta}
                     />
                     <p />
                   </span>

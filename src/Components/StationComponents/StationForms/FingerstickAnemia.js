@@ -9,7 +9,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const questions = [
   { num: 1, question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
@@ -45,21 +45,31 @@ const radioQuestions = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).fingerstickAnemia;
-  const newState = {
-    Hb: data[0].answer,
-    meals: data[1].answer,
-    protein: data[2].answer,
-    carbohydrates: data[3].answer,
-    vegetables: data[4].answer,
-    sweets: data[5].answer,
-  };
-  return newState;
-};
-
 class Fingerstick extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      Hb: "",
+      meals: "",
+      protein: "",
+      carbohydrates: "",
+      vegetables: "",
+      sweets: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        Hb: response["Fingerstick Blood Test (Anemia)"][0].answers,
+        meals: response["Fingerstick Blood Test (Anemia)"][1].answers,
+        protein: response["Fingerstick Blood Test (Anemia)"][2].answers,
+        carbohydrates: response["Fingerstick Blood Test (Anemia)"][3].answers,
+        vegetables: response["Fingerstick Blood Test (Anemia)"][4].answers,
+        sweets: response["Fingerstick Blood Test (Anemia)"][4].answers,
+      });
+    });
+  }
 
   handleRadioChange(e) {
     if (e.target.name === "protein") {
@@ -173,11 +183,7 @@ class Fingerstick extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.label}
-                      defaultValue={
-                        prevData[question.num - 1].answer === ""
-                          ? false
-                          : prevData[question.num - 1].answer
-                      }
+                      value={this.state[question.id]}
                     />
                     <p />
                   </span>

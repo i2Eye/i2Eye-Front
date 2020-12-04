@@ -10,7 +10,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const radioQuestions = [
   {
@@ -29,51 +29,53 @@ const questions = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).fingerstickRCBG;
-  const newState = {
-    age:
-      data[0].answer === "Y"
-        ? "Above 18"
-        : data[0].answer === "N"
-        ? "18 and below"
-        : "",
-    RCBG: data[1].answer,
-  };
-  return newState;
-};
-
 class EyeScreening extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      age: 2,
+      RCBG: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        age: response["Fingerstick Blood Test (RCBG)"][0].answers,
+        RCBG: response["Fingerstick Blood Test (RCBG)"][1].answers,
+      });
+      console.log(response.bloodPressure);
+    });
+  }
 
   handleSubmit() {
     //get final data of form
-    if(!this.state.age) {
+    if (!this.state.age) {
       alert("Required fields cannot be left empty!");
     } else if (this.state.age == "Above 18" && !this.state.RCBG) {
       alert("Required fields cannot be left empty!");
     } else {
-    console.log(this.state);
-    const answers = {
-      "Fingerstick Blood Test (RCBG)": [
-        {
-          answers: this.state.age,
-          num: 1,
-          question: "Is patient > 18 years old?",
-        },
-        {
-          answers: this.state.RCBG,
-          num: 2,
-          question: "Random capillary blood glucose (mg/dL)",
-        },
-      ],
-    };
+      console.log(this.state);
+      const answers = {
+        "Fingerstick Blood Test (RCBG)": [
+          {
+            answers: this.state.age,
+            num: 1,
+            question: "Is patient > 18 years old?",
+          },
+          {
+            answers: this.state.RCBG,
+            num: 2,
+            question: "Random capillary blood glucose (mg/dL)",
+          },
+        ],
+      };
 
-    updatePatientData(this.props.id, answers).then((response) =>
-      console.log(response)
-    );
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
+    }
   }
-}
 
   handleAgeChange(e) {
     this.setState({ age: e.target.value });
@@ -156,7 +158,7 @@ class EyeScreening extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="number"
                       label={question.label}
-                      defaultValue={this.state.RCBG}
+                      value={this.state.RCBG}
                     />
                     <p />
                   </li>
