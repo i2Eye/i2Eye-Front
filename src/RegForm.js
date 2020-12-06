@@ -13,6 +13,7 @@ import { postRegistration } from "./dbFunctions";
 import { regFormJson } from "./Components/RegFormComponents/formatJson";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Backdrop } from "@material-ui/core";
+import SelectStations from "./Components/RegFormComponents/SelectStations";
 
 const renderStep = (
   step,
@@ -59,8 +60,18 @@ const renderStep = (
         />
       );
     case 4:
-      return <Confirm values={values} errorPresent={errorPresent}/>;
+      return (
+        <SelectStations
+          values={values}
+          errors={errors}
+          touched={touched}
+          handleChange={handleChange}
+          setFieldValue={setFieldValue}
+        />
+      );
     case 5:
+      return <Confirm values={values} errorPresent={errorPresent}/>;
+    case 6:
       return <Success patientId={patientId}/>;
     default:
       return 0;
@@ -115,6 +126,17 @@ export const RegForm = (props) => {
 
     pre_existing_conditions: "",
     family_pre_existing_conditions: "",
+
+    // selected stations
+    selectedStations: [],
+    station1: false,
+    station2: false,
+    station3: false,
+    station4: false,
+    station5: false,
+    station6: false,
+    station7: false,
+    station8: false,
   };
 
   const getEditRegFormData = (id) => {
@@ -182,7 +204,7 @@ export const RegForm = (props) => {
       : getEditRegFormData(params.patientID);
 
   const [step, setStep] = useState(0);
-  const isSubmitStep = step === 4;
+  const isSubmitStep = step === 5;
 
   // a snapshot of form state is used as initialValues after each transition
   const [snapshot, setSnapshot] = useState({ ...regFormData });
@@ -234,7 +256,7 @@ export const RegForm = (props) => {
         setErrorPresent(true);
       });
       
-    } else if (step === 5) {
+    } else if (step === 6) {
       // reset form
       setSnapshot((snapshot) => ({ ...regFormData }));
       formikBag.setValues({ ...regFormData });
@@ -255,7 +277,7 @@ export const RegForm = (props) => {
       {(formik) => (
         <Form noValidate>
           {renderStep(step, formik, params.patientID, errorPresent)}
-          {step > 0 && step < 5 && !isLoading && (
+          {step > 0 && step < 6 && !isLoading && (
             <Button
               variant="contained"
               color="primary"

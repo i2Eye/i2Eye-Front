@@ -7,7 +7,7 @@ export const Confirm = ({
   values,
   errorPresent
 }) => {
-  const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions } = values;
+  const { name, nric, gender, birthday, age, education, occupation, exercise_freq, exercise_duration, monthly_household_income, household_count, symptoms, has_tubercolosis, live_with_someone_with_tubercolosis, other_diagnosed_with_tubercolosis_beyond_4_months, has_blood_borne_disease, blood_borne_disease, family_has_diabetes, family_diabetes_count, family_has_anemia, family_anemia_count, family_has_oral_cancer, family_oral_cancer_count, pre_existing_conditions, family_pre_existing_conditions, selectedStations } = values;
 
   const getBooleanLabel = value => {
     if (value === true) {
@@ -27,6 +27,30 @@ export const Confirm = ({
       }
     })
     return symptomsLabel;
+  }
+
+  const stationOptions = {
+      station1: 'Station 1 Oral Health',
+      station2: 'Station 2 BMI & Abdominal Obesity',
+      station3: 'Station 3 Eye Screening',
+      station4: 'Station 4 Phlebotomy Test',
+      station5: 'Station 5 Fingerstick Blood Test (Anemia)',
+      station6: 'Station 6 Fingerstick Blood Test (RCBG)',
+      station7: 'Station 7 Blood Pressure',
+      station8: 'Station 8 Doctor\'s Consult',
+  };
+
+  const getStationsLabel = () => {
+    var stationsLabel = "";
+
+    selectedStations.forEach((value, index) => {
+      if (index === selectedStations.length - 1) {
+        stationsLabel = stationsLabel.concat(stationOptions[value], " ");  
+      } else {
+        stationsLabel = stationsLabel.concat(stationOptions[value], ", ");
+      }
+    })
+    return stationsLabel;
   }
 
     return (
@@ -77,6 +101,10 @@ export const Confirm = ({
           <ListItemText primary="If 'Yes' to knowing anyone in the family who has oral cancer, how many family members have oral cancer?" secondary={family_oral_cancer_count} />
           
           <ListItemText primary="Other pre-existing conditions of family member(s) (if any)" secondary={family_pre_existing_conditions} />
+        </List>
+
+        <List subheader={<h3>Part 5: Selection of Stations</h3>}>
+          <ListItemText primary="Please select all the stations you would like to go" secondary={getStationsLabel()} />
         </List>
 
         {errorPresent && <ErrorSnackbar message={"Error in registration, please submit form again"}/> }
