@@ -3,13 +3,22 @@ import "../../App.css";
 import FormAbled from "./FormAbled";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import Success from "./StationForms/Success";
 
 class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
       station: 1,
+      success: false,
     };
+    this.changeState = this.changeState.bind(this);
+  }
+
+  changeState() {
+    this.setState({
+      success: true,
+    });
   }
 
   render() {
@@ -19,7 +28,6 @@ class Form extends Component {
 
     return (
       <div>
-        <h2>Station {this.state.station}</h2>
         <h3 className="text-right">Currently serving : {params.patientID}</h3>
         <Button
           variant="contained"
@@ -38,7 +46,15 @@ class Form extends Component {
             ? "Cancel"
             : "Back"}
         </Button>
-        <FormAbled stationName={params.stationName} id={params.patientID} />
+        {this.state.success && <Success />}
+        {!this.state.success && (
+          <FormAbled
+            stationName={params.stationName}
+            id={params.patientID}
+            state={this.state.success}
+            onChange={this.changeState}
+          />
+        )}
       </div>
     );
   }

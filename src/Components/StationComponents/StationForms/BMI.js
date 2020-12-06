@@ -43,12 +43,12 @@ class BMI extends Component {
     }
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
     if (!this.state.height || !this.state.weight || !this.state.waist) {
       alert("Required fields cannot be left empty!");
     } else {
       //get final data of form
-      alert("BMI station form submitted successfully!");
+      this.props.onChange();
       console.log(this.state);
       const answers = {
         BMI: [
