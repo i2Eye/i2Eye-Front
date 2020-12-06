@@ -217,6 +217,13 @@ def get_all_patients():
                 # Append each station and the status to the list.
                 this_patient_data.update({station_name: outcome})
 
+            availability_query = """SELECT status from patient WHERE patient_id = {0}""".format(
+                id)
+            cursor.execute(availability_query)
+            connection.commit()
+            availability = cursor.fetchall()[0][0]
+            this_patient_data.update({"Is Available": availability})
+
             # Processing of this patient is done. Append to results.
             results.append(this_patient_data)
             # Iterate to next patient.
@@ -631,8 +638,8 @@ def update_completed_stations(patient_id):
         completed_stations = [0] * num_of_stations
 
         for station_name, completion_info in data.items():
-            station_id_query = """SELECT station_id FROM station WHERE station_name = '{0}' """.format(
-                station_name)
+            station_id_query = """SELECT station_id FROM station WHERE station_name LIKE '{0}' """.format(
+                station_name.replace("'", "''"))
             cursor2.execute(station_id_query)
             connection.commit()
             station_id = cursor2.fetchall()[0][0]-1

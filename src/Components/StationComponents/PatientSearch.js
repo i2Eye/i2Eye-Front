@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import Switch from "@material-ui/core/Switch";
+import { getAllPatients, updatePatientStatus } from "../../dbFunctions";
 
 const useStyles = (theme) => ({
   root: {
@@ -41,48 +42,42 @@ class PatientSearch extends Component {
     input: "",
     patientID: getPatientID(this.props.match.params.patientID),
     toggle: true,
-  };
-
-  //Replace with function to retrieve list of people when backend team is done
-  getPeople = () => {
-    const people = [];
-    for (let i = 1; i <= 10000; i++) {
-      people[i - 1] = {
-        id: i,
-        name: "Person " + ((i * 173) % 190),
-        available: Math.floor(i * 26.4) % 11 !== 2,
-        age: (i * 151) % 111,
-        gender: i % 2 === 0 ? "F" : "M",
-      };
-    }
-    return people;
+    people: [],
+    next: false,
   };
 
   handleInput = (e, v, r) => {
-    this.setState({ input: v });
+    console.log(v)
+    this.setState({ input: v, next: v === "" ? false : true });
   };
 
   handleMasterSearch = (e, v, r) => {
-    this.setState({ patientID: v === null ? 0 : v.id });
+    const currPatient = this.state.patientID;
+    this.setState({ patientID: v === null ? currPatient : v.id, next: v === null ? false : true });
   };
 
   handleToggle = (e) => {
     this.setState({ toggle: e.target.checked });
   };
 
+  handleCancel = () => {
+    this.setState({ input: "", next: false });
+  }
+
   //Find a way to render an alert if there is no next person in the queue
-  getNextPerson = () => {
-    const people = this.getPeople();
-    const availablePeople = people.filter((person) => person.available);
+  getNextPerson = (stationName) => {
+    const { people } = this.state;
+    const currStation = this.getStationName(stationName)
+    const availablePeople = people.filter((person) => person["Is Available"] && person[currStation] === "In Queue");
     availablePeople.length <= 0
-      ? this.setState({ patientID: 0 })
-      : this.setState({ patientID: availablePeople[0].id });
+      ? this.setState({ next: false })
+      : this.setState({ patientID: availablePeople[0].id, next: true });
     this.setState({ input: "" });
   };
 
   getCard = (classes, patientID) => {
-    const patient = this.getPeople().find(
-      (patient) => patient.id === patientID
+    const patient = this.state.people.find(
+      (patient) => patient["id"] === patientID
     );
 
     return (
@@ -93,14 +88,14 @@ class PatientSearch extends Component {
             color="textSecondary"
             gutterBottom
           >
-            {`ID : ${patient.id}`}
+            {`ID : ${patient["id"]}`}
           </Typography>
           <Typography variant="body2" component="p">
-            {`Name : ${patient.name}`}
+            {`Name : ${patient["Name"]}`}
             <br />
-            {`Age : ${patient.age}`}
+            {`Age : ${patient["Age"]}`}
             <br />
-            {`Gender : ${patient.gender}`}
+            {`Gender : ${patient["Gender"]}`}
           </Typography>
         </CardContent>
       </Card>
@@ -108,9 +103,10 @@ class PatientSearch extends Component {
   };
 
   getWarning = (patientID) => {
+    const { people, next } = this.state;
     if (
-      patientID > 0 &&
-      !this.getPeople().find((patient) => patient.id === patientID).available
+      next &&
+      !people.find((patient) => patient["id"] === patientID)["Is Available"]
     ) {
       return (
         <Typography variant="subtitle1" color="error">
@@ -134,14 +130,16 @@ class PatientSearch extends Component {
     return stations.find((station) => station.tag === stationTag).name;
   };
 
+  componentDidMount() {
+    getAllPatients().then((result) => this.setState({ people: result }));
+  }
+
   render() {
-    const { input, patientID, toggle } = this.state;
+    const { input, patientID, toggle, people, next } = this.state;
     const {
       classes,
       match: { params },
     } = this.props;
-
-    console.log(patientID);
 
     return (
       <div>
@@ -158,12 +156,12 @@ class PatientSearch extends Component {
 
         <VirtualizedAutocomplete
           id="patient-master-search"
-          options={this.getPeople()}
+          options={people}
           getOptionLabel={(option) =>
-            option.id.toString() +
+            option["id"].toString() +
             " - " +
-            option.name +
-            (!option.available ? " (busy)" : "")
+            option["Name"] +
+            (!option["Is Available"] ? " (busy)" : "")
           }
           renderInput={(params) => (
             <TextField
@@ -185,7 +183,7 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginRight: 20, marginBottom: 20 }}
-          onClick={this.getNextPerson}
+          onClick={() => this.getNextPerson(params.stationName)}
           disabled={!toggle}
         >
           Get Next Person
@@ -195,24 +193,27 @@ class PatientSearch extends Component {
           variant="contained"
           color="primary"
           style={{ marginTop: 20, marginBottom: 20 }}
-          onClick={() => this.setState({ input: "", patientID: 0 })}
-          disabled={!toggle || patientID <= 0}
+          onClick={this.handleCancel}
+          disabled={!toggle || !next }
         >
           Cancel
         </Button>
         {this.getWarning(patientID)}
         <br />
 
-        {patientID <= 0 ? null : this.getCard(classes, patientID)}
+        {!next || people.length <= 0
+          ? null
+          : this.getCard(classes, patientID)}
 
         <Button
           variant="contained"
           color="primary"
           style={{
             marginRight: 20,
-            marginTop: patientID <= 0 ? 145.563 : 20,
+            marginTop: !next || people.length <= 0 ? 145.563 : 20,
           }}
           component={Link}
+          //onClick = {this.handleCancel}
           to="/stations"
         >
           Back
@@ -220,9 +221,12 @@ class PatientSearch extends Component {
         <Button
           variant="contained"
           color="primary"
-          style={patientID <= 0 ? { marginTop: 145.563 } : { marginTop: 20 }}
-          disabled={!toggle || patientID <= 0}
+          style={{
+            marginTop: !next || people.length <= 0 ? 145.563 : 20,
+          }}
+          disabled={!toggle || !next }
           component={Link}
+          onClick = {() => updatePatientStatus(patientID, false)}
           to={`/stations/${params.stationName}/${patientID}`}
         >
           Next

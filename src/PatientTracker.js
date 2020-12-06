@@ -28,6 +28,7 @@ import SaveWorker from "./Components/PatientTrackerComponents/save.worker";
 import * as FileSaver from "file-saver";
 import exportCSV from "./Components/PatientTrackerComponents/ExportCSV";
 import jsPDF from "jspdf";
+import { getAllPatients, updatePatientData, updateCompletedStations } from "./dbFunctions";
 
 var saveWorker;
 
@@ -59,6 +60,7 @@ class PatientTracker extends Component {
     printOpen: 0,
     fileName: "",
     saveError: false,
+    people: [],
   };
 
   seeMoreButton = (
@@ -86,7 +88,7 @@ class PatientTracker extends Component {
     this.setState({
       [name]: value,
     });
-  };
+  };  
 
   handleOpenSave = (x) => {
     var today = new Date();
@@ -297,18 +299,19 @@ class PatientTracker extends Component {
   };
 
   editDialog = () => {
-    const { clickedRow, editOpen } = this.state;
+    const { clickedRow, editOpen, people } = this.state;
     //console.log(clickedRow);
 
-    const patientData = this.getPeople().find(
+    const patient = people.find(
       (person) => person.id.toString() === clickedRow.toString()
     );
-    //console.log(patientData.oralHealth);
+    //console.log(patientData["Oral Health"]);
+
+    const patientData = {...patient}
 
     return (
       <Dialog
         open={editOpen}
-        onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
@@ -325,13 +328,13 @@ class PatientTracker extends Component {
                 }}
               >
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
-                      name="name"
-                      id="name"
+                      name="Name"
+                      id="Name"
                       label="Name"
-                      onChange={this.handleChange}
-                      defaultValue={patientData.name}
+                      onChange={(e) => {patientData["Name"] = e.target.value}}
+                      defaultValue={patientData["Name"]}
                       autoComplete="off"
                       fullWidth
                     />
@@ -341,11 +344,11 @@ class PatientTracker extends Component {
                     <FormControl fullWidth>
                       <InputLabel id="gender-label">Gender</InputLabel>
                       <Select
-                        name="gender"
+                        name="Gender"
                         labelId="gender-label"
-                        id="gender"
-                        onChange={this.handleChange}
-                        value={patientData.gender}
+                        id="Gender"
+                        onChange={(e) => {patientData["Gender"] = e.target.value}}
+                        defaultValue={patientData["Gender"]}
                       >
                         <MenuItem value={"F"}>Female</MenuItem>
                         <MenuItem value={"M"}>Male</MenuItem>
@@ -354,24 +357,24 @@ class PatientTracker extends Component {
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
-                      name="age"
-                      id="age"
+                      name="Age"
+                      id="Age"
                       label="Age"
                       type="number"
-                      onChange={this.handleChange}
-                      defaultValue={patientData.age}
+                      onChange={(e) => {patientData["Age"] = e.target.value}}
+                      defaultValue={patientData["Age"]}
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel id="OralHealth">OralHealth</InputLabel>
+                      <InputLabel id="Oral Health">Oral Health</InputLabel>
                       <Select
-                        name="oralHealth"
-                        id="oralHealth"
-                        labelId="OralHealth"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.oralHealth}
+                        name="Oral Health"
+                        id="Oral Health"
+                        labelId="Oral Health"
+                        onChange={(e) => {patientData["Oral Health"] = e.target.value}}
+                        defaultValue={patientData["Oral Health"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -379,15 +382,15 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="BMI">BMI</InputLabel>
                       <Select
-                        name="bmi"
-                        id="bmi"
+                        name="BMI"
+                        id="BMI"
                         labelId="BMI"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.bmi}
+                        onChange={(e) => {patientData["BMI"] = e.target.value}}
+                        defaultValue={patientData.BMI}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -395,15 +398,15 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel id="EyeScreening">EyeScreening</InputLabel>
+                      <InputLabel id="Eye Screening">Eye Screening</InputLabel>
                       <Select
-                        name="eyeScreening"
-                        id="eyeScreening"
-                        labelId="EyeScreening"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.eyeScreening}
+                        name="Eye Screening"
+                        id="Eye Screening"
+                        labelId="Eye Screening"
+                        onChange={(e) => {patientData["Eye Screening"] = e.target.value}}
+                        defaultValue={patientData["Eye Screening"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -411,17 +414,17 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="Phlebotomy Test">
                         Phlebotomy Test
                       </InputLabel>
                       <Select
-                        name="phlebotomy"
-                        id="phlebotomy"
+                        name="Phlebotomy Test"
+                        id="Phlebotomy Test"
                         labelId="Phlebotomy Test"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.phlebotomy}
+                        onChange={(e) => {patientData["Phlebotomy Test"] = e.target.value}}
+                        defaultValue={patientData["Phlebotomy Test"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -429,17 +432,17 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="Fingerstick Anemia">
                         Fingerstick Anemia
                       </InputLabel>
                       <Select
-                        name="fingerstickAnemia"
-                        id="fingerstickAnemia"
+                        name="Fingerstick Blood Test (Anemia)"
+                        id="Fingerstick Blood Test (Anemia)"
                         labelId="Fingerstick Anemia"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.fingerstickAnemia}
+                        onChange={(e) => {patientData["Fingerstick Blood Test (Anemia)"] = e.target.value}}
+                        defaultValue={patientData["Fingerstick Blood Test (Anemia)"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -447,17 +450,17 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="Fingerstick RCBG">
                         Fingerstick RCBG
                       </InputLabel>
                       <Select
-                        name="fingerstickRCBG"
-                        id="fingerstickRCBG"
+                        name="Fingerstick Blood Test (RCBG)"
+                        id="Fingerstick Blood Test (RCBG)"
                         labelId="Fingerstick RCBG"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.fingerstickRCBG}
+                        onChange={(e) => {patientData["Fingerstick Blood Test (RCBG)"] = e.target.value}}
+                        defaultValue={patientData["Fingerstick Blood Test (RCBG)"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -465,17 +468,17 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="Blood Pressure">
                         Blood Pressure
                       </InputLabel>
                       <Select
-                        name="bloodPressure"
-                        id="bloodPressure"
+                        name="Blood Pressure"
+                        id="Blood Pressure"
                         labelId="Blood Pressure"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.bloodPressure}
+                        onChange={(e) => {patientData["Blood Pressure"] = e.target.value}}
+                        defaultValue={patientData["Blood Pressure"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -483,17 +486,17 @@ class PatientTracker extends Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id="Doctor's Consult">
                         Doctor's Consult
                       </InputLabel>
                       <Select
-                        name="doctorConsult"
-                        id="doctorConsult"
+                        name="Doctor's Consult"
+                        id="Doctor's Consult"
                         labelId="Doctor's Consult"
-                        onChange={this.handleChange}
-                        defaultValue={patientData.doctorConsult}
+                        onChange={(e) => {patientData["Doctor's Consult"] = e.target.value}}
+                        defaultValue={patientData["Doctor's Consult"]}
                       >
                         <MenuItem value={"In Queue"}>In Queue</MenuItem>
                         <MenuItem value={"Not Queued"}>Not Queued</MenuItem>
@@ -507,16 +510,45 @@ class PatientTracker extends Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
-            Close
+          <Button onClick={() => {this.setState({editOpen: false})}} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => {
+            Object.assign(patient, patientData)
+            this.handleClose(patientData)}
+            } color="primary">
+            Save Changes
           </Button>
         </DialogActions>
       </Dialog>
     );
   };
 
-  handleClose = () => {
-    this.setState({ editOpen: false });
+  handleClose = (patient) => {
+    const data = [
+      {"num": 1,
+       "question": "Name"},
+      {"num": 3,
+       "question": "Gender"},
+      {"num": 5,
+       "question": "Age"}
+    ]
+    for (const field in data) {
+      data[field]["answers"] = patient[data[field]["question"]]
+    }
+    updatePatientData(patient.id, {"Registration": data})
+
+    const stations = ["Registratoin", "BMI", "Oral Health", "Phlebotomy Test", "Eye Screening", "Fingerstick Blood Test (Anemia)", 
+                      "Fingerstick Blood Test (RCBG)", "Blood Pressure", "Doctor's Consult"]
+    const station_completion = {}
+    for (const field in patient) {
+      if (stations.indexOf(field) >= 0) {
+        station_completion[field] = patient[field]
+      }
+    }
+    station_completion["Registration"] = "Completed"
+    updateCompletedStations(patient.id, station_completion)
+    this.setState({ editOpen: false,  });
   };
 
   editButton = (
@@ -553,38 +585,31 @@ class PatientTracker extends Component {
   };
 
   getPeople = () => {
-    const people = [];
-    for (let i = 1; i <= 10000; i++) {
-      people[i - 1] = {
-        actions: (
-          <React.Fragment>
-            {this.editButton}
-            {this.seeMoreButton}
-          </React.Fragment>
-        ),
-        id: i,
-        name: "Person " + ((i * 173) % 190),
-        age: (i * 151) % 111,
-        gender: i % 2 === 0 ? "F" : "M",
-        oralHealth:
-          i % 5 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        bmi:
-          i % 7 === 0 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        eyeScreening:
-          i % 6 === 0 ? "Completed" : i % 5 === 0 ? "In Queue" : "Not Queued",
-        phlebotomy:
-          i % 4 === 0 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
-        fingerstickAnemia:
-          i % 5 === 2 ? "Completed" : i % 5 === 1 ? "In Queue" : "Not Queued",
-        fingerstickRCBG:
-          i % 6 === 3 ? "Completed" : i % 5 === 2 ? "In Queue" : "Not Queued",
-        bloodPressure:
-          i % 7 === 2 ? "Completed" : i % 3 === 1 ? "In Queue" : "Not Queued",
-        doctorConsult:
-          i % 6 === 5 ? "Completed" : i % 2 === 1 ? "In Queue" : "Not Queued",
-      };
-    }
-    return people;
+    const peoplePromise = getAllPatients();
+    peoplePromise.then((result) =>
+      this.setState({
+        people: result.map((person) => ({
+          actions: (
+            <React.Fragment>
+              {this.editButton}
+              {this.seeMoreButton}
+            </React.Fragment>
+          ),
+          id: person["id"],
+          "Name": person["Name"],
+          "Age": person["Age"],
+          "Gender": person["Gender"],
+          "Oral Health": person["Oral Health"],
+          "BMI": person["BMI"],
+          "Eye Screening": person["Eye Screening"],
+          "Phlebotomy Test": person["Phlebotomy Test"],
+          "Fingerstick Blood Test (Anemia)": person["Fingerstick Blood Test (Anemia)"],
+          "Fingerstick Blood Test (RCBG)": person["Fingerstick Blood Test (RCBG)"],
+          "Blood Pressure": person["Blood Pressure"],
+          "Doctor's Consult": person["Doctor's Consult"],
+        })),
+      })
+    );
   };
 
   filterPeople = (people) => {
@@ -596,49 +621,57 @@ class PatientTracker extends Component {
       hasIncompleteStations,
       completedAllStations,
     } = this.state;
-    return people
-      .filter(
-        (person) =>
-          person.name.toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
-          person.id.toString().indexOf(input) !== -1
-      )
-      .filter((person) => {
-        if (ageRange[0] > 100) {
-          return person.age > 100;
-        } else if (ageRange[1] > 100) {
-          return person.age >= ageRange[0];
-        } else {
-          return person.age >= ageRange[0] && person.age <= ageRange[1];
-        }
-      })
-      .filter((person) => {
-        let m = false;
-        let f = false;
-        if (isMale) {
-          m = person.gender === "M";
-        }
-        if (isFemale) {
-          f = person.gender === "F";
-        }
-        return m || f;
-      })
-      .filter((person) => {
+
+    const match_search = people.filter((person) => person["Name"] !== undefined &&
+          (person["Name"].toLowerCase().indexOf(input.toLowerCase()) !== -1 ||
+          person.id.toString().indexOf(input) !== -1))
+
+    const match_age = match_search.filter((person) => {
+      if (person["Age"] === undefined) {
+        return false
+      } else if (ageRange[0] > 100) {
+        return person["Age"] > 100
+      } else if (ageRange[1] > 100) {
+        return person["Age"] >= ageRange[0]
+      } else {
+        return person["Age"] >= ageRange[0] && person["Age"] <= ageRange[1]
+      }
+    })
+
+    const match_gender = match_age.filter((person) => person["Gender"] !== undefined &&
+      ((person["Gender"] === "M" && isMale) || (person["Gender"] === "F" && isFemale)))
+
+    const match_stations = match_gender.filter((person) => {
         let incomplete = false;
         let complete = false;
+        
         if (hasIncompleteStations) {
           incomplete =
-            person.oralHealth === "In Queue" ||
-            person.bmi === "In Queue" ||
-            person.eyeScreening === "In Queue";
+            person["Oral Health"] === "In Queue" ||
+            person.BMI === "In Queue" ||
+            person["Eye Screening"] === "In Queue" ||
+            person["Phlebotomy Test"] === "In Queue" ||
+            person["Fingerstick Blood Test (Anemia)"] === "In Queue" ||
+            person["Fingerstick Blood Test (RCBG)"] === "In Queue" ||
+            person["Blood Pressure"] === "In Queue" ||
+            person["Doctor's Consult"] === "In Queue"
         }
         if (completedAllStations) {
           complete =
-            person.oralHealth !== "In Queue" &&
-            person.bmi !== "In Queue" &&
-            person.eyeScreening !== "In Queue";
+          person["Oral Health"] !== "In Queue" &&
+          person.BMI !== "In Queue" &&
+          person["Eye Screening"] !== "In Queue" &&
+          person["Phlebotomy Test"] !== "In Queue" &&
+          person["Fingerstick Blood Test (Anemia)"] !== "In Queue" &&
+          person["Fingerstick Blood Test (RCBG)"] !== "In Queue" &&
+          person["Blood Pressure"] !== "In Queue" &&
+          person["Doctor's Consult"] !== "In Queue"
         }
         return incomplete || complete;
-      });
+    })
+
+
+    return match_gender
   };
 
   handleCheckbox = (event) => {
@@ -680,58 +713,58 @@ class PatientTracker extends Component {
       {
         width: 230,
         label: "Name",
-        dataKey: "name",
+        dataKey: "Name",
       },
       {
         width: 70,
         label: "Age",
-        dataKey: "age",
+        dataKey: "Age",
         numeric: true,
       },
       {
         width: 120,
         label: "Gender",
-        dataKey: "gender",
+        dataKey: "Gender",
       },
       {
         width: 150,
         label: "Oral Health",
-        dataKey: "oralHealth",
+        dataKey: "Oral Health",
       },
       {
         width: 150,
         label: "BMI",
-        dataKey: "bmi",
+        dataKey: "BMI",
       },
       {
         width: 150,
         label: "Eye Screening",
-        dataKey: "eyeScreening",
+        dataKey: "Eye Screening",
       },
       {
         width: 150,
         label: "Phlebotomy Test",
-        dataKey: "phlebotomy",
+        dataKey: "Phlebotomy Test",
       },
       {
         width: 150,
         label: "Fingerstick Anemia",
-        dataKey: "fingerstickAnemia",
+        dataKey: "Fingerstick Blood Test (Anemia)",
       },
       {
         width: 150,
         label: "Fingerstick RCBG",
-        dataKey: "fingerstickRCBG",
+        dataKey: "Fingerstick Blood Test (RCBG)",
       },
       {
         width: 150,
         label: "Blood Pressure",
-        dataKey: "bloodPressure",
+        dataKey: "Blood Pressure",
       },
       {
         width: 150,
         label: "Doctor's Consult",
-        dataKey: "doctorConsult",
+        dataKey: "Doctor's Consult",
       },
     ];
 
@@ -776,6 +809,10 @@ class PatientTracker extends Component {
     return columns;
   };
 
+  componentDidMount() {
+    this.getPeople();
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -784,10 +821,10 @@ class PatientTracker extends Component {
       isFemale,
       hasIncompleteStations,
       completedAllStations,
+      people,
     } = this.state;
     //console.log(editOpen);
 
-    const people = this.getPeople();
     const filteredPeople = this.filterPeople(people);
     return (
       <div>

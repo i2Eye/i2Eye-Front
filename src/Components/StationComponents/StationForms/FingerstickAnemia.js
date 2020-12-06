@@ -8,6 +8,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
+import "../../../dbFunctions";
+import { updatePatientData } from "../../../dbFunctions";
 
 const questions = [
   { num: 1, question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
@@ -96,6 +98,46 @@ class Fingerstick extends Component {
     } else {
       //get final data of form
       console.log(this.state);
+      const answers = {
+        "Fingerstick Blood Test (Anemia)": [
+          {
+            answers: this.state.Hb,
+            num: 1,
+            question: "Hb level (g/dL)",
+          },
+          {
+            answers: this.state.meals,
+            num: 2,
+            question: "How many meals do you eat a day?",
+          },
+          {
+            answers: this.state.protein,
+            num: 3,
+            question:
+              "How often do you eat protein (eg. daal, mung, rajma, chole, chana)?",
+          },
+          {
+            answers: this.state.carbohydrates,
+            num: 4,
+            question: "How often do you eat carbohydrates (eg. chapati, rice)?",
+          },
+          {
+            answers: this.state.vegetables,
+            num: 5,
+            question:
+              "How often do you eat vegetables (eg. gobhi, patta gobhi, saag)?",
+          },
+          {
+            answers: this.state.sweets,
+            num: 6,
+            question: "How often do you eat sweets/desserts (eg. gulab jamun)?",
+          },
+        ],
+      };
+
+      updatePatientData(this.props.id, answers).then((response) =>
+        console.log(response)
+      );
     }
   }
 
