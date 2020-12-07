@@ -58,6 +58,7 @@ class VirtualizedAutocomplete extends Component {
         getOptionSelected={getOptionSelected}
         onChange={onChange}
         renderInput={renderInput}
+        onClose={() => {}}
       />
     );
   }
