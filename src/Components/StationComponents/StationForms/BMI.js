@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
-import getTestData from "../../../TestData";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const questions = [
   { question: "Height (m)", id: "height" },
@@ -11,18 +11,26 @@ const questions = [
   { question: "Waist circumference (cm)", id: "waist" },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).bmi;
-  const newState = {
-    height: data[0].answer,
-    weight: data[1].answer,
-    waist: data[2].answer,
-  };
-  return newState;
-};
-
 class BMI extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      height: "",
+      weight: "",
+      waist: "",
+      errorPresent: false,
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        height: response.BMI[0].answers,
+        weight: response.BMI[1].answers,
+        waist: response.BMI[2].answers,
+      });
+    });
+  }
 
   handleChange(e) {
     if (e.target.id === "height") {
@@ -36,12 +44,11 @@ class BMI extends Component {
     }
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
     if (!this.state.height || !this.state.weight || !this.state.waist) {
       alert("Required fields cannot be left empty!");
     } else {
       //get final data of form
-      alert("BMI station form submitted successfully!");
       console.log(this.state);
       const answers = {
         BMI: [
@@ -63,15 +70,28 @@ class BMI extends Component {
         ],
       };
 
-      updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
-      );
+      updatePatientData(this.props.id, answers).then((response) => {
+        // console.log(response);
+        this.setState({errorPresent: false}, () => {
+          if (response === false) {
+            console.log("here");
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
+      });
     }
   }
 
   render() {
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           BMI & Abdominal Obesity
         </h1>
@@ -101,7 +121,8 @@ class BMI extends Component {
                       label={question.question}
                       type="number"
                       style={{ width: "250px" }}
-                      defaultValue={this.state[question.id]}
+                      //defaultValue={this.state.height}
+                      value={this.state[question.id]}
                     />
                     <p />
                   </span>

@@ -25,6 +25,10 @@ class FormAbled extends Component {
     bloodPressure: BloodPressure,
   };
 
+  handleChange(e) {
+    this.props.onChange();
+  }
+
   render() {
     const { stationName } = this.props;
     const StationTag = this.forms[stationName || OralHealth];
@@ -40,7 +44,11 @@ class FormAbled extends Component {
                 paddingBottom: 20,
               }}
             >
-              <StationTag id={this.props.id} />
+              <StationTag
+                id={this.props.id}
+                onChange={this.handleChange.bind(this)}
+                state={this.props.state}
+              />
             </Paper>
           </Grid>
           <Grid item md={5}>

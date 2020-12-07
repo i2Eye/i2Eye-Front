@@ -7,8 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
-import getTestData from "../../../TestData.js";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const questions = [
   { question: "Dental ID", label: "Dental ID", id: "id", type: "text" },
@@ -81,33 +80,43 @@ const questions = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).oralHealth;
-  const newState = {
-    id: data[0].answer,
-    intoxication:
-      data[1].answer === "Y" ? "Yes" : data[1].answer === "N" ? "No" : "",
-    product: data[2].answer,
-    amount: data[3].answer.includes("<1")
-      ? "<1 a day"
-      : data[3].answer.includes("1-10")
-      ? "1-10 a day"
-      : ">10 a day",
-    duration: data[4].answer,
-    reason: data[5].answer,
-    consuming:
-      data[6].answer === "Y" ? "Yes" : data[6].answer === "N" ? "No" : "",
-    stopDate: data[7].answer,
-    stopReason: data[8].answer,
-    quit: data[9].answer === "Y" ? "Yes" : data[9].answer === "N" ? "No" : "",
-    quitDuration: data[10].answer,
-    consumeAgainReason: data[11].answer,
-  };
-  return newState;
-};
-
 class OralHealth extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: "",
+      intoxication: "",
+      product: "",
+      amount: "",
+      duration: "",
+      reason: "",
+      consuming: "",
+      stopDate: "",
+      stopReason: "",
+      quit: "",
+      quitDuration: "",
+      consumeAgainReason: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        id: response["Oral Health"][0].answers,
+        intoxication: response["Oral Health"][1].answers,
+        product: response["Oral Health"][2].answers,
+        amount: response["Oral Health"][3].answers,
+        duration: response["Oral Health"][4].answers,
+        reason: response["Oral Health"][5].answers,
+        consuming: response["Oral Health"][6].answers,
+        stopDate: response["Oral Health"][7].answers,
+        stopReason: response["Oral Health"][8].answers,
+        quit: response["Oral Health"][9].answers,
+        quitDuration: response["Oral Health"][10].answers,
+        consumeAgainReason: response["Oral Health"][11].answers,
+      });
+    });
+  }
 
   handleChange(e) {
     if (e.target.id === "id") {
@@ -300,7 +309,7 @@ class OralHealth extends Component {
                       onChange={this.handleChange.bind(this)}
                       type="text"
                       label={question.label}
-                      defaultValue={this.state[question.id]}
+                      value={this.state[question.id]}
                       disabled={
                         question.id === "id"
                           ? false

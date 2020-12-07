@@ -10,7 +10,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const questions = [
   {
@@ -38,25 +38,30 @@ const radioQuestions = [
   },
 ];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).bloodPressure;
-  const newState = {
-    age:
-      data[0].answer === "Y"
-        ? "Above 18"
-        : data[0].answer === "N"
-        ? "18 and below"
-        : "",
-    Systolic1: data[1].answer,
-    Diastolic1: data[2].answer,
-    Systolic2: data[3].answer,
-    Diastolic2: data[4].answer,
-  };
-  return newState;
-};
-
 class BloodPressure extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      age: "",
+      Systolic1: "",
+      Diastolic1: "",
+      Systolic2: "",
+      Diastolic2: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        age: response["Blood Pressure"][0].answers,
+        Systolic1: response["Blood Pressure"][1].answers,
+        Diastolic1: response["Blood Pressure"][2].answers,
+        Systolic2: response["Blood Pressure"][3].answers,
+        Diastolic2: response["Blood Pressure"][4].answers,
+      });
+      console.log(response.bloodPressure);
+    });
+  }
 
   handleSubmit() {
     //get final data of form
@@ -209,7 +214,7 @@ class BloodPressure extends Component {
                       disabled={
                         this.state.age === "18 and below" ? true : false
                       }
-                      defaultValue={this.state[question.key]}
+                      value={this.state[question.key]}
                     />
                     <p />
                   </span>

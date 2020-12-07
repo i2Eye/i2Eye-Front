@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import "../../../dbFunctions";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 
 const questions = [
   { question: "Urgent doctor's consult: doctor's notes", id: "Urgent" },
@@ -32,6 +32,18 @@ class Doctor extends Component {
       StandardReason: "",
       StandardOthers: "",
     };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        Systolic1: response["Doctor's Consult"][0].answers,
+        Diastolic1: response["Doctor's Consult"][1].answers,
+        Systolic2: response["Doctor's Consult"][2].answers,
+        Diastolic2: response["Doctor's Consult"][3].answers,
+      });
+      console.log(response.bloodPressure);
+    });
   }
 
   handleChange(e) {
@@ -134,6 +146,7 @@ class Doctor extends Component {
                         variant="outlined"
                         fullWidth
                         onChange={this.handleChange.bind(this)}
+                        value={this.state[question.id]}
                       />
                       <p />
                     </li>

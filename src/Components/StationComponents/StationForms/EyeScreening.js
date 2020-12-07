@@ -4,21 +4,27 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
-import { updatePatientData } from "../../../dbFunctions";
+import { updatePatientData, getPatient } from "../../../dbFunctions";
 import Success from "./Success";
 
 const questions = [{ question: "SNC ID" }];
 
-const handleEdit = (id) => {
-  const data = getTestData(id).eyeScreening;
-  const newState = {
-    id: data[0].answer,
-  };
-  return newState;
-};
 
 class EyeScreening extends Component {
-  state = handleEdit(this.props.id);
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: "",
+    };
+  }
+
+  async componentDidMount() {
+    const data = getPatient(this.props.id).then((response) => {
+      this.setState({
+        id: response["Eye Screening"][0].answers,
+      });
+    });
+  }
 
   handleChange(e) {
     this.setState({ id: e.target.value });
@@ -77,7 +83,7 @@ class EyeScreening extends Component {
                       name="search"
                       type="text"
                       label={question.question}
-                      defaultValue={this.state.id}
+                      value={this.state.id}
                     />
                     <p />
                   </span>
