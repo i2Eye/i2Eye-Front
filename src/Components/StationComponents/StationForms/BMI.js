@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
-import getTestData from "../../../TestData";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const questions = [
   { question: "Height (m)", id: "height" },
@@ -18,6 +18,7 @@ class BMI extends Component {
       height: "",
       weight: "",
       waist: "",
+      errorPresent: false,
     };
   }
 
@@ -48,7 +49,6 @@ class BMI extends Component {
       alert("Required fields cannot be left empty!");
     } else {
       //get final data of form
-      this.props.onChange();
       console.log(this.state);
       const answers = {
         BMI: [
@@ -70,9 +70,15 @@ class BMI extends Component {
         ],
       };
 
-      updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
-      );
+      updatePatientData(this.props.id, answers).then((response) => {
+        // console.log(response);
+        if (response === false) {
+          console.log("here");
+          this.setState({ errorPresent: true });
+        } else {
+          this.props.onChange();
+        }
+      });
     }
   }
 
@@ -126,6 +132,11 @@ class BMI extends Component {
             </Button>
           </ol>
         </form>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Error in BMI form, please submit form again"}
+          />
+        )}
       </div>
     );
   }
