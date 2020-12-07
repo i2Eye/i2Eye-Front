@@ -72,12 +72,14 @@ class BMI extends Component {
 
       updatePatientData(this.props.id, answers).then((response) => {
         // console.log(response);
-        if (response === false) {
-          console.log("here");
-          this.setState({ errorPresent: true });
-        } else {
-          this.props.onChange();
-        }
+        this.setState({errorPresent: false}, () => {
+          if (response === false) {
+            console.log("here");
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
       });
     }
   }
@@ -85,6 +87,11 @@ class BMI extends Component {
   render() {
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           BMI & Abdominal Obesity
         </h1>
@@ -132,11 +139,6 @@ class BMI extends Component {
             </Button>
           </ol>
         </form>
-        {this.state.errorPresent && (
-          <ErrorSnackbar
-            message={"Error in BMI form, please submit form again"}
-          />
-        )}
       </div>
     );
   }
