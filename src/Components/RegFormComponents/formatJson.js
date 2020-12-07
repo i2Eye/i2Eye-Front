@@ -124,12 +124,7 @@ export const regFormJson = (values) => {
         "num": 25,
         "question": "Other pre-existing conditions of family members (if any)",
         "answers": values.pre_existing_conditions
-      },
-      {
-        "num": 26,
-        "question": "Please select all the stations you would like to go",
-        "answers" : values.selectedStations
-      },
+      }
     ]
   }
 };

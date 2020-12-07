@@ -8,12 +8,12 @@ import Confirm from "./Components/RegFormComponents/Confirm";
 import Success from "./Components/RegFormComponents/Success";
 import { getStepValidationSchema } from "./Components/RegFormComponents/validationSchema";
 import Button from "@material-ui/core/Button";
-import getTestData from "./TestData";
-import { postRegistration } from "./dbFunctions";
+import { postRegistration, getPatient, updatePatientData, updateCompletedStations, deletePatient } from "./dbFunctions";
 import { regFormJson } from "./Components/RegFormComponents/formatJson";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Backdrop } from "@material-ui/core";
 import SelectStations from "./Components/RegFormComponents/SelectStations";
+import { resolveModuleNameFromCache } from "typescript";
 
 const renderStep = (
   step,
@@ -79,7 +79,6 @@ const renderStep = (
 };
 
 export const RegForm = (props) => {
-
   const emptyRegFormData = {
     // personal details
     name: "",
@@ -139,69 +138,67 @@ export const RegForm = (props) => {
     station8: false,
   };
 
-  const getEditRegFormData = (id) => {
-    const editRegFormData = getTestData(id).registration;
-    return {
-      // personal details
-      name: editRegFormData[0].answer,
-      nric: editRegFormData[1].answer,
-      gender: editRegFormData[2].answer,
-      birthday: editRegFormData[3].answer,
-      age: editRegFormData[4].answer,
-      education: editRegFormData[15].answer,
-      occupation: editRegFormData[12].answer,
-
-      // lifestyle
-      exercise_freq: editRegFormData[16].answer,
-      exercise_duration: editRegFormData[17].answer,
-
-      // household info
-      monthly_household_income: editRegFormData[13].answer,
-      household_count: editRegFormData[14].answer,
-
-      // medical conditions
-      symptoms: editRegFormData[8].answer,
-      cough_2_weeks:
-        editRegFormData[8].answer.indexOf("Cough lasting for >2 weeks") >= 0,
-      cough_up_blood:
-        editRegFormData[8].answer.indexOf("Coughing up blood") >= 0,
-      breathlessness: editRegFormData[8].answer.indexOf("Breathlessness") >= 0,
-      weight_loss: editRegFormData[8].answer.indexOf("Weight loss") >= 0,
-      loss_of_appetite:
-        editRegFormData[8].answer.indexOf("Loss of apetite") >= 0,
-      fever: editRegFormData[8].answer.indexOf("Fever") >= 0,
-      no_symptom: editRegFormData[8].answer.indexOf("None of the above") >= 0,
-
-      has_tubercolosis: editRegFormData[5].answer,
-      live_with_someone_with_tubercolosis: editRegFormData[6].answer,
-      other_diagnosed_with_tubercolosis_beyond_4_months:
-        editRegFormData[7].answer,
-
-      has_blood_borne_disease: editRegFormData[9].answer,
-      blood_borne_disease: editRegFormData[10].answer,
-
-      family_has_diabetes: editRegFormData[18].answer,
-      family_diabetes_count: editRegFormData[19].answer,
-
-      family_has_anemia: editRegFormData[20].answer,
-      family_anemia_count: editRegFormData[21].answer,
-
-      family_has_oral_cancer: editRegFormData[22].answer,
-      family_oral_cancer_count: editRegFormData[23].answer,
-
-      pre_existing_conditions: editRegFormData[11].answer,
-      family_pre_existing_conditions: editRegFormData[24].answer,
-    };
-  };
-
   const {
     match: { params },
   } = props;
 
-  const regFormData =
-    params.patientID === undefined
-      ? { ...emptyRegFormData }
-      : getEditRegFormData(params.patientID);
+  const regFormData = { ...emptyRegFormData }
+
+  if (params.patientID !== undefined) {
+    getPatient(params.patientID).then(res => {
+      regFormData = {
+        // personal details
+        name: res[0].answer,
+        nric: res[1].answer,
+        gender: res[2].answer,
+        birthday: res[3].answer,
+        age: res[4].answer,
+        education: res[15].answer,
+        occupation: res[12].answer,
+  
+        // lifestyle
+        exercise_freq: res[16].answer,
+        exercise_duration: res[17].answer,
+  
+        // household info
+        monthly_household_income: res[13].answer,
+        household_count: res[14].answer,
+  
+        // medical conditions
+        symptoms: res[8].answer,
+        cough_2_weeks:
+          res[8].answer.indexOf("Cough lasting for >2 weeks") >= 0,
+        cough_up_blood:
+          res[8].answer.indexOf("Coughing up blood") >= 0,
+        breathlessness: res[8].answer.indexOf("Breathlessness") >= 0,
+        weight_loss: res[8].answer.indexOf("Weight loss") >= 0,
+        loss_of_appetite:
+          res[8].answer.indexOf("Loss of apetite") >= 0,
+        fever: res[8].answer.indexOf("Fever") >= 0,
+        no_symptom: res[8].answer.indexOf("None of the above") >= 0,
+  
+        has_tubercolosis: res[5].answer,
+        live_with_someone_with_tubercolosis: res[6].answer,
+        other_diagnosed_with_tubercolosis_beyond_4_months:
+          res[7].answer,
+  
+        has_blood_borne_disease: res[9].answer,
+        blood_borne_disease: res[10].answer,
+  
+        family_has_diabetes: res[18].answer,
+        family_diabetes_count: res[19].answer,
+  
+        family_has_anemia: res[20].answer,
+        family_anemia_count: res[21].answer,
+  
+        family_has_oral_cancer: res[22].answer,
+        family_oral_cancer_count: res[23].answer,
+  
+        pre_existing_conditions: res[11].answer,
+        family_pre_existing_conditions: res[24].answer,
+      }
+    })
+  }
 
   const [step, setStep] = useState(0);
   const isSubmitStep = step === 5;
@@ -210,6 +207,7 @@ export const RegForm = (props) => {
   const [snapshot, setSnapshot] = useState({ ...regFormData });
   const [isLoading, setIsLoading] = useState(false);
   const [errorPresent, setErrorPresent] = useState(false);
+  const [id, setID] = useState(0)
 
   const nextStep = (values) => {
     setSnapshot(values);
@@ -222,8 +220,18 @@ export const RegForm = (props) => {
   };
 
   const handleSubmit = (values, formikBag) => {
-    if (isSubmitStep) {
+    if (isSubmitStep && params.patientID === undefined) {
       const newUser = regFormJson(values);
+      const stations = {
+      "Registration": "Completed",
+      "Phlebotomy Test": values.station1 ? "In Queue" : "Not Queued",
+      "Blood Pressure": values.station2 ? "In Queue" : "Not Queued",
+      "BMI": values.station3 ? "In Queue" : "Not Queued",
+      "Oral Health": values.station4 ? "In Queue" : "Not Queued",
+      "Fingerstick Blood Test (Anemia)": values.station5 ? "In Queue" : "Not Queued",
+      "Fingerstick Blood Test (RCBG)": values.station6 ? "In Queue" : "Not Queued",
+      "Eye Screening": values.station7 ? "In Queue" : "Not Queued",
+      "Doctor's Consult": values.station8 ? "In Queue" : "Not Queued"}
       setIsLoading(true);
       //reset error state for re-submissions
       setErrorPresent(false);
@@ -249,13 +257,22 @@ export const RegForm = (props) => {
         } else {
           setErrorPresent(false);
           // registration successful
-          params.patientID = res;
           nextStep(values); 
+          setID(res)
+          return res
         }
+      }).then((res) => {
+        updateCompletedStations(res, stations)
       }).catch(err => {
+        if (id !== 0) {
+          deletePatient(id)
+          setID(0)
+        }
         setErrorPresent(true);
       });
       
+    } else if (isSubmitStep) {
+
     } else if (step === 6) {
       // reset form
       setSnapshot((snapshot) => ({ ...regFormData }));
@@ -276,7 +293,7 @@ export const RegForm = (props) => {
     >
       {(formik) => (
         <Form noValidate>
-          {renderStep(step, formik, params.patientID, errorPresent)}
+          {renderStep(step, formik, id, errorPresent)}
           {step > 0 && step < 6 && !isLoading && (
             <Button
               variant="contained"
