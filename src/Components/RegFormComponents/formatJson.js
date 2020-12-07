@@ -43,7 +43,7 @@ export const regFormJson = (values) => {
       {
         "num": 9,
         "question": "Are you currently suffering from any of the following symptoms?",
-        "answers": formatArray(values.symptoms)
+        "answers": values.symptoms
       },
       {
         "num": 10,
@@ -124,15 +124,15 @@ export const regFormJson = (values) => {
         "num": 25,
         "question": "Other pre-existing conditions of family members (if any)",
         "answers": values.pre_existing_conditions
-      },
+      }
     ]
   }
 };
 
-const formatArray = (array) => {
-  let result = ""
-  for (const option in array) {
-    result = result + option + "&"
-  }
-  return result;
-}
+// const formatArray = (array) => {
+//   let result = ""
+//   for (const option in array) {
+//     result = result + option + "&"
+//   }
+//   return result;
+// }
