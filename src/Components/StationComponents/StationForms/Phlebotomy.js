@@ -11,6 +11,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const radioQuestions = [
   {
@@ -52,6 +53,7 @@ class Phlebotomy extends Component {
       },
       vimta: "",
       count: 0,
+      errorPresent: false,
     };
   }
 
@@ -109,7 +111,13 @@ class Phlebotomy extends Component {
       };
 
       updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
+        this.setState({ errorPresent: false }, () => {
+          if (response === false) {
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
       );
     }
   }
@@ -202,6 +210,11 @@ class Phlebotomy extends Component {
   render() {
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           Phlebotomy Test
         </h1>

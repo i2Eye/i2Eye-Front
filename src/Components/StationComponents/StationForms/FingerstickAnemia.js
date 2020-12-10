@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const questions = [
   { num: 1, question: "Hb level (g/dL)", label: "Hb level (g/dL)", id: "Hb" },
@@ -55,6 +56,7 @@ class Fingerstick extends Component {
       carbohydrates: "",
       vegetables: "",
       sweets: "",
+      errorPresent: false,
     };
   }
 
@@ -146,7 +148,13 @@ class Fingerstick extends Component {
       };
 
       updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
+        this.setState({ errorPresent: false }, () => {
+          if (response === false) {
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
       );
     }
   }
@@ -157,6 +165,11 @@ class Fingerstick extends Component {
 
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           Fingerstick Blood Test (Anemia)
         </h1>

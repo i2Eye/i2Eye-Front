@@ -4,6 +4,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import "../../../dbFunctions";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const questions = [
   { question: "Urgent doctor's consult: doctor's notes", id: "Urgent" },
@@ -31,6 +32,7 @@ class Doctor extends Component {
       UrgentOthers: "",
       StandardReason: "",
       StandardOthers: "",
+      errorPresent: false,
     };
   }
 
@@ -104,13 +106,24 @@ class Doctor extends Component {
     };
 
     updatePatientData(this.props.id, answers).then((response) =>
-      console.log(response)
+      this.setState({ errorPresent: false }, () => {
+        if (response === false) {
+          this.setState({ errorPresent: true });
+        } else {
+          this.props.onChange();
+        }
+      })
     );
   }
 
   render() {
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           Doctor's Consult
         </h1>

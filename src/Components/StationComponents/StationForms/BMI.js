@@ -71,10 +71,8 @@ class BMI extends Component {
       };
 
       updatePatientData(this.props.id, answers).then((response) => {
-        // console.log(response);
         this.setState({errorPresent: false}, () => {
           if (response === false) {
-            console.log("here");
             this.setState({ errorPresent: true });
           } else {
             this.props.onChange();

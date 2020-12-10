@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import getTestData from "../../../TestData";
 import "../../../dbFunctions";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const radioQuestions = [
   {
@@ -35,6 +36,7 @@ class EyeScreening extends Component {
     this.state = {
       age: 2,
       RCBG: "",
+      errorPresent: false,
     };
   }
 
@@ -72,7 +74,13 @@ class EyeScreening extends Component {
       };
 
       updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
+        this.setState({ errorPresent: false }, () => {
+          if (response === false) {
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
       );
     }
   }
@@ -91,6 +99,11 @@ class EyeScreening extends Component {
 
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           Fingerstick Blood Test (RCBG)
         </h1>
