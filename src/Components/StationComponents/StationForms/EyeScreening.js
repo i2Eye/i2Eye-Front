@@ -6,15 +6,16 @@ import getTestData from "../../../TestData";
 import "../../../dbFunctions";
 import { updatePatientData, getPatient } from "../../../dbFunctions";
 import Success from "./Success";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 const questions = [{ question: "SNC ID" }];
-
 
 class EyeScreening extends Component {
   constructor(props) {
     super(props);
     this.state = {
       id: "",
+      errorPresent: false,
     };
   }
 
@@ -48,7 +49,13 @@ class EyeScreening extends Component {
       };
 
       updatePatientData(this.props.id, answers).then((response) =>
-        console.log(response)
+        this.setState({ errorPresent: false }, () => {
+          if (response === false) {
+            this.setState({ errorPresent: true });
+          } else {
+            this.props.onChange();
+          }
+        })
       );
     }
   }
@@ -56,6 +63,11 @@ class EyeScreening extends Component {
   render() {
     return (
       <div>
+        {this.state.errorPresent && (
+          <ErrorSnackbar
+            message={"Connection error, please submit form again"}
+          />
+        )}
         <h1 style={{ fontFamily: "sans-serif", fontSize: 30 }}>
           Eye Screening
         </h1>
